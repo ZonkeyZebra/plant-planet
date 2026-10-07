@@ -1,6 +1,13 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Utah Plant Wireframe</title>
 <style>
+:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+[hidden]:not([hidden=until-found i]){display:none!important}
 /* Layout concept: one centered column, boxes only. Black on white, one font, one size. Pictures are black line drawings. */
 :root{--ink:#000;--paper:#fff}
 *{box-sizing:border-box}
@@ -11,7 +18,7 @@ h2{border-bottom:1px solid var(--ink);padding-bottom:4px;margin-bottom:10px}
 button{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--ink);border-radius:0;padding:6px 10px;cursor:pointer;text-align:left}
 button:hover{text-decoration:underline}
 button[aria-pressed="true"],button.on{background:var(--ink);color:var(--paper)}
-button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px double var(--ink);outline-offset:2px}
+button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px double var(--ink);outline-offset:2px}
 input[type=text],textarea{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--ink);border-radius:0;padding:6px 8px;width:100%}
 input[type=checkbox]{accent-color:#000;width:14px;height:14px;margin:0;flex:none}
 .box{border:1px solid var(--ink);padding:12px;min-width:0}
@@ -51,12 +58,17 @@ table{border-collapse:collapse;width:100%;min-width:560px}
 th,td{border:1px solid var(--ink);padding:4px 8px;text-align:left;font-weight:normal;vertical-align:top}
 .meter{display:block;height:8px;background:var(--ink);margin-top:3px}
 .sticky{position:sticky;top:env(safe-area-inset-top,0px);background:var(--paper);z-index:2}
+details.admin{border:1px dashed var(--ink);padding:8px 12px}
+details.admin summary{cursor:pointer}
+details.admin[open] summary{margin-bottom:8px}
 .s{fill:var(--paper);stroke:var(--ink);stroke-width:1.6}
 .n{fill:none;stroke:var(--ink);stroke-width:1.6}
 .k{fill:var(--ink);stroke:var(--ink);stroke-width:1.2}
 .f{fill:var(--paper);stroke:none}
 svg *{stroke-linecap:round;stroke-linejoin:round}
 </style>
+</head>
+<body>
 
 <div class="wrap"><div id="app"></div></div>
 
@@ -394,6 +406,92 @@ var RESULTS=load('upresults',[]);
 var T=null;
 var T0=Date.now();
 
+/* ---------- shared results (Google Sheet via Apps Script) and admin gate ----------
+   Every finished task is saved in this browser AND posted to the Apps Script web app, which adds a row to the sheet.
+   Results, report, click log, and delete controls stay hidden until someone enters the admin key (ADMIN_KEY in the script).
+   The key is only checked by the script when data is listed or cleared, and is kept for this browser tab only. */
+var BACKEND_URL='https://script.google.com/macros/s/AKfycbylzPgk7XDZkrq_6th89aLelKf-eDN1KDY2eDzGy0EeffG4iee7NzYpY0_onyqY36N0/exec';
+var ADMIN=false,ADMIN_KEY='',CLOUD=[],CLOUDERR='';
+var SYNC={pending:0,fail:0};
+var ADMIN_ROUTES=/^(results|report|log)$/;
+try{ADMIN_KEY=sessionStorage.getItem('upadminkey')||'';}catch(e){}
+
+function post(body){
+  return fetch(BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}).then(function(r){return r.json();});
+}
+function syncNote(){
+  var n=$('#syncnote');if(!n)return;
+  n.textContent=SYNC.pending>0?'Saving your answers...':
+    SYNC.fail>0?'Some answers could not be saved to the shared results. They are saved in this browser.':
+    'Your answers were saved to the shared results.';
+}
+function taskRow(rec,t){
+  var o={session_id:rec.id,participant:rec.participant,started:rec.started};
+  for(var k in t){if(k!=='views'&&k!=='events')o[k]=t[k];}
+  o.views_json=JSON.stringify(t.views||[]);
+  o.events_json=JSON.stringify(t.events||[]);
+  return o;
+}
+function sendRow(row,tries){
+  return post({action:'save',row:row}).then(function(r){if(!r||!r.ok)throw new Error('save failed');}).catch(function(err){
+    if(tries>0)return new Promise(function(res){setTimeout(res,1500);}).then(function(){return sendRow(row,tries-1);});
+    throw err;
+  });
+}
+function cloudSave(rec){
+  var t=rec.tasks[rec.tasks.length-1];if(!t)return;
+  var row=taskRow(rec,t),tt=T;
+  SYNC.pending++;
+  tt.chain=(tt.chain||Promise.resolve()).then(function(){return sendRow(row,2);}).then(function(){SYNC.pending--;syncNote();},function(){SYNC.pending--;SYNC.fail++;syncNote();});
+}
+function loadCloud(){
+  CLOUDERR='';
+  return post({action:'list',key:ADMIN_KEY}).then(function(r){
+    if(!r||!r.ok)throw new Error(r&&r.error?r.error:'no response');
+    var by={};
+    r.rows.forEach(function(row){
+      var s=by[row.session_id]||(by[row.session_id]={id:row.session_id,participant:row.participant,started:row.started,complete:false,tasks:[]});
+      var t={};for(var k in row){if(k!=='views_json'&&k!=='events_json'&&k!=='saved_at'&&k!=='session_id'&&k!=='participant'&&k!=='started')t[k]=row[k];}
+      try{t.views=JSON.parse(row.views_json||'[]');}catch(e){t.views=[];}
+      try{t.events=JSON.parse(row.events_json||'[]');}catch(e){t.events=[];}
+      s.tasks.push(t);
+    });
+    CLOUD=Object.keys(by).map(function(k){var s=by[k];s.tasks.sort(function(a,b){return a.order-b.order;});s.complete=s.tasks.length>=TASKS.length;return s;});
+  });
+}
+function allResults(){
+  var by={};
+  CLOUD.concat(RESULTS).forEach(function(s){var c=by[s.id];if(!c||s.tasks.length>c.tasks.length)by[s.id]=s;});
+  return Object.keys(by).map(function(k){return by[k];}).sort(function(a,b){return String(a.started).localeCompare(String(b.started));});
+}
+function refreshAdmin(){
+  if(T)return;
+  var k=routeParts(S.route)[0];
+  if(k!=='results'&&k!=='report')return;
+  var o=$('#out');if(o&&o.value)return;
+  render();
+}
+function unlockAdmin(){
+  var key=window.prompt('Admin key');
+  if(!key)return;
+  ADMIN_KEY=key.trim();
+  loadCloud().then(function(){
+    ADMIN=true;try{sessionStorage.setItem('upadminkey',ADMIN_KEY);}catch(e){}
+    render();
+  },function(err){
+    ADMIN=false;ADMIN_KEY='';try{sessionStorage.removeItem('upadminkey');}catch(e){}
+    window.alert('Could not unlock. The key was not accepted or the results sheet could not be reached ('+(err&&err.message?err.message:'error')+').');
+  });
+}
+function lockAdmin(){
+  ADMIN=false;ADMIN_KEY='';CLOUD=[];S.confirm='';try{sessionStorage.removeItem('upadminkey');}catch(e){}
+  S.route='home';render();window.scrollTo(0,0);
+}
+/* Reopen the admin view after a page reload in the same tab. */
+if(ADMIN_KEY){
+  loadCloud().then(function(){ADMIN=true;if(!T)render();},function(){ADMIN_KEY='';try{sessionStorage.removeItem('upadminkey');}catch(e){}});
+}
+
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 function fmt(ms){var s=Math.floor(ms/1000);var m=Math.floor(s/60);s=s%60;return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;}
 function count(fn){return PLANTS.filter(fn).length;}
@@ -426,15 +524,15 @@ function toCSV(rows,cols){return [cols.join(',')].concat(rows.map(function(r){re
 var LOGCOLS=['n','time','elapsed_ms','mode','participant','task_id','task_ms','page','kind','target'];
 var RESCOLS=['session_id','participant','started','order','task_id','scenario','expected','endpoint','endpoint_name','correct','skipped','time_ms','clicks','backtracks','wrong_turns','searches','filters_used','first_choice','first_choice_on_path','page_trail','struggle_events','path'];
 var REPCOLS=['page','visits','avg_seconds','clicks','backtracks','wrong_turns','wrong_answers','gave_up','struggle'];
-function resultRows(){var out=[];RESULTS.forEach(function(s){s.tasks.forEach(function(t){var r={session_id:s.id,participant:s.participant,started:s.started};for(var k in t)r[k]=t[k];out.push(r);});});return out;}
+function resultRows(){var out=[];allResults().forEach(function(s){s.tasks.forEach(function(t){var r={session_id:s.id,participant:s.participant,started:s.started};for(var k in t)r[k]=t[k];out.push(r);});});return out;}
 function getData(src,f){
   if(src==='report'){
-    var R=computeReport(RESULTS);
+    var R=computeReport(allResults());
     var prow=R.pages.map(function(p){var o={};for(var k in p)o[k]=p[k];o.avg_seconds=Math.round(p.avg_seconds*10)/10;return o;});
     return f==='csv'?toCSV(prow,REPCOLS):JSON.stringify({pages:prow,tasks:R.tasks,backtrack_paths:R.pairs},null,2);
   }
   if(src==='log')return f==='csv'?toCSV(LOG,LOGCOLS):JSON.stringify(LOG,null,2);
-  return f==='csv'?toCSV(resultRows(),RESCOLS):JSON.stringify(RESULTS,null,2);
+  return f==='csv'?toCSV(resultRows(),RESCOLS):JSON.stringify(allResults(),null,2);
 }
 function setStatus(m){var s=$('#status');if(s)s.textContent=m;}
 function copyText(text,ta){
@@ -483,6 +581,7 @@ function go(route){
     }
   }else if(isLeaf&&S.route.indexOf('leaf:')!==0){S.leafFrom=S.route;}
   S.route=route;S.confirm='';render();window.scrollTo(0,0);
+  if(ADMIN&&/^(results|report)$/.test(routeParts(route)[0]))loadCloud().then(refreshAdmin,function(err){CLOUDERR=err&&err.message?err.message:'error';refreshAdmin();});
 }
 
 /* ---------- struggle analysis ---------- */
@@ -576,6 +675,7 @@ function persistSession(){
   var idx=-1;RESULTS.forEach(function(s,i){if(s.id===T.id)idx=i;});
   if(idx<0)RESULTS.push(rec);else RESULTS[idx]=rec;
   save('upresults',RESULTS);
+  cloudSave(rec);
 }
 function completeTask(id,skipped){
   var task=T.order[T.i];
@@ -597,10 +697,11 @@ function completeTask(id,skipped){
   persistSession();
   T.state=T.i>=T.order.length?'done':'scenario';
   S.route='home';S.query='';render();window.scrollTo(0,0);
+  syncNote();
 }
 function startTest(){
   var el=$('#pid');var pid=(el&&el.value.trim())||('anon-'+Math.random().toString(36).slice(2,6));
-  T={id:'s'+Date.now(),pid:pid,order:shuffle(TASKS),i:0,state:'scenario',startedAt:new Date().toISOString(),tasks:[],clicks:0,path:[],taskStart:0,timer:null};
+  T={id:'s'+Date.now()+'-'+Math.random().toString(36).slice(2,6),pid:pid,order:shuffle(TASKS),i:0,state:'scenario',startedAt:new Date().toISOString(),tasks:[],clicks:0,path:[],taskStart:0,timer:null};
   render();window.scrollTo(0,0);
 }
 function beginTask(){
@@ -635,8 +736,9 @@ function header(){
 }
 function footer(){
   var run=T&&T.state==='running';
+  var admin=ADMIN?'<button data-go="results" data-log="control:Test results">Test results</button><button data-go="report" data-log="control:Struggle report">Struggle report</button><button data-go="log" data-log="control:Click log">Click log: <span id="logcount">'+LOG.length+'</span> clicks recorded</button>':'';
   return '<footer class="ph col"><p>Wireframe: black and white, one font. Dashed boxes are placeholders. Plant data is sample data. Pictures are generic line drawings, not photos.</p>'+
-    (run?'':'<div class="bar"><button data-go="test" data-log="control:Test mode">Test mode</button><button data-go="results" data-log="control:Test results">Test results</button><button data-go="report" data-log="control:Struggle report">Struggle report</button><button data-go="log" data-log="control:Click log">Click log: <span id="logcount">'+LOG.length+'</span> clicks recorded</button></div>')+'</footer>';
+    (run?'':'<div class="bar"><button data-go="test" data-log="control:Test mode">Test mode</button>'+admin+(ADMIN?'<button data-act="lock">Lock admin</button>':'<button data-act="unlock">Admin</button>')+'</div>')+'</footer>';
 }
 function planTags(p){return '<span class="tags">'+p.types.map(function(t){return '<span class="tag">'+esc(TL[t])+'</span>';}).join('')+'</span>';}
 function rowFor(b){
@@ -759,23 +861,27 @@ function exportBox(src,title){
   '<p id="status" role="status" aria-live="polite"></p>'+
   '<label for="out">Export text (select all and copy if the buttons are blocked)</label><textarea id="out" rows="8" readonly></textarea></section>';
 }
+/* Delete buttons live inside a closed "Admin" box, and still need a second click to confirm. */
 function clearBtn(key,label){
   var on=S.confirm===key;
   return '<button data-act="clear" data-key="'+key+'">'+(on?'Confirm: delete '+label+' (cannot be undone)':'Clear '+label)+'</button>';
 }
+function adminBox(key,label,note){
+  return '<details class="admin"'+(S.confirm===key?' open':'')+'><summary>Admin: delete data</summary><div class="col"><p>'+note+'</p><div>'+clearBtn(key,label)+'</div></div></details>';
+}
 function logPage(){
   var rows=LOG.slice(-60).reverse().map(function(r){return '<tr><td>'+r.n+'</td><td>'+esc(r.time)+'</td><td>'+esc(r.mode)+'</td><td>'+esc(r.task_id)+'</td><td>'+esc(r.page)+'</td><td>'+esc(r.kind)+'</td><td>'+esc(r.target)+'</td></tr>';}).join('');
   return screen('Click log')+crumbs('log')+
-  '<section class="col"><h2>Click log: '+LOG.length+' clicks recorded</h2><p>Every click on a link, button, or filter, and every search, is recorded with time, page, and target. Data is kept in this browser.</p>'+
+  '<section class="col"><h2>Click log: '+LOG.length+' clicks recorded</h2><p>Every click on a link, button, or filter, and every search, is recorded with time, page, and target. This log is kept in this browser only. Test answers from all participants are in Test results.</p>'+
   '<div class="scroll"><table><thead><tr><th>#</th><th>Time</th><th>Mode</th><th>Task</th><th>Page</th><th>Kind</th><th>Target</th></tr></thead><tbody>'+(rows||'<tr><td colspan="7">No clicks yet.</td></tr>')+'</tbody></table></div>'+
-  '<p>Showing the latest 60. Exports contain everything.</p><div>'+clearBtn('log','click log')+'</div></section>'+exportBox('log','Export click log');
+  '<p>Showing the latest 60. Exports contain everything.</p>'+adminBox('log','click log','Deletes the click log stored in this browser.')+'</section>'+exportBox('log','Export click log');
 }
 
 function testIntro(){
   return screen('Test mode start')+crumbs('test')+
   '<section class="box col"><h2>Test mode</h2><p>You will see 10 scenarios in random order. Most show a picture of a plant. For each one, read the scenario, click OK, then use the site to find the page you think matches. The timer starts when you click OK. When you reach a placeholder page, your answer is recorded and the next scenario starts.</p>'+
   '<label for="pid">Participant name or ID</label><input type="text" id="pid" autocomplete="off" placeholder="P01">'+
-  '<div class="bar"><button data-act="starttest" data-log="control:Start test">Start test</button><button data-go="results" data-log="control:View test results">View test results</button><button data-go="home" data-log="nav:Back to site">Back to site</button></div></section>';
+  '<div class="bar"><button data-act="starttest" data-log="control:Start test">Start test</button>'+(ADMIN?'<button data-go="results" data-log="control:View test results">View test results</button>':'')+'<button data-go="home" data-log="nav:Back to site">Back to site</button></div></section>';
 }
 function scenarioScreen(){
   var t=T.order[T.i];
@@ -795,15 +901,20 @@ function doneScreen(){
   var ok=T.tasks.filter(function(t){return t.correct;}).length;
   var R=computeReport([{tasks:T.tasks}]);
   return screen('Test complete')+'<section class="box col"><h2>Test complete: '+ok+' of '+T.tasks.length+' correct</h2>'+resultsTable(rows)+
-  R.summary.slice(0,2).map(function(s){return '<p class="ph">'+esc(s)+'</p>';}).join('')+'<div class="bar"><button data-go="results" data-act="finishtest" data-log="control:View all results">View all results</button><button data-act="finishtest" data-log="control:Back to site after test">Back to site</button></div></section>';
+  '<p class="ph" id="syncnote"></p>'+
+  (ADMIN?R.summary.slice(0,2).map(function(s){return '<p class="ph">'+esc(s)+'</p>';}).join(''):'')+
+  '<div class="bar">'+(ADMIN?'<button data-go="results" data-act="finishtest" data-log="control:View all results">View all results</button>':'')+'<button data-act="finishtest" data-log="control:Back to site after test">Back to site</button></div></section>';
 }
 function resultsPage(){
-  var rows=resultRows();
+  var list=allResults(),rows=resultRows();
+  var where='Results from all participants are loaded from the shared Google Sheet. Press Refresh to load new sessions.'+(CLOUDERR?' Last load failed: '+esc(CLOUDERR):'');
   return screen('Test results')+crumbs('results')+
-  '<section class="col"><h2>Test results: '+RESULTS.length+' sessions, '+rows.length+' tasks</h2><p>Results are kept in this browser. Copy the export to keep them elsewhere.</p>'+resultsTable(rows)+'<div class="bar"><button data-go="report" data-log="control:Struggle report">Open struggle report</button>'+clearBtn('results','test results')+'</div></section>'+exportBox('results','Export test results');
+  '<section class="col"><h2>Test results: '+list.length+' sessions, '+rows.length+' tasks</h2><p>'+where+'</p>'+resultsTable(rows)+'<div class="bar"><button data-act="refresh">Refresh</button><button data-go="report" data-log="control:Struggle report">Open struggle report</button></div>'+
+  adminBox('results','all test results','Deletes every saved session for all participants, in the shared Google Sheet and in this browser. This cannot be undone. Copy the export first.')+'</section>'+exportBox('results','Export test results');
 }
 function reportPage(){
-  var R=computeReport(RESULTS);
+  var list=allResults();
+  var R=computeReport(list);
   var rows=R.pages.slice().sort(function(a,b){return b.struggle-a.struggle||b.avg_seconds-a.avg_seconds;});
   var max=Math.max.apply(null,rows.map(function(r){return r.struggle;}).concat([1]));
   function th(a){return '<tr>'+a.map(function(h){return '<th>'+h+'</th>';}).join('')+'</tr>';}
@@ -815,7 +926,7 @@ function reportPage(){
   }).join(''):'<tr><td colspan="7">No data yet.</td></tr>')+'</tbody></table></div>';
   var pairTable='<div class="scroll"><table><thead>'+th(['Backtrack (from page back to page)','Times'])+'</thead><tbody>'+(R.pairs.length?R.pairs.map(function(p){return '<tr><td>'+esc(p.path.replace(' -> ',' back to '))+'</td><td>'+p.count+'</td></tr>';}).join(''):'<tr><td colspan="2">No backtracks recorded.</td></tr>')+'</tbody></table></div>';
   return screen('Struggle report')+crumbs('report')+
-  '<section class="col"><h2>Where people struggle: '+R.n+' task attempts from '+RESULTS.length+' sessions</h2>'+
+  '<section class="col"><div class="bar"><button data-act="refresh">Refresh</button></div><h2>Where people struggle: '+R.n+' task attempts from '+list.length+' sessions</h2>'+
   R.summary.map(function(s){return '<p class="box">'+esc(s)+'</p>';}).join('')+
   '<h2>By page, most struggle first</h2>'+pageTable+
   '<h2>By task</h2>'+taskTable+
@@ -830,6 +941,7 @@ function render(){
   else if(T&&T.state==='done'){html='<div class="col">'+doneScreen()+'</div>';}
   else{
     var r=S.route,i=r.indexOf(':'),k=i<0?r:r.slice(0,i),arg=i<0?'':r.slice(i+1),body;
+    if(ADMIN_ROUTES.test(k)&&!ADMIN){S.route='home';k='home';arg='';}
     if(k==='home')body=home();
     else if(k==='type')body=typePage(arg);
     else if(k==='places')body=placesIndex();
@@ -854,11 +966,19 @@ function act(name,el){
   if(name==='copy'){copyText(getData(el.getAttribute('data-src'),el.getAttribute('data-fmt')),$('#out'));return;}
   if(name==='show'){var ta=$('#out');ta.value=getData(el.getAttribute('data-src'),el.getAttribute('data-fmt'));ta.focus();ta.select();setStatus('Text shown below and selected.');return;}
   if(name==='clear'){
+    if(!ADMIN)return;
     var key=el.getAttribute('data-key');
     if(S.confirm!==key){S.confirm=key;render();return;}
-    if(key==='log'){LOG=[];save('uplog',LOG);}else{RESULTS=[];save('upresults',RESULTS);}
-    S.confirm='';render();return;
+    if(key==='log'){LOG=[];save('uplog',LOG);S.confirm='';render();return;}
+    post({action:'clear',key:ADMIN_KEY}).then(function(r){
+      if(!r||!r.ok)throw new Error(r&&r.error?r.error:'no response');
+      CLOUD=[];RESULTS=[];save('upresults',RESULTS);S.confirm='';render();
+    },function(err){S.confirm='';CLOUDERR='delete failed ('+(err&&err.message?err.message:'error')+')';render();});
+    return;
   }
+  if(name==='refresh'){loadCloud().then(function(){render();},function(err){CLOUDERR=err&&err.message?err.message:'error';render();});return;}
+  if(name==='unlock'){unlockAdmin();return;}
+  if(name==='lock'){lockAdmin();return;}
   if(name==='starttest'){startTest();return;}
   if(name==='begin'){beginTask();return;}
   if(name==='skip'){completeTask('',true);return;}
@@ -892,4 +1012,5 @@ render();
 })();
 </script>
 
-</body></html>
+</body>
+</html>
