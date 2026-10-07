@@ -1,0 +1,895 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Utah Plant Wireframe</title>
+<style>
+/* Layout concept: one centered column, boxes only. Black on white, one font, one size. Pictures are black line drawings. */
+:root{--ink:#000;--paper:#fff}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:14px/1.5 Arial,Helvetica,sans-serif;margin:0;padding-inline:16px;padding-block:16px 48px}
+.wrap{max-width:980px;margin-inline:auto;display:flex;flex-direction:column;gap:14px}
+h1,h2,h3,p,ul,fieldset{font:inherit;margin:0;padding:0}
+h2{border-bottom:1px solid var(--ink);padding-bottom:4px;margin-bottom:10px}
+button{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--ink);border-radius:0;padding:6px 10px;cursor:pointer;text-align:left}
+button:hover{text-decoration:underline}
+button[aria-pressed="true"],button.on{background:var(--ink);color:var(--paper)}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px double var(--ink);outline-offset:2px}
+input[type=text],textarea{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--ink);border-radius:0;padding:6px 8px;width:100%}
+input[type=checkbox]{accent-color:#000;width:14px;height:14px;margin:0;flex:none}
+.box{border:1px solid var(--ink);padding:12px;min-width:0}
+.ph{border:1px dashed var(--ink);padding:12px;min-width:0}
+.screen{border:1px dashed var(--ink);padding:4px 8px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px solid var(--ink);padding:8px}
+.grow{flex:1 1 auto}
+form.bar input{flex:1 1 200px;width:auto;min-width:0}
+.crumbs{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.crumbs button{border:0;padding:0;text-decoration:underline}
+.img{display:block;min-height:84px;border:1px solid var(--ink);background:linear-gradient(to top right,transparent calc(50% - 1px),var(--ink) 50%,transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),var(--ink) 50%,transparent calc(50% + 1px))}
+.pic{display:block;width:100%;aspect-ratio:1/1;border:1px solid var(--ink);background:var(--paper)}
+.pic svg{display:block;width:100%;height:100%}
+.thumb{width:72px;flex:none}
+.bigpic{width:100%;max-width:260px}
+.hero{display:flex;flex-direction:column;gap:12px;padding:20px;max-width:720px;margin-inline:auto;width:100%}
+.hero .img{min-height:150px}
+.hero p{text-align:center}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+.grid.wide{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.split{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:720px){.split{grid-template-columns:200px minmax(0,1fr)}}
+.col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;align-items:center}
+.card{display:flex;flex-direction:column;gap:6px;width:100%;height:100%}
+.tag{border:1px solid var(--ink);padding:0 6px;display:inline-block;margin:0 4px 4px 0}
+.tags{display:flex;flex-wrap:wrap}
+.fs{border:1px solid var(--ink);padding:8px 10px;min-width:0}
+.fs legend{padding:0 4px}
+.chk{display:flex;gap:8px;align-items:center;padding:2px 0;cursor:pointer}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{border-radius:99px;padding:2px 10px}
+.rowbtn{display:flex;flex-wrap:wrap;gap:4px 14px;width:100%;align-items:center}
+.stat{display:flex;flex-direction:column;gap:2px}
+.scroll{overflow:auto;max-height:320px;border:1px solid var(--ink)}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th,td{border:1px solid var(--ink);padding:4px 8px;text-align:left;font-weight:normal;vertical-align:top}
+.meter{display:block;height:8px;background:var(--ink);margin-top:3px}
+.sticky{position:sticky;top:env(safe-area-inset-top,0px);background:var(--paper);z-index:2}
+.s{fill:var(--paper);stroke:var(--ink);stroke-width:1.6}
+.n{fill:none;stroke:var(--ink);stroke-width:1.6}
+.k{fill:var(--ink);stroke:var(--ink);stroke-width:1.2}
+.f{fill:var(--paper);stroke:none}
+svg *{stroke-linecap:round;stroke-linejoin:round}
+</style>
+
+<div class="wrap"><div id="app"></div></div>
+
+<script>
+(function(){
+'use strict';
+/* Set to false to swap every picture back to a plain box with an X. */
+var SHOW_IMAGES=true;
+/* Search is built but switched off for now. Set to true to bring the search bar back on every page. */
+var SHOW_SEARCH=false;
+
+var TYPES=[['Flower','Flowers'],['Tree','Trees'],['Bush','Bushes'],['Aquatic','Aquatics']];
+var TL={Flower:'Flowers',Tree:'Trees',Bush:'Bushes',Aquatic:'Aquatics'};
+var REGIONS=['Wasatch Front','Uinta Mountains','Red rock desert','Great Basin','Wetlands and lakes'];
+var SEASONS=['Spring','Summer','Fall','Year-round'];
+var COLORS=['White','Yellow','Pink','Purple','Red','Orange','Blue','Green or gray'];
+var LEAVES=['Lance-shaped','Round or oval','Lobed','Needle or scale-like','Narrow or grass-like','Compound (leaflets)','Heart-shaped'];
+
+var RAW=[
+'sego-lily|Sego lily|Calochortus nuttallii|Flower|White|Narrow or grass-like|Wasatch Front,Uinta Mountains,Great Basin|Spring,Summer',
+'wild-rose|Woods\' rose|Rosa woodsii|Flower,Bush|Pink|Compound (leaflets)|Wasatch Front,Uinta Mountains,Wetlands and lakes|Summer',
+'utah-serviceberry|Utah serviceberry|Amelanchier utahensis|Flower,Tree,Bush|White|Round or oval|Wasatch Front,Red rock desert,Great Basin|Spring',
+'yellow-pond-lily|Yellow pond-lily|Nuphar polysepala|Flower,Aquatic|Yellow|Heart-shaped|Wetlands and lakes,Uinta Mountains|Summer',
+'columbine|Rocky Mountain columbine|Aquilegia coerulea|Flower|Blue,White|Lobed|Uinta Mountains,Wasatch Front|Summer',
+'yarrow|Common yarrow|Achillea millefolium|Flower|White|Compound (leaflets)|Wasatch Front,Uinta Mountains,Great Basin|Summer,Fall',
+'utah-penstemon|Utah penstemon|Penstemon utahensis|Flower|Red|Lance-shaped|Red rock desert|Spring',
+'globemallow|Desert globemallow|Sphaeralcea ambigua|Flower|Orange|Lobed|Red rock desert,Great Basin|Spring,Summer',
+'sunflower|Common sunflower|Helianthus annuus|Flower|Yellow|Heart-shaped|Wasatch Front,Great Basin,Red rock desert|Summer,Fall',
+'paintbrush|Desert Indian paintbrush|Castilleja chromosa|Flower|Red|Lance-shaped|Great Basin,Red rock desert,Wasatch Front|Spring,Summer',
+'lupine|Silvery lupine|Lupinus argenteus|Flower|Purple|Compound (leaflets)|Uinta Mountains,Wasatch Front|Summer',
+'rabbitbrush|Rubber rabbitbrush|Ericameria nauseosa|Bush,Flower|Yellow|Narrow or grass-like|Great Basin,Red rock desert,Wasatch Front|Fall',
+'sagebrush|Big sagebrush|Artemisia tridentata|Bush|Green or gray|Lobed|Great Basin,Wasatch Front,Red rock desert|Year-round',
+'gambel-oak|Gambel oak|Quercus gambelii|Tree,Bush|Green or gray|Lobed|Wasatch Front,Red rock desert|Summer,Fall',
+'aspen|Quaking aspen|Populus tremuloides|Tree|Yellow,Green or gray|Round or oval|Uinta Mountains,Wasatch Front|Summer,Fall',
+'blue-spruce|Blue spruce|Picea pungens|Tree|Green or gray|Needle or scale-like|Uinta Mountains,Wasatch Front|Year-round',
+'subalpine-fir|Subalpine fir|Abies lasiocarpa|Tree|Green or gray|Needle or scale-like|Uinta Mountains|Year-round',
+'utah-juniper|Utah juniper|Juniperus osteosperma|Tree|Green or gray|Needle or scale-like|Red rock desert,Great Basin|Year-round',
+'pinyon-pine|Pinyon pine|Pinus edulis|Tree|Green or gray|Needle or scale-like|Red rock desert,Great Basin|Year-round',
+'bigtooth-maple|Bigtooth maple|Acer grandidentatum|Tree|Red,Green or gray|Lobed|Wasatch Front|Fall',
+'fremont-cottonwood|Fremont cottonwood|Populus fremontii|Tree|Green or gray|Heart-shaped|Red rock desert,Wetlands and lakes|Summer,Fall',
+'chokecherry|Chokecherry|Prunus virginiana|Bush,Tree|White|Round or oval|Wasatch Front,Uinta Mountains,Great Basin|Spring',
+'mountain-mahogany|Curl-leaf mountain mahogany|Cercocarpus ledifolius|Bush,Tree|Green or gray|Narrow or grass-like|Great Basin,Wasatch Front|Year-round',
+'elderberry|Blue elderberry|Sambucus cerulea|Bush,Tree|White|Compound (leaflets)|Wasatch Front,Wetlands and lakes|Summer',
+'cliffrose|Stansbury cliffrose|Purshia stansburyana|Bush|White|Lobed|Red rock desert,Great Basin|Spring',
+'saltbush|Fourwing saltbush|Atriplex canescens|Bush|Green or gray|Narrow or grass-like|Great Basin,Red rock desert|Year-round',
+'cattail|Broadleaf cattail|Typha latifolia|Aquatic|Green or gray|Narrow or grass-like|Wetlands and lakes|Summer',
+'bulrush|Hardstem bulrush|Schoenoplectus acutus|Aquatic|Green or gray|Narrow or grass-like|Wetlands and lakes|Summer',
+'smartweed|Water smartweed|Persicaria amphibia|Aquatic,Flower|Pink|Lance-shaped|Wetlands and lakes|Summer',
+'coontail|Coontail|Ceratophyllum demersum|Aquatic|Green or gray|Needle or scale-like|Wetlands and lakes|Summer',
+'sago-pondweed|Sago pondweed|Stuckenia pectinata|Aquatic|Green or gray|Narrow or grass-like|Wetlands and lakes|Summer',
+'monkeyflower|Yellow monkeyflower|Erythranthe guttata|Flower|Yellow|Round or oval|Wetlands and lakes,Uinta Mountains|Spring,Summer',
+'marsh-marigold|Elkslip marsh marigold|Caltha leptosepala|Flower|White|Heart-shaped|Uinta Mountains|Summer',
+'mules-ears|Mule\'s ears|Wyethia amplexicaulis|Flower|Yellow|Lance-shaped|Wasatch Front,Uinta Mountains|Spring,Summer',
+'fireweed|Fireweed|Chamaenerion angustifolium|Flower|Pink,Purple|Lance-shaped|Uinta Mountains,Wasatch Front|Summer,Fall',
+'scarlet-gilia|Scarlet gilia|Ipomopsis aggregata|Flower|Red|Compound (leaflets)|Uinta Mountains,Wasatch Front,Red rock desert|Summer',
+'duckweed|Common duckweed|Lemna minor|Aquatic|Green or gray|Round or oval|Wetlands and lakes|Summer',
+'elodea|Canadian waterweed|Elodea canadensis|Aquatic|Green or gray|Lance-shaped|Wetlands and lakes|Summer',
+'water-buttercup|White water buttercup|Ranunculus aquatilis|Aquatic,Flower|White|Lobed|Wetlands and lakes,Uinta Mountains|Spring,Summer',
+'watercress|Watercress|Nasturtium officinale|Aquatic,Flower|White|Compound (leaflets)|Wetlands and lakes,Wasatch Front|Spring,Summer',
+'arrowhead|Broadleaf arrowhead|Sagittaria latifolia|Aquatic,Flower|White|Heart-shaped|Wetlands and lakes|Summer,Fall',
+'mares-tail|Common mare\'s tail|Hippuris vulgaris|Aquatic|Green or gray|Narrow or grass-like|Wetlands and lakes,Uinta Mountains|Summer',
+'phragmites|Common reed|Phragmites australis|Aquatic|Green or gray|Narrow or grass-like|Wetlands and lakes|Summer,Fall',
+'milfoil|Northern watermilfoil|Myriophyllum sibiricum|Aquatic|Green or gray|Compound (leaflets)|Wetlands and lakes|Summer'
+];
+var PLANTS=RAW.map(function(l){var f=l.split('|');return{id:f[0],name:f[1],latin:f[2],types:f[3].split(','),colors:f[4].split(','),leaf:f[5],regions:f[6].split(','),seasons:f[7].split(',')};});
+var TOOLS=[
+ {id:'tool-identify',name:'Identify from a photo'},
+ {id:'tool-saved',name:'My saved plants'},
+ {id:'tool-poison',name:'Poisonous plants'},
+ {id:'tool-invasive',name:'Invasive species'},
+ {id:'tool-report',name:'Report a sighting'}
+].map(function(t){t.tool=true;t.latin='';t.types=[];t.colors=[];t.regions=[];t.seasons=[];t.leaf='';return t;});
+var BYID={};PLANTS.concat(TOOLS).forEach(function(b){BYID[b.id]=b;});
+var KW={'tool-identify':'photo picture camera identify unknown what is this','tool-saved':'saved favorites bookmarks list','tool-poison':'poisonous toxic dog cat pet pets sick danger safety','tool-invasive':'invasive weeds noxious species','tool-report':'report sighting submit'};
+
+var TASKS=[
+ {id:'T1',img:'columbine',text:'You are hiking in the Uinta Mountains in summer and take a picture of this flower. The petals were blue and white. Find its page.',ok:['columbine']},
+ {id:'T2',img:'sego-lily',text:'You photograph this flower on a spring hike along the Wasatch Front. Find its page.',ok:['sego-lily']},
+ {id:'T3',img:'aspen',text:'You take this picture of a tree on a mountain hillside in the fall. Its leaves had turned yellow. Find its page.',ok:['aspen']},
+ {id:'T4',img:'blue-spruce',text:'You photograph this evergreen in the mountains. A ranger tells you it is the state tree. Find its page.',ok:['blue-spruce']},
+ {id:'T5',img:'bigtooth-maple',text:'It is fall along the Wasatch Front and you photograph this tree. Its leaves were red. Find its page.',ok:['bigtooth-maple']},
+ {id:'T6',img:'cattail',text:'At a wetland near the Great Salt Lake you photograph this tall plant. Find its page.',ok:['cattail']},
+ {id:'T7',img:'yellow-pond-lily',text:'You photograph this plant floating on a lake in summer. The flower was yellow. Find its page.',ok:['yellow-pond-lily']},
+ {id:'T8',img:'rabbitbrush',text:'In the Great Basin in the fall you photograph this shrub. The flowers were yellow. Find its page.',ok:['rabbitbrush']},
+ {id:'T9',img:'',text:'You took a photo of a plant and want help figuring out what it is. Find the tool for that.',ok:['tool-identify']},
+ {id:'T10',img:'',text:'You have a dog and want to know which plants could make it sick. Find that information.',ok:['tool-poison']}
+];
+
+/* ---------- line drawings (black on white, generic) ---------- */
+var VE=' vector-effect="non-scaling-stroke"';
+function el(tag,attrs,cls){return '<'+tag+' class="'+(cls||'s')+'" '+attrs+'/>';}
+function pth(d,c){return el('path','d="'+d+'"',c);}
+function cir(x,y,r,c){return el('circle','cx="'+x+'" cy="'+y+'" r="'+r+'"',c);}
+function ell(x,y,rx,ry,rot,c){return el('ellipse','cx="'+x+'" cy="'+y+'" rx="'+rx+'" ry="'+ry+'" transform="rotate('+(rot||0)+' '+x+' '+y+')"',c);}
+function lin(x1,y1,x2,y2,c){return pth('M'+x1+' '+y1+'L'+x2+' '+y2,c||'n');}
+function gtr(t,inner){return '<g transform="'+t+'">'+inner+'</g>';}
+var GROUND=lin(8,108,112,108);
+function wave(y){return pth('M4 '+y+'q7.5 -4 15 0t15 0t15 0t15 0t15 0t15 0t15 0','n');}
+var LP={
+ lance:'M0 0C6 -6 6 -14 0 -22C-6 -14 -6 -6 0 0Z',
+ round:'M0 0C10 -2 10 -16 0 -18C-10 -16 -10 -2 0 0Z',
+ lobed:'M0 0L5 -3L4 -6L9 -8L6 -12L9 -16L3 -17L0 -22L-3 -17L-9 -16L-6 -12L-9 -8L-4 -6L-5 -3Z',
+ heart:'M0 -3C-4 2 -11 -2 -9 -10C-8 -15 -3 -19 0 -24C3 -19 8 -15 9 -10C11 -2 4 2 0 -3Z',
+ narrow:'M0 0C2 -8 1 -18 0 -30C-1 -18 -2 -8 0 0Z'
+};
+function leaf(type,x,y,ang,sc){
+  var inner='';
+  if(LP[type])inner='<path class="s" d="'+LP[type]+'"'+VE+'/>';
+  else if(type==='needle')inner='<path class="n" d="M0 0L0 -20M0 0L-6 -18M0 0L6 -18M0 0L-11 -14M0 0L11 -14"'+VE+'/>';
+  else if(type==='scale')inner='<path class="n" d="M0 0L0 -18M0 -4L-3 -7M0 -4L3 -7M0 -9L-3 -12M0 -9L3 -12M0 -14L-3 -17M0 -14L3 -17"'+VE+'/>';
+  else if(type==='compound'){
+    inner='<path class="n" d="M0 0L0 -26"'+VE+'/>';
+    [8,15,22].forEach(function(y2){
+      inner+='<g transform="translate(0 -'+y2+') rotate(-55) scale(.45)"><path class="s" d="'+LP.lance+'"'+VE+'/></g>';
+      inner+='<g transform="translate(0 -'+y2+') rotate(55) scale(.45)"><path class="s" d="'+LP.lance+'"'+VE+'/></g>';
+    });
+    inner+='<g transform="translate(0 -26) scale(.45)"><path class="s" d="'+LP.lance+'"'+VE+'/></g>';
+  }
+  return '<g transform="translate('+x+' '+y+') rotate('+ang+') scale('+sc+')">'+inner+'</g>';
+}
+function ring(cx,cy,n,rx,ry,d,c){var s='';for(var i=0;i<n;i++){s+='<ellipse class="'+(c||'s')+'" cx="'+cx+'" cy="'+(cy-d)+'" rx="'+rx+'" ry="'+ry+'" transform="rotate('+(i*360/n)+' '+cx+' '+cy+')"/>';}return s;}
+function cloud(cs){
+  return cs.map(function(c){return cir(c[0],c[1],c[2]);}).join('')+cs.map(function(c){return '<circle class="f" cx="'+c[0]+'" cy="'+c[1]+'" r="'+(c[2]-1)+'"/>';}).join('');
+}
+var SPOTS=[[48,44,0],[68,40,30],[60,58,-20],[40,64,-40],[78,62,40],[56,30,10],[70,54,-30],[50,54,25]];
+function leafSpots(type,oy,sc,n){var s='';for(var i=0;i<Math.min(n||SPOTS.length,SPOTS.length);i++){var p=SPOTS[i];s+=leaf(type,p[0],p[1]+oy,p[2],sc);}return s;}
+
+function aFlower(p){
+  var h=p.h||60,top=108-h,cx=60,cy=top,s=GROUND,i,a,n,sh,r,x,y,k,sz,ux,uy,by;
+  s+=pth('M60 108Q'+(60+(p.bend||4))+' '+(108-h/2)+' 60 '+top,'n');
+  var nl=p.nl||2;
+  for(i=0;i<nl;i++){s+=leaf(p.leaf,60,104-i*7,(i%2?1:-1)*(50+i*5),p.lsc||0.85);}
+  switch(p.bloom){
+    case 'lily':s+=ring(cx,cy+6,6,6,13,12)+cir(cx,cy+6,3,'k');break;
+    case 'daisy':s+=ring(cx,cy,14,3,9,12)+cir(cx,cy,p.big?9:7,p.disc||'k');break;
+    case 'cup5':s+=ring(cx,cy,5,7,8,8)+cir(cx,cy,3.5);break;
+    case 'spur':
+      s+=ring(cx,cy+4,5,5,10,10);
+      for(i=0;i<5;i++){a=i*72*Math.PI/180;s+=lin(cx+Math.sin(a)*10,cy+4-Math.cos(a)*10,cx+Math.sin(a)*24,cy+4-Math.cos(a)*24)+cir(cx+Math.sin(a)*24,cy+4-Math.cos(a)*24,1.6,'k');}
+      s+=cir(cx,cy+4,3);break;
+    case 'umbel':
+      for(i=-3;i<=3;i++){ux=cx+i*10;uy=cy+4+Math.abs(i)*3;s+=lin(cx,cy+14,ux,uy)+cir(ux,uy,5);}
+      s+=cir(cx,cy+2,5);break;
+    case 'brush':
+      for(i=0;i<5;i++){by=cy+i*7;s+=ell(cx-5,by,3.5,8,-30)+ell(cx+5,by,3.5,8,30);}break;
+    case 'spike':
+      n=p.n||8;sh=p.shape||'dot';r=p.r||4;
+      for(i=0;i<n;i++){
+        y=cy+4+i*((h*0.55)/n);k=1-i/(n*1.7);sz=r*k+1;x=cx+(i%2?1:-1)*(5+4*k);
+        if(sh==='dot')s+=cir(x,y,sz);
+        else if(sh==='pea')s+=ell(x,y,sz*1.5,sz*0.8,i%2?35:-35);
+        else s+=ell(x,y,sz*1.9,sz*0.7,i%2?20:-20);
+      }
+      s+=cir(cx,cy-2,2.5,'k');break;
+  }
+  return s;
+}
+function aTree(p){
+  var s=GROUND,k=p.kind,i;
+  if(k==='conifer'){
+    var T=p.tiers||4,sp=82/(T+1);
+    s+=pth('M56 108L56 96L64 96L64 108Z');
+    for(i=T-1;i>=0;i--){var ya=14+i*sp,yb=ya+sp*2.2,w=8+(i+1)*(p.narrow?3.6:5.8);s+=pth('M60 '+ya+'L'+(60-w)+' '+yb+'L'+(60+w)+' '+yb+'Z');}
+    if(p.cones)s+=ell(40,70,3,6,0)+ell(80,56,3,6,0);
+    return s;
+  }
+  if(k==='aspen'){
+    s+=pth('M58 108L59 36L62 36L63 108Z')+pth('M58 90h3M59 74h3M58 58h3M59 46h2','n');
+    s+=cloud([[60,34,15],[50,50,12],[70,50,12],[60,62,10]])+leafSpots('round',-8,0.36,8);
+    return s;
+  }
+  if(k==='pine'){
+    s+=pth('M56 108L57 72L63 72L64 108Z')+cloud([[60,56,16],[40,66,13],[80,66,13],[50,42,11],[72,44,11]])+leafSpots('needle',6,0.38,6)+ell(44,80,3,5,0)+ell(78,54,3,5,0);
+    return s;
+  }
+  if(k==='juniper'){
+    s+=pth('M54 108Q50 92 58 82L64 82Q66 94 64 108Z')+cloud([[60,62,18],[42,72,12],[78,72,12],[52,50,11],[70,52,11]])+leafSpots('scale',10,0.42,6)+cir(50,70,1.8,'k')+cir(72,64,1.8,'k')+cir(62,78,1.8,'k');
+    return s;
+  }
+  s+=pth('M56 108L57 70L63 70L64 108Z');
+  var cs=p.wide?[[34,56,16],[60,46,22],[86,56,16],[46,68,14],[74,68,14]]:p.tall?[[60,34,17],[48,52,17],[72,52,17],[60,70,14]]:p.small?[[60,56,18],[46,64,13],[74,64,13],[54,44,12],[68,46,12]]:[[60,50,24],[42,62,16],[78,62,16],[52,36,16],[70,38,15]];
+  s+=cloud(cs)+leafSpots(p.leaf,0,0.42);
+  if(p.dots)[[50,50],[66,44],[60,60],[44,62],[76,60]].forEach(function(d){s+=cir(d[0],d[1],1.8,'k');});
+  return s;
+}
+var FL=[[44,76],[58,66],[74,74],[50,88],[68,88],[82,86],[36,86]];
+function aBush(p){
+  var s=GROUND,k=p.kind,i;
+  if(k==='wands'){
+    [[44,34],[54,26],[64,30],[74,38],[84,46]].forEach(function(w,i2){
+      var bx=48+i2*6;
+      s+=pth('M'+bx+' 108Q'+((bx+w[0])/2)+' 70 '+w[0]+' '+w[1],'n');
+      for(var j=0;j<3;j++){var t=(j+1)/4;s+=leaf('narrow',bx+(w[0]-bx)*t*0.8,108-(108-w[1])*t*0.9,(w[0]-60)*0.8+(j%2?35:-35),0.5);}
+      s+=cir(w[0],w[1]-3,4.5)+cir(w[0]-3,w[1]+2,3.5)+cir(w[0]+3,w[1]+2,3.5);
+    });
+    return s;
+  }
+  if(k==='arch'){
+    ['M56 108Q38 34 12 56','M58 108Q54 24 34 32','M62 108Q66 24 86 32','M64 108Q82 34 108 56'].forEach(function(d){s+=pth(d,'n');});
+    [[30,60,-60],[22,64,-80],[26,40,-50],[40,40,-30],[78,40,30],[92,40,50],[96,60,70],[88,62,60],[50,54,-10],[70,54,10]].forEach(function(l){s+=leaf(p.leaf,l[0],l[1],l[2],0.45);});
+    return s;
+  }
+  var cs=p.tall?[[60,66,20],[40,78,15],[80,78,15],[50,52,14],[70,54,14]]:[[60,80,22],[38,88,16],[82,88,16],[50,70,15],[72,72,15]];
+  s+=lin(54,108,50,96)+lin(66,108,70,96)+cloud(cs)+leafSpots(p.leaf,p.tall?10:26,0.42,8);
+  for(i=0;i<(p.flowers||0);i++){var f=FL[i];s+=p.cups?ring(f[0],f[1],5,2.6,3,3.2)+cir(f[0],f[1],1,'k'):cir(f[0],f[1],2,'k');}
+  if(p.umbels)[[44,50],[60,42],[76,50]].forEach(function(u){s+=cir(u[0],u[1],6)+cir(u[0]-2,u[1]-1,1.2,'k')+cir(u[0]+2,u[1]+1,1.2,'k');});
+  return s;
+}
+function aqLily(){
+  var s=GROUND+wave(72);
+  s+=lin(60,72,60,108)+lin(30,72,30,108)+lin(88,72,88,108);
+  s+=ell(30,70,18,6,0)+lin(30,70,40,66)+ell(88,71,15,5,0)+lin(88,71,97,68);
+  s+=ring(60,58,6,3.5,8,7)+cir(60,58,3,'k');
+  return s;
+}
+function aqReed(p){
+  var s=GROUND+wave(92),h=p.head;
+  if(h==='whorls'){
+    s+=lin(60,100,60,22);
+    [90,78,66,54,42,30].forEach(function(y){s+=leaf('needle',60,y,-70,0.5)+leaf('needle',60,y,70,0.5);});
+    return s;
+  }
+  [[30,100,-12],[44,100,-6],[76,100,8],[90,100,14]].forEach(function(b){s+=leaf('narrow',b[0],b[1],b[2],2.0);});
+  if(h==='cattail')s+=lin(60,100,60,24)+ell(60,40,5,15,0,'k')+lin(60,24,60,14);
+  if(h==='tuft')[44,60,76].forEach(function(x,i){var hh=34+i%2*10;s+=lin(x,100,x,hh)+ell(x,hh-4,3,6,0)+lin(x,hh-10,x-4,hh-16)+lin(x,hh-10,x+4,hh-16);});
+  if(h==='plume')s+=lin(60,100,60,30)+pth('M60 30Q48 14 56 8Q62 4 64 12Q72 20 60 30Z')+lin(60,30,60,12)+lin(60,24,52,14)+lin(60,24,68,16);
+  return s;
+}
+function aqSub(p){
+  var s=GROUND+wave(26),k=p.kind;
+  [[34,58],[60,42],[86,64]].forEach(function(st){
+    var x=st[0],t=st[1];
+    s+=pth('M'+x+' 108Q'+(x+8)+' 72 '+x+' '+t,'n');
+    if(k==='strand'){s+=leaf('narrow',x,108,-14,1.1)+leaf('narrow',x,108,14,1.1)+leaf('narrow',x,108,0,0.9);return;}
+    [94,78,62].forEach(function(y){
+      if(y<t+6)return;
+      if(k==='whorl')s+=leaf('needle',x+3,y,-45,0.55)+leaf('needle',x+3,y,45,0.55);
+      else if(k==='leafy')s+=leaf('lance',x+3,y,-50,0.45)+leaf('lance',x+3,y,50,0.45);
+      else s+=lin(x+3,y,x-8,y-5)+lin(x+3,y,x+14,y-5)+lin(x+3,y-5,x-6,y-10)+lin(x+3,y-5,x+12,y-10);
+    });
+  });
+  return s;
+}
+var ARROW='M0 -22C-3 -12 -8 -6 -14 0L-5 -1C-5 3 -3 7 0 11C3 7 5 3 5 -1L14 0C8 -6 3 -12 0 -22Z';
+function aqEmerge(p){
+  var s=GROUND+wave(84),k=p.kind,i;
+  if(k==='smartweed'){
+    s+=lin(60,108,60,34);
+    [[60,90,-60],[60,76,60],[60,62,-55]].forEach(function(l){s+=leaf('lance',l[0],l[1],l[2],0.9);});
+    for(i=0;i<5;i++)s+=cir(60+(i%2?3:-3),24+i*5,2.6);
+    return s;
+  }
+  if(k==='arrow'){
+    s+=lin(30,108,30,62)+lin(90,108,90,62)+gtr('translate(30 60)',pth(ARROW))+gtr('translate(90 60)',pth(ARROW));
+    s+=lin(60,84,60,30)+ring(60,28,3,1.8,2.6,2.6)+ring(52,40,3,1.8,2.6,2.6)+ring(68,40,3,1.8,2.6,2.6);
+    return s;
+  }
+  if(k==='buttercup'){
+    s+=leaf('lobed',30,84,-80,0.8)+leaf('lobed',92,84,80,0.8);
+    s+=lin(60,84,60,60)+ring(60,56,5,3.5,4.5,4.5)+cir(60,56,2.5,'k');
+    s+=lin(40,84,40,108)+lin(40,96,32,92)+lin(40,96,48,92)+lin(80,84,80,108)+lin(80,96,72,92)+lin(80,96,88,92);
+    return s;
+  }
+  s+=leaf('compound',34,84,-70,0.85)+leaf('compound',86,84,70,0.85)+leaf('compound',60,84,0,1);
+  s+=ring(60,44,4,1.8,2.4,2.4)+ring(48,56,4,1.8,2.4,2.4)+ring(72,56,4,1.8,2.4,2.4);
+  return s;
+}
+function aqFloat(){
+  var s=GROUND+wave(62);
+  [[22,58],[40,60],[58,57],[76,60],[94,58],[50,66],[84,67],[30,67]].forEach(function(p){s+=ell(p[0],p[1],7,3.2,0)+lin(p[0],p[1]+3,p[0],p[1]+10);});
+  return s;
+}
+var AF={flower:aFlower,tree:aTree,bush:aBush,lily:aqLily,reed:aqReed,sub:aqSub,emerge:aqEmerge,float:aqFloat};
+var ART={
+ 'sego-lily':['flower',{bloom:'lily',h:58,leaf:'narrow',nl:3}],
+ 'wild-rose':['bush',{kind:'mound',leaf:'compound',flowers:5,cups:true}],
+ 'utah-serviceberry':['tree',{kind:'round',small:1,leaf:'round',dots:true}],
+ 'yellow-pond-lily':['lily',{}],
+ 'columbine':['flower',{bloom:'spur',h:56,leaf:'lobed',nl:2}],
+ 'yarrow':['flower',{bloom:'umbel',h:60,leaf:'compound',nl:3}],
+ 'utah-penstemon':['flower',{bloom:'spike',h:72,leaf:'lance',nl:2,shape:'tube',n:8,r:4}],
+ 'globemallow':['flower',{bloom:'spike',h:62,leaf:'lobed',nl:3,shape:'dot',n:8,r:4.5}],
+ 'sunflower':['flower',{bloom:'daisy',h:70,leaf:'heart',nl:3,disc:'k',big:1}],
+ 'paintbrush':['flower',{bloom:'brush',h:50,leaf:'lance',nl:2}],
+ 'lupine':['flower',{bloom:'spike',h:74,leaf:'compound',nl:3,shape:'pea',n:12,r:3.6}],
+ 'rabbitbrush':['bush',{kind:'wands'}],
+ 'sagebrush':['bush',{kind:'mound',leaf:'lobed'}],
+ 'gambel-oak':['tree',{kind:'round',leaf:'lobed'}],
+ 'aspen':['tree',{kind:'aspen'}],
+ 'blue-spruce':['tree',{kind:'conifer',tiers:4,cones:true}],
+ 'subalpine-fir':['tree',{kind:'conifer',tiers:6,narrow:true}],
+ 'utah-juniper':['tree',{kind:'juniper'}],
+ 'pinyon-pine':['tree',{kind:'pine'}],
+ 'bigtooth-maple':['tree',{kind:'round',leaf:'lobed',wide:1}],
+ 'fremont-cottonwood':['tree',{kind:'round',leaf:'heart',tall:1}],
+ 'chokecherry':['bush',{kind:'mound',leaf:'round',tall:1,flowers:7}],
+ 'mountain-mahogany':['bush',{kind:'mound',leaf:'narrow',tall:1}],
+ 'elderberry':['bush',{kind:'mound',leaf:'compound',tall:1,umbels:true}],
+ 'cliffrose':['bush',{kind:'mound',leaf:'lobed',flowers:6,cups:true}],
+ 'saltbush':['bush',{kind:'arch',leaf:'narrow'}],
+ 'cattail':['reed',{head:'cattail'}],
+ 'bulrush':['reed',{head:'tuft'}],
+ 'smartweed':['emerge',{kind:'smartweed'}],
+ 'coontail':['sub',{kind:'whorl'}],
+ 'sago-pondweed':['sub',{kind:'strand'}],
+ 'monkeyflower':['flower',{bloom:'cup5',h:48,leaf:'round',nl:3}],
+ 'marsh-marigold':['flower',{bloom:'cup5',h:40,leaf:'heart',nl:2,lsc:1.1}],
+ 'mules-ears':['flower',{bloom:'daisy',h:56,leaf:'lance',nl:4,disc:'s',lsc:1.3}],
+ 'fireweed':['flower',{bloom:'spike',h:78,leaf:'lance',nl:4,shape:'dot',n:10,r:3.4}],
+ 'scarlet-gilia':['flower',{bloom:'spike',h:70,leaf:'compound',nl:2,shape:'tube',n:7,r:3.4}],
+ 'duckweed':['float',{}],
+ 'elodea':['sub',{kind:'leafy'}],
+ 'water-buttercup':['emerge',{kind:'buttercup'}],
+ 'watercress':['emerge',{kind:'cress'}],
+ 'arrowhead':['emerge',{kind:'arrow'}],
+ 'mares-tail':['reed',{head:'whorls'}],
+ 'phragmites':['reed',{head:'plume'}],
+ 'milfoil':['sub',{kind:'feather'}]
+};
+function art(id){var a=ART[id];return '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" focusable="false">'+AF[a[0]](a[1]||{})+'</svg>';}
+function pic(id,cls){
+  if(!SHOW_IMAGES||!ART[id])return '<span class="img'+(cls?' '+cls:'')+'" style="aspect-ratio:1/1" role="img" aria-label="Image placeholder"></span>';
+  return '<span class="pic'+(cls?' '+cls:'')+'" role="img" aria-label="Line drawing of a plant">'+art(id)+'</span>';
+}
+
+/* ---------- state, storage ---------- */
+function $(s){return document.querySelector(s);}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function load(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+var S={route:'home',leafFrom:'home',confirm:'',query:'',filters:{type:[],color:[],leaf:[],region:[],season:[]}};
+var LOG=load('uplog',[]);
+var RESULTS=load('upresults',[]);
+var T=null;
+var T0=Date.now();
+
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function fmt(ms){var s=Math.floor(ms/1000);var m=Math.floor(s/60);s=s%60;return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;}
+function count(fn){return PLANTS.filter(fn).length;}
+
+/* ---------- click logging ---------- */
+function logEvent(kind,target){
+  var run=T&&T.state==='running';
+  var seq=LOG.length?LOG[LOG.length-1].n+1:1;
+  LOG.push({n:seq,time:new Date().toISOString(),elapsed_ms:Date.now()-T0,mode:run?'test':'browse',participant:run?T.pid:'',task_id:run?T.order[T.i].id:'',task_ms:run?Math.round(performance.now()-T.taskStart):'',page:S.route,kind:kind,target:target});
+  if(LOG.length>5000)LOG.shift();
+  save('uplog',LOG);
+  if(run){
+    T.clicks++;T.path.push(target);
+    T.views[T.views.length-1].clicks++;
+    if(kind==='filter')T.filters++;
+    if(kind==='search')T.searches++;
+  }
+  var c=$('#logcount');if(c)c.textContent=LOG.length;
+}
+document.addEventListener('click',function(e){
+  var el=e.target.closest&&e.target.closest('[data-log]');
+  if(!el)return;
+  var raw=el.getAttribute('data-log'),i=raw.indexOf(':');
+  logEvent(raw.slice(0,i),raw.slice(i+1));
+},true);
+
+/* ---------- export helpers ---------- */
+function csvCell(v){v=(v===null||v===undefined)?'':String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+function toCSV(rows,cols){return [cols.join(',')].concat(rows.map(function(r){return cols.map(function(c){return csvCell(r[c]);}).join(',');})).join('\n');}
+var LOGCOLS=['n','time','elapsed_ms','mode','participant','task_id','task_ms','page','kind','target'];
+var RESCOLS=['session_id','participant','started','order','task_id','scenario','expected','endpoint','endpoint_name','correct','skipped','time_ms','clicks','backtracks','wrong_turns','searches','filters_used','first_choice','first_choice_on_path','page_trail','struggle_events','path'];
+var REPCOLS=['page','visits','avg_seconds','clicks','backtracks','wrong_turns','wrong_answers','gave_up','struggle'];
+function resultRows(){var out=[];RESULTS.forEach(function(s){s.tasks.forEach(function(t){var r={session_id:s.id,participant:s.participant,started:s.started};for(var k in t)r[k]=t[k];out.push(r);});});return out;}
+function getData(src,f){
+  if(src==='report'){
+    var R=computeReport(RESULTS);
+    var prow=R.pages.map(function(p){var o={};for(var k in p)o[k]=p[k];o.avg_seconds=Math.round(p.avg_seconds*10)/10;return o;});
+    return f==='csv'?toCSV(prow,REPCOLS):JSON.stringify({pages:prow,tasks:R.tasks,backtrack_paths:R.pairs},null,2);
+  }
+  if(src==='log')return f==='csv'?toCSV(LOG,LOGCOLS):JSON.stringify(LOG,null,2);
+  return f==='csv'?toCSV(resultRows(),RESCOLS):JSON.stringify(RESULTS,null,2);
+}
+function setStatus(m){var s=$('#status');if(s)s.textContent=m;}
+function copyText(text,ta){
+  function fallback(){if(ta){ta.value=text;ta.focus();ta.select();}setStatus('Copy was blocked. The text is selected in the box below. Press Ctrl+C or Cmd+C.');}
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){setStatus('Copied to clipboard.');if(ta)ta.value=text;},fallback);
+    }else fallback();
+  }catch(e){fallback();}
+}
+
+/* ---------- search ---------- */
+function hay(b){return [b.name,b.latin,b.types.map(function(t){return TL[t];}).join(' '),b.colors.join(' '),b.leaf,b.regions.join(' '),b.seasons.join(' '),KW[b.id]||''].join(' ').toLowerCase();}
+function doSearch(q){
+  var toks=q.toLowerCase().split(/\s+/).filter(Boolean);
+  var res=PLANTS.concat(TOOLS).filter(function(b){var h=hay(b);return toks.every(function(t){return h.indexOf(t)>=0;});});
+  var ql=q.toLowerCase();
+  return res.sort(function(a,b){var an=a.name.toLowerCase().indexOf(ql)>=0?0:1,bn=b.name.toLowerCase().indexOf(ql)>=0?0:1;return an-bn||a.name.localeCompare(b.name);});
+}
+
+/* ---------- routing ---------- */
+function crumbsFor(route){
+  var i=route.indexOf(':');var k=i<0?route:route.slice(0,i);var arg=i<0?'':route.slice(i+1);
+  var H=['home','Home'],PL=['places','Places and seasons'];
+  if(k==='home')return [H];
+  if(k==='type')return [H,[route,TL[arg]]];
+  if(k==='places')return [H,PL];
+  if(k==='place')return [H,PL,[route,arg]];
+  if(k==='season'){var p=arg.split('|');return [H,PL,['place:'+p[0],p[0]],[route,p[1]]];}
+  if(k==='search')return [H,[route,'Search: '+arg]];
+  if(k==='leaf')return crumbsFor(S.leafFrom).concat([[route,BYID[arg].name]]);
+  if(k==='log')return [H,[route,'Click log']];
+  if(k==='test')return [H,[route,'Test mode']];
+  if(k==='results')return [H,[route,'Test results']];
+  if(k==='report')return [H,[route,'Struggle report']];
+  return [H];
+}
+function go(route){
+  var isLeaf=route.indexOf('leaf:')===0;
+  if(T&&T.state==='running'){
+    if(isLeaf){completeTask(route.slice(5),false);return;}
+    var cur=T.views[T.views.length-1];
+    if(route!==cur.route){
+      cur.dwell=performance.now()-cur.enter;
+      T.views.push({route:route,page:pageLabel(route),enter:performance.now(),clicks:0,dwell:0});
+    }
+  }else if(isLeaf&&S.route.indexOf('leaf:')!==0){S.leafFrom=S.route;}
+  S.route=route;S.confirm='';render();window.scrollTo(0,0);
+}
+
+/* ---------- struggle analysis ---------- */
+var PAGE_ORDER=['Home page','Flowers page','Trees page','Bushes page','Aquatics page','Places index','Place page','Season list','Search results'];
+function routeParts(r){var i=r.indexOf(':');return [i<0?r:r.slice(0,i),i<0?'':r.slice(i+1)];}
+function depthOf(r){var k=routeParts(r)[0];return k==='home'?0:k==='place'?2:k==='season'?3:1;}
+function pageLabel(r){
+  var p=routeParts(r),k=p[0];
+  if(k==='home')return 'Home page';
+  if(k==='type')return TL[p[1]]+' page';
+  if(k==='places')return 'Places index';
+  if(k==='place')return 'Place page';
+  if(k==='season')return 'Season list';
+  if(k==='search')return 'Search results';
+  return k;
+}
+function onPath(r,task){
+  var p=routeParts(r),k=p[0],a=p[1];
+  var targets=task.ok.map(function(id){return BYID[id];});
+  if(k==='type')return targets.some(function(b){return b.types.indexOf(a)>=0;});
+  if(k==='places')return targets.some(function(b){return !b.tool;});
+  if(k==='place')return targets.some(function(b){return b.regions.indexOf(a)>=0;});
+  if(k==='season'){var q=a.split('|');return targets.some(function(b){return b.regions.indexOf(q[0])>=0&&b.seasons.indexOf(q[1])>=0;});}
+  return true;
+}
+/* Backtrack: leaving a page without going deeper (up, sideways, or back to a page already seen).
+   Wrong turn: going deeper into a section that does not hold the answer. */
+function analyze(task,views,skipped,correct){
+  var ev=[],bt=0,wt=0,i;
+  for(i=0;i<views.length-1;i++){
+    var a=views[i],b=views[i+1],da=depthOf(a.route),db=depthOf(b.route);
+    var seen=views.slice(0,i+1).some(function(v){return v.route===b.route;});
+    if(db<da){ev.push({type:'backtrack up',from:a.page,to:b.page});bt++;}
+    else if(db===da){ev.push({type:'backtrack sideways',from:a.page,to:b.page});bt++;}
+    else if(seen){ev.push({type:'revisit',from:a.page,to:b.page});bt++;}
+    else if(!onPath(b.route,task)){ev.push({type:'wrong turn',from:a.page,to:b.page});wt++;}
+  }
+  var last=views[views.length-1];
+  if(skipped)ev.push({type:'gave up',from:last.page,to:''});
+  else if(!correct)ev.push({type:'wrong answer',from:last.page,to:''});
+  return {events:ev,bt:bt,wt:wt};
+}
+function blankPage(name){return {page:name,visits:0,seconds:0,avg_seconds:0,clicks:0,backtracks:0,wrong_turns:0,wrong_answers:0,gave_up:0,struggle:0};}
+function computeReport(sessions){
+  var pages={},pairs={},tasks={},n=0,firstTotal=0,wrongFirst=0,firstWrong={};
+  PAGE_ORDER.forEach(function(p){pages[p]=blankPage(p);});
+  function pg(name){return pages[name]||(pages[name]=blankPage(name));}
+  sessions.forEach(function(s){s.tasks.forEach(function(t){
+    if(!t.views)return;
+    n++;
+    var tk=tasks[t.task_id]||(tasks[t.task_id]={task_id:t.task_id,attempts:0,correct:0,ms:0,bt:0,wt:0,ev:{}});
+    tk.attempts++;if(t.correct)tk.correct++;tk.ms+=t.time_ms;tk.bt+=t.backtracks;tk.wt+=t.wrong_turns;
+    t.views.forEach(function(v){var p=pg(v.page);p.visits++;p.seconds+=v.ms/1000;p.clicks+=v.clicks;});
+    t.events.forEach(function(e){
+      var p=pg(e.from);
+      if(e.type==='wrong turn')p.wrong_turns++;
+      else if(e.type==='wrong answer')p.wrong_answers++;
+      else if(e.type==='gave up')p.gave_up++;
+      else{p.backtracks++;var key=e.from+' -> '+e.to;pairs[key]=(pairs[key]||0)+1;}
+      tk.ev[e.from]=(tk.ev[e.from]||0)+1;
+    });
+    if(t.first_choice){firstTotal++;if(t.first_choice_on_path===false){wrongFirst++;firstWrong[t.first_choice]=(firstWrong[t.first_choice]||0)+1;}}
+  });});
+  var rows=Object.keys(pages).map(function(k){var p=pages[k];p.struggle=p.backtracks+p.wrong_turns+p.wrong_answers+p.gave_up;p.avg_seconds=p.visits?p.seconds/p.visits:0;return p;});
+  var total=rows.reduce(function(a,p){return a+p.struggle;},0);
+  var pairList=Object.keys(pairs).map(function(k){return {path:k,count:pairs[k]};}).sort(function(a,b){return b.count-a.count;}).slice(0,10);
+  var taskList=Object.keys(tasks).map(function(k){
+    var t=tasks[k],top='',m=0;for(var pgn in t.ev){if(t.ev[pgn]>m){m=t.ev[pgn];top=pgn;}}
+    return {task_id:t.task_id,attempts:t.attempts,correct_pct:Math.round(100*t.correct/t.attempts),avg_seconds:Math.round(t.ms/t.attempts/100)/10,avg_backtracks:Math.round(10*t.bt/t.attempts)/10,avg_wrong_turns:Math.round(10*t.wt/t.attempts)/10,top_struggle_page:top||'none'};
+  }).sort(function(a,b){return parseInt(a.task_id.slice(1),10)-parseInt(b.task_id.slice(1),10);});
+  var summary=[];
+  if(!n){summary.push('No test data with page tracking yet. Run test mode, then come back.');}
+  else{
+    var ranked=rows.slice().sort(function(a,b){return b.struggle-a.struggle;});
+    if(ranked[0].struggle>0)summary.push('Most struggle: '+ranked[0].page+' ('+ranked[0].struggle+' of '+total+' struggle events, '+Math.round(100*ranked[0].struggle/total)+'%).');
+    else summary.push('No struggle events recorded in '+n+' task attempts.');
+    var slow=rows.filter(function(p){return p.visits>0;}).sort(function(a,b){return b.avg_seconds-a.avg_seconds;})[0];
+    if(slow)summary.push('Longest average time per visit: '+slow.page+' ('+(Math.round(slow.avg_seconds*10)/10)+' seconds).');
+    if(pairList.length)summary.push('Most common backtrack: '+pairList[0].path.replace(' -> ',' back to ')+' ('+pairList[0].count+(pairList[0].count===1?' time).':' times).'));
+    if(firstTotal){
+      var fw=Object.keys(firstWrong).sort(function(a,b){return firstWrong[b]-firstWrong[a];})[0];
+      summary.push('First click from Home went to a section without the answer in '+wrongFirst+' of '+firstTotal+' attempts'+(fw?', most often '+fw+'.':'.'));
+    }
+  }
+  return {n:n,pages:rows,tasks:taskList,pairs:pairList,summary:summary,total:total};
+}
+
+/* ---------- test mode ---------- */
+function persistSession(){
+  var rec={id:T.id,participant:T.pid,started:T.startedAt,complete:T.i>=T.order.length,tasks:T.tasks.slice()};
+  var idx=-1;RESULTS.forEach(function(s,i){if(s.id===T.id)idx=i;});
+  if(idx<0)RESULTS.push(rec);else RESULTS[idx]=rec;
+  save('upresults',RESULTS);
+}
+function completeTask(id,skipped){
+  var task=T.order[T.i];
+  var ms=Math.round(performance.now()-T.taskStart);
+  clearInterval(T.timer);
+  var lastView=T.views[T.views.length-1];lastView.dwell=performance.now()-lastView.enter;
+  var correct=skipped?false:task.ok.indexOf(id)>=0;
+  var an=analyze(task,T.views,!!skipped,correct);
+  var second=T.views[1];
+  T.tasks.push({order:T.i+1,task_id:task.id,scenario:task.text,expected:task.ok.join('|'),endpoint:skipped?'':id,endpoint_name:skipped?'':BYID[id].name,correct:correct,skipped:!!skipped,time_ms:ms,clicks:T.clicks,
+    backtracks:an.bt,wrong_turns:an.wt,searches:T.searches,filters_used:T.filters,
+    first_choice:second?second.page:'',first_choice_on_path:second?onPath(second.route,task):'',
+    page_trail:T.views.map(function(v){return v.page+' ('+(v.dwell/1000).toFixed(1)+'s, '+v.clicks+' clicks)';}).join(' > '),
+    struggle_events:an.events.map(function(e){return e.type+' at '+e.from+(e.to?' to '+e.to:'');}).join('; '),
+    path:T.path.join(' > '),
+    views:T.views.map(function(v){return {page:v.page,route:v.route,ms:Math.round(v.dwell),clicks:v.clicks};}),
+    events:an.events});
+  T.i++;
+  persistSession();
+  T.state=T.i>=T.order.length?'done':'scenario';
+  S.route='home';S.query='';render();window.scrollTo(0,0);
+}
+function startTest(){
+  var el=$('#pid');var pid=(el&&el.value.trim())||('anon-'+Math.random().toString(36).slice(2,6));
+  T={id:'s'+Date.now(),pid:pid,order:shuffle(TASKS),i:0,state:'scenario',startedAt:new Date().toISOString(),tasks:[],clicks:0,path:[],taskStart:0,timer:null};
+  render();window.scrollTo(0,0);
+}
+function beginTask(){
+  T.state='running';T.taskStart=performance.now();T.clicks=0;T.path=[];T.filters=0;T.searches=0;
+  T.views=[{route:'home',page:'Home page',enter:performance.now(),clicks:0,dwell:0}];
+  S.route='home';S.query='';
+  render();window.scrollTo(0,0);
+  clearInterval(T.timer);
+  T.timer=setInterval(function(){var el=$('#timer');if(el)el.textContent=fmt(performance.now()-T.taskStart);},250);
+}
+
+/* ---------- view builders ---------- */
+function screen(name){return '<p class="screen">Screen: '+esc(name)+'</p>';}
+function crumbs(route){
+  var c=crumbsFor(route);
+  return '<nav class="crumbs" aria-label="Breadcrumb">'+c.map(function(x,i){
+    if(i===c.length-1)return '<span aria-current="page">'+esc(x[1])+'</span>';
+    return '<button data-go="'+esc(x[0])+'" data-log="nav:crumb '+esc(x[1])+'">'+esc(x[1])+'</button><span aria-hidden="true">/</span>';
+  }).join(' ')+'</nav>';
+}
+function header(){
+  var r=S.route;
+  var inPlaces=/^(places|place:|season:)/.test(r);
+  function nb(route,label,on){return '<button data-go="'+route+'" data-log="nav:'+label+'"'+(on?' aria-pressed="true"':'')+'>'+label+'</button>';}
+  var q=r.indexOf('search:')===0?r.slice(7):'';
+  var homeBtn='<button type="button" data-go="home" data-log="nav:Utah plants (home)"'+(r==='home'?' aria-pressed="true"':'')+'>Utah plants</button>';
+  var quick=TYPES.map(function(t){return nb('type:'+t[0],t[1],r==='type:'+t[0]);}).join('')+nb('places','Places and seasons',inPlaces);
+  if(!SHOW_SEARCH)return '<nav class="bar" aria-label="Quick access">'+homeBtn+'<span class="grow"></span>'+quick+'</nav>';
+  return '<form class="bar" role="search" id="sform">'+homeBtn+
+    '<input type="text" id="q" aria-label="Search plants" autocomplete="off" placeholder="Search by name, color, or place" value="'+esc(q)+'"><button type="submit">Search</button></form>'+
+    '<nav class="bar" aria-label="Quick access">'+quick+'</nav>';
+}
+function footer(){
+  var run=T&&T.state==='running';
+  return '<footer class="ph col"><p>Wireframe: black and white, one font. Dashed boxes are placeholders. Plant data is sample data. Pictures are generic line drawings, not photos.</p>'+
+    (run?'':'<div class="bar"><button data-go="test" data-log="control:Test mode">Test mode</button><button data-go="results" data-log="control:Test results">Test results</button><button data-go="report" data-log="control:Struggle report">Struggle report</button><button data-go="log" data-log="control:Click log">Click log: <span id="logcount">'+LOG.length+'</span> clicks recorded</button></div>')+'</footer>';
+}
+function planTags(p){return '<span class="tags">'+p.types.map(function(t){return '<span class="tag">'+esc(TL[t])+'</span>';}).join('')+'</span>';}
+function rowFor(b){
+  return '<button class="rowbtn box" data-go="leaf:'+b.id+'" data-log="leaf:'+esc(b.name)+'">'+(b.tool?'':'<span class="thumb">'+pic(b.id)+'</span>')+'<span>'+esc(b.name)+'</span>'+(b.latin?'<span>'+esc(b.latin)+'</span>':'')+planTags(b)+'</button>';
+}
+
+function home(){
+  var n=function(t){return count(function(p){return p.types.indexOf(t)>=0;});};
+  var rep={Flower:'sego-lily',Tree:'blue-spruce',Bush:'sagebrush',Aquatic:'cattail'};
+  var quick=TYPES.map(function(t){return '<button class="card" data-go="type:'+t[0]+'" data-log="nav:quick link '+t[1]+'">'+pic(rep[t[0]])+'<span>'+t[1]+'</span><span>'+n(t[0])+' plants</span></button>';}).join('')+
+    '<button class="card" data-go="places" data-log="nav:quick link Places and seasons"><span class="img" style="aspect-ratio:1/1;width:100%" role="img" aria-label="Image placeholder"></span><span>Places and seasons</span><span>'+REGIONS.length+' regions</span></button>';
+  var tools=TOOLS.map(function(t){return '<button class="box" data-go="leaf:'+t.id+'" data-log="leaf:'+esc(t.name)+'">'+esc(t.name)+'</button>';}).join('');
+  function stat(v,l){return '<div class="box stat"><span>'+v+'</span><span>'+l+'</span></div>';}
+  var gcn=[['Plants',146],['Mollusks',27],['Birds',23],['Fish',22],['Insects',16],['Mammals',14],['Amphibians',4],['Reptiles',4]];
+  return screen('Home page')+
+  '<section class="box hero" aria-label="Welcome"><div class="img" role="img" aria-label="Photo placeholder"></div><p>Photo or photo rotator goes here</p><p>This site is made by the average person for the average person. I am sorry, biologists, if this hurts your feelings.</p></section>'+
+  '<section><h2>Quick access</h2><div class="grid">'+quick+'</div></section>'+
+  '<section><h2>Safety and tools</h2><div class="grid wide">'+tools+'</div></section>'+
+  '<section><h2>Utah at a glance</h2><div class="grid">'+
+    stat('84,916','square miles of land and water')+
+    stat('65%','owned by the federal government')+
+    stat('13,528 ft','highest point, Kings Peak (Uinta Mountains)')+
+    stat('2,350 ft','lowest point, Beaver Dam Wash')+
+    stat('256','species of greatest conservation need')+
+  '</div></section>'+
+  '<section><h2>Species of greatest conservation need, by group</h2><div class="grid">'+gcn.map(function(g){return stat(g[1],g[0]);}).join('')+'</div></section>'+
+  '<section><h2>State symbols</h2><div class="grid">'+stat('Sego lily','state flower')+stat('Blue spruce','state tree')+stat('Rocky Mountain elk','state animal')+'</div></section>'+
+  '<p class="ph">Data sources: Utah Division of State History state facts page; Utah Wildlife Action Plan figures as reported by TownLift, January 2026. Sample content for the wireframe.</p>';
+}
+
+function anyFilter(){var f=S.filters;return !!(f.type.length||f.color.length||f.leaf.length||f.region.length||f.season.length);}
+function matches(p,type,useTypeFilter){
+  var f=S.filters;
+  if(type&&p.types.indexOf(type)<0)return false;
+  if(useTypeFilter&&f.type.length&&!p.types.some(function(t){return f.type.indexOf(t)>=0;}))return false;
+  if(f.color.length&&!p.colors.some(function(c){return f.color.indexOf(c)>=0;}))return false;
+  if(f.leaf.length&&f.leaf.indexOf(p.leaf)<0)return false;
+  if(f.region.length&&!p.regions.some(function(r){return f.region.indexOf(r)>=0;}))return false;
+  if(f.season.length&&!p.seasons.some(function(s){return f.season.indexOf(s)>=0;}))return false;
+  return true;
+}
+function fgroup(key,title,opts){
+  return '<fieldset class="fs"><legend>'+esc(title)+'</legend>'+opts.map(function(o){
+    var v=Array.isArray(o)?o[0]:o,l=Array.isArray(o)?o[1]:o;
+    return '<label class="chk"><input type="checkbox" data-fgroup="'+key+'" data-fval="'+esc(v)+'" data-log="filter:'+esc(title)+' = '+esc(l)+'"'+(S.filters[key].indexOf(v)>=0?' checked':'')+'> <span>'+esc(l)+'</span></label>';
+  }).join('')+'</fieldset>';
+}
+var FTITLE={type:'Plant type',color:'Color (flower or fall leaf)',leaf:'Leaf shape',region:'Location',season:'Season seen'};
+function filterAside(showType){
+  return '<aside class="box col" aria-label="Filters"><div class="row"><span>Filters</span><button data-act="clearfilters" data-log="filter:Clear all filters">Clear all</button></div>'+
+    (showType?fgroup('type',FTITLE.type,TYPES):'')+
+    fgroup('color',FTITLE.color,COLORS)+fgroup('leaf',FTITLE.leaf,LEAVES)+fgroup('region',FTITLE.region,REGIONS)+fgroup('season',FTITLE.season,SEASONS)+'</aside>';
+}
+function chipsHtml(keys){
+  var c='';
+  keys.forEach(function(k){S.filters[k].forEach(function(v){
+    var lab=k==='type'?TL[v]:v;
+    c+='<button data-act="unfilter" data-fgroup="'+k+'" data-fval="'+esc(v)+'" data-log="filter:remove '+esc(FTITLE[k])+' = '+esc(lab)+'" aria-label="Remove filter '+esc(lab)+'">'+esc(lab)+' x</button>';
+  });});
+  return c;
+}
+var PAGENAME={Flower:'Flower page',Tree:'Tree page',Bush:'Bush page',Aquatic:'Aquatic page'};
+function typePage(type){
+  var label=TL[type];
+  var list=PLANTS.filter(function(p){return matches(p,type);}).sort(function(a,b){return a.name.localeCompare(b.name);});
+  var total=count(function(p){return p.types.indexOf(type)>=0;});
+  var chips=chipsHtml(['color','leaf','region','season']);
+  var grid=list.length?'<div class="grid">'+list.map(function(p){
+    return '<button class="card" data-go="leaf:'+p.id+'" data-log="leaf:'+esc(p.name)+'">'+pic(p.id)+'<span>'+esc(p.name)+'</span><span>'+esc(p.latin)+'</span>'+planTags(p)+'</button>';
+  }).join('')+'</div>':'<div class="ph col"><p>No '+esc(label.toLowerCase())+' match these filters.</p><div><button data-act="clearfilters" data-log="filter:Clear all filters">Clear all filters</button></div></div>';
+  return screen(PAGENAME[type]+' (type page template, view A)')+crumbs('type:'+type)+
+  '<div class="split">'+filterAside(false)+'<div class="col"><div class="row"><span>'+list.length+' of '+total+' '+esc(label.toLowerCase())+' shown</span><span class="ph">Sort: name A to Z (not built)</span></div>'+
+  (chips?'<div class="chips" aria-label="Active filters">'+chips+'</div>':'')+grid+'</div></div>';
+}
+
+function placesIndex(){
+  var cards=REGIONS.map(function(r){var c=count(function(p){return p.regions.indexOf(r)>=0;});return '<button class="card" data-go="place:'+esc(r)+'" data-log="nav:'+esc(r)+'"><span>'+esc(r)+'</span><span>'+c+' plants</span></button>';}).join('');
+  return screen('Places index (view B, first level)')+crumbs('places')+
+    '<section><h2>Browse by where you are</h2><div class="grid wide">'+cards+'</div></section>'+
+    '<p class="ph">Every plant is reachable in this view. Safety and tools pages are only on the home page.</p>';
+}
+function placePage(r){
+  var cards=SEASONS.map(function(s){var c=count(function(p){return p.regions.indexOf(r)>=0&&p.seasons.indexOf(s)>=0;});if(!c)return '';return '<button class="card" data-go="season:'+esc(r)+'|'+esc(s)+'" data-log="nav:'+esc(r)+' / '+esc(s)+'"><span>'+esc(s)+'</span><span>'+c+' plants</span></button>';}).join('');
+  return screen('Place page (view B, second level)')+crumbs('place:'+r)+
+    '<section><h2>'+esc(r)+': when are you visiting?</h2><div class="grid wide">'+cards+'</div></section>';
+}
+function seasonPage(arg){
+  var p=arg.split('|');var r=p[0],s=p[1];
+  var list=PLANTS.filter(function(x){return x.regions.indexOf(r)>=0&&x.seasons.indexOf(s)>=0;}).sort(function(a,b){return a.name.localeCompare(b.name);});
+  return screen('Season list (view B, third level)')+crumbs('season:'+arg)+
+    '<section><h2>'+esc(r)+', '+esc(s.toLowerCase())+': '+list.length+' plants</h2><div class="col">'+list.map(rowFor).join('')+'</div></section>';
+}
+function searchPage(q){
+  var base=doSearch(q);
+  var on=anyFilter();
+  var res=base.filter(function(b){return b.tool?!on:matches(b,null,true);});
+  var chips=chipsHtml(['type','color','leaf','region','season']);
+  var body=res.length?'<div class="col">'+res.map(rowFor).join('')+'</div>':
+    '<div class="ph col"><p>No matches'+(on?' with these filters.':'. Try a plant name, a color, or a place.')+'</p>'+(on?'<div><button data-act="clearfilters" data-log="filter:Clear all filters">Clear all filters</button></div>':'')+'</div>';
+  return screen('Search results with filters')+crumbs('search:'+q)+
+    '<div class="split">'+filterAside(true)+'<div class="col"><div class="row"><span>'+res.length+' of '+base.length+' results for "'+esc(q)+'"</span><span class="ph">Sort: name A to Z (not built)</span></div>'+
+    (chips?'<div class="chips" aria-label="Active filters">'+chips+'</div>':'')+
+    (on?'<p class="ph">Safety and tools pages are hidden while filters are on.</p>':'')+body+'</div></div>';
+}
+
+function leafPage(id){
+  var b=BYID[id];
+  var path=crumbsFor('leaf:'+id).map(function(c){return c[1];}).join(' > ');
+  var details=b.tool?'<div class="ph">Tool or safety content goes here</div>':
+    '<div class="grid wide"><div class="ph">Color: '+esc(b.colors.join(', '))+'</div><div class="ph">Leaf shape: '+esc(b.leaf)+'</div><div class="ph">Location: '+esc(b.regions.join(', '))+'</div><div class="ph">Season seen: '+esc(b.seasons.join(', '))+'</div></div>';
+  return screen('Placeholder page (end of the path)')+crumbs('leaf:'+id)+
+  '<section class="box col"><h2>You selected: '+esc(b.name)+'</h2><p>Block ID: '+esc(b.id)+'</p>'+(b.latin?'<p>Latin name: '+esc(b.latin)+'</p>':'')+'<p>Path taken: '+esc(path)+'</p>'+
+  (b.tool?'<div class="img" role="img" aria-label="Image placeholder"></div>':pic(b.id,'bigpic'))+'<div class="ph">Description goes here</div>'+details+
+  '<div class="bar"><button data-go="'+esc(S.leafFrom)+'" data-log="nav:Back">Back</button><button data-go="home" data-log="nav:Home">Home</button></div></section>';
+}
+
+function exportBox(src,title){
+  return '<section class="col"><h2>'+title+'</h2>'+
+  '<div class="bar"><button data-act="copy" data-src="'+src+'" data-fmt="json">Copy JSON</button><button data-act="copy" data-src="'+src+'" data-fmt="csv">Copy CSV</button><button data-act="show" data-src="'+src+'" data-fmt="json">Show JSON</button><button data-act="show" data-src="'+src+'" data-fmt="csv">Show CSV</button></div>'+
+  '<p id="status" role="status" aria-live="polite"></p>'+
+  '<label for="out">Export text (select all and copy if the buttons are blocked)</label><textarea id="out" rows="8" readonly></textarea></section>';
+}
+function clearBtn(key,label){
+  var on=S.confirm===key;
+  return '<button data-act="clear" data-key="'+key+'">'+(on?'Confirm: delete '+label+' (cannot be undone)':'Clear '+label)+'</button>';
+}
+function logPage(){
+  var rows=LOG.slice(-60).reverse().map(function(r){return '<tr><td>'+r.n+'</td><td>'+esc(r.time)+'</td><td>'+esc(r.mode)+'</td><td>'+esc(r.task_id)+'</td><td>'+esc(r.page)+'</td><td>'+esc(r.kind)+'</td><td>'+esc(r.target)+'</td></tr>';}).join('');
+  return screen('Click log')+crumbs('log')+
+  '<section class="col"><h2>Click log: '+LOG.length+' clicks recorded</h2><p>Every click on a link, button, or filter, and every search, is recorded with time, page, and target. Data is kept in this browser.</p>'+
+  '<div class="scroll"><table><thead><tr><th>#</th><th>Time</th><th>Mode</th><th>Task</th><th>Page</th><th>Kind</th><th>Target</th></tr></thead><tbody>'+(rows||'<tr><td colspan="7">No clicks yet.</td></tr>')+'</tbody></table></div>'+
+  '<p>Showing the latest 60. Exports contain everything.</p><div>'+clearBtn('log','click log')+'</div></section>'+exportBox('log','Export click log');
+}
+
+function testIntro(){
+  return screen('Test mode start')+crumbs('test')+
+  '<section class="box col"><h2>Test mode</h2><p>You will see 10 scenarios in random order. Most show a picture of a plant. For each one, read the scenario, click OK, then use the site to find the page you think matches. The timer starts when you click OK. When you reach a placeholder page, your answer is recorded and the next scenario starts.</p>'+
+  '<label for="pid">Participant name or ID</label><input type="text" id="pid" autocomplete="off" placeholder="P01">'+
+  '<div class="bar"><button data-act="starttest" data-log="control:Start test">Start test</button><button data-go="results" data-log="control:View test results">View test results</button><button data-go="home" data-log="nav:Back to site">Back to site</button></div></section>';
+}
+function scenarioScreen(){
+  var t=T.order[T.i];
+  return screen('Test scenario')+'<section class="box col"><h2>Task '+(T.i+1)+' of '+T.order.length+'</h2>'+(t.img?pic(t.img,'bigpic'):'')+'<p>'+esc(t.text)+'</p><p>The timer starts when you click OK.</p><div><button data-act="begin" data-log="control:OK (start task '+t.id+')">OK</button></div></section>';
+}
+function testBar(){
+  var t=T.order[T.i];
+  return '<div class="box col sticky"><div class="row"><span>Task '+(T.i+1)+' of '+T.order.length+'</span><span>Time <span id="timer">'+fmt(performance.now()-T.taskStart)+'</span></span></div>'+
+    '<div class="rowbtn" style="flex-wrap:nowrap;align-items:flex-start">'+(t.img?'<span class="thumb">'+pic(t.img)+'</span>':'')+'<p>Scenario: '+esc(t.text)+'</p></div>'+
+    '<div class="bar"><button data-act="skip" data-log="control:Cannot find it (skip task)">I cannot find it</button><button data-act="quit" data-log="control:Quit test">Quit test</button></div></div>';
+}
+function resultsTable(rows){
+  return '<div class="scroll"><table><thead><tr><th>Participant</th><th>Order</th><th>Task</th><th>Endpoint</th><th>Correct</th><th>Seconds</th><th>Clicks</th></tr></thead><tbody>'+(rows.length?rows.map(function(r){return '<tr><td>'+esc(r.participant)+'</td><td>'+r.order+'</td><td>'+esc(r.task_id)+'</td><td>'+esc(r.skipped?'(skipped)':r.endpoint_name)+'</td><td>'+(r.correct?'yes':'no')+'</td><td>'+(r.time_ms/1000).toFixed(1)+'</td><td>'+r.clicks+'</td></tr>';}).join(''):'<tr><td colspan="7">No results yet.</td></tr>')+'</tbody></table></div>';
+}
+function doneScreen(){
+  var rows=T.tasks.map(function(t){var r={participant:T.pid};for(var k in t)r[k]=t[k];return r;});
+  var ok=T.tasks.filter(function(t){return t.correct;}).length;
+  var R=computeReport([{tasks:T.tasks}]);
+  return screen('Test complete')+'<section class="box col"><h2>Test complete: '+ok+' of '+T.tasks.length+' correct</h2>'+resultsTable(rows)+
+  R.summary.slice(0,2).map(function(s){return '<p class="ph">'+esc(s)+'</p>';}).join('')+'<div class="bar"><button data-go="results" data-act="finishtest" data-log="control:View all results">View all results</button><button data-act="finishtest" data-log="control:Back to site after test">Back to site</button></div></section>';
+}
+function resultsPage(){
+  var rows=resultRows();
+  return screen('Test results')+crumbs('results')+
+  '<section class="col"><h2>Test results: '+RESULTS.length+' sessions, '+rows.length+' tasks</h2><p>Results are kept in this browser. Copy the export to keep them elsewhere.</p>'+resultsTable(rows)+'<div class="bar"><button data-go="report" data-log="control:Struggle report">Open struggle report</button>'+clearBtn('results','test results')+'</div></section>'+exportBox('results','Export test results');
+}
+function reportPage(){
+  var R=computeReport(RESULTS);
+  var rows=R.pages.slice().sort(function(a,b){return b.struggle-a.struggle||b.avg_seconds-a.avg_seconds;});
+  var max=Math.max.apply(null,rows.map(function(r){return r.struggle;}).concat([1]));
+  function th(a){return '<tr>'+a.map(function(h){return '<th>'+h+'</th>';}).join('')+'</tr>';}
+  var pageTable='<div class="scroll"><table><thead>'+th(['Rank','Page','Visits','Avg seconds per visit','Clicks','Backtracks from here','Wrong turns made here','Wrong answers','Gave up','Struggle events'])+'</thead><tbody>'+rows.map(function(r,i){
+    return '<tr><td>'+(i+1)+'</td><td>'+esc(r.page)+'</td><td>'+r.visits+'</td><td>'+(Math.round(r.avg_seconds*10)/10)+'</td><td>'+r.clicks+'</td><td>'+r.backtracks+'</td><td>'+r.wrong_turns+'</td><td>'+r.wrong_answers+'</td><td>'+r.gave_up+'</td><td>'+r.struggle+'<span class="meter" style="width:'+Math.round(100*r.struggle/max)+'%"></span></td></tr>';
+  }).join('')+'</tbody></table></div>';
+  var taskTable='<div class="scroll"><table><thead>'+th(['Task','Attempts','Correct %','Avg seconds','Avg backtracks','Avg wrong turns','Page with most struggle'])+'</thead><tbody>'+(R.tasks.length?R.tasks.map(function(t){
+    return '<tr><td>'+esc(t.task_id)+'</td><td>'+t.attempts+'</td><td>'+t.correct_pct+'</td><td>'+t.avg_seconds+'</td><td>'+t.avg_backtracks+'</td><td>'+t.avg_wrong_turns+'</td><td>'+esc(t.top_struggle_page)+'</td></tr>';
+  }).join(''):'<tr><td colspan="7">No data yet.</td></tr>')+'</tbody></table></div>';
+  var pairTable='<div class="scroll"><table><thead>'+th(['Backtrack (from page back to page)','Times'])+'</thead><tbody>'+(R.pairs.length?R.pairs.map(function(p){return '<tr><td>'+esc(p.path.replace(' -> ',' back to '))+'</td><td>'+p.count+'</td></tr>';}).join(''):'<tr><td colspan="2">No backtracks recorded.</td></tr>')+'</tbody></table></div>';
+  return screen('Struggle report')+crumbs('report')+
+  '<section class="col"><h2>Where people struggle: '+R.n+' task attempts from '+RESULTS.length+' sessions</h2>'+
+  R.summary.map(function(s){return '<p class="box">'+esc(s)+'</p>';}).join('')+
+  '<h2>By page, most struggle first</h2>'+pageTable+
+  '<h2>By task</h2>'+taskTable+
+  '<h2>Most common backtracks</h2>'+pairTable+
+  '<p class="ph">Backtrack: leaving a page without going deeper into the site. That means going up, switching sideways to another section, or returning to a page already seen. Wrong turn: going deeper into a section that does not hold the answer. Wrong answer and gave up are counted on the page where the task ended. Struggle events add these four counts. Each is counted against the page the person was on when it happened.</p></section>'+
+  exportBox('report','Export struggle report');
+}
+
+function render(){
+  var a=$('#app');var html;
+  if(T&&T.state==='scenario'){html='<div class="col">'+scenarioScreen()+'</div>';}
+  else if(T&&T.state==='done'){html='<div class="col">'+doneScreen()+'</div>';}
+  else{
+    var r=S.route,i=r.indexOf(':'),k=i<0?r:r.slice(0,i),arg=i<0?'':r.slice(i+1),body;
+    if(k==='home')body=home();
+    else if(k==='type')body=typePage(arg);
+    else if(k==='places')body=placesIndex();
+    else if(k==='place')body=placePage(arg);
+    else if(k==='season')body=seasonPage(arg);
+    else if(k==='search')body=searchPage(arg);
+    else if(k==='leaf')body=leafPage(arg);
+    else if(k==='log')body=logPage();
+    else if(k==='test')body=testIntro();
+    else if(k==='results')body=resultsPage();
+    else if(k==='report')body=reportPage();
+    else body=home();
+    html='<div class="col">'+((T&&T.state==='running')?testBar():'')+header()+body+footer()+'</div>';
+  }
+  a.innerHTML=html;
+}
+
+/* ---------- events ---------- */
+function act(name,el){
+  if(name==='clearfilters'){S.filters={type:[],color:[],leaf:[],region:[],season:[]};render();return;}
+  if(name==='unfilter'){var g=el.getAttribute('data-fgroup'),v=el.getAttribute('data-fval');S.filters[g]=S.filters[g].filter(function(x){return x!==v;});render();return;}
+  if(name==='copy'){copyText(getData(el.getAttribute('data-src'),el.getAttribute('data-fmt')),$('#out'));return;}
+  if(name==='show'){var ta=$('#out');ta.value=getData(el.getAttribute('data-src'),el.getAttribute('data-fmt'));ta.focus();ta.select();setStatus('Text shown below and selected.');return;}
+  if(name==='clear'){
+    var key=el.getAttribute('data-key');
+    if(S.confirm!==key){S.confirm=key;render();return;}
+    if(key==='log'){LOG=[];save('uplog',LOG);}else{RESULTS=[];save('upresults',RESULTS);}
+    S.confirm='';render();return;
+  }
+  if(name==='starttest'){startTest();return;}
+  if(name==='begin'){beginTask();return;}
+  if(name==='skip'){completeTask('',true);return;}
+  if(name==='quit'){clearInterval(T.timer);T=null;S.route='home';render();window.scrollTo(0,0);return;}
+  if(name==='finishtest'){T=null;S.route=el.getAttribute('data-go')||'home';render();window.scrollTo(0,0);return;}
+}
+var app=$('#app');
+app.addEventListener('click',function(e){
+  var el=e.target.closest('[data-go],[data-act]');if(!el)return;
+  if(el.getAttribute('data-act')){act(el.getAttribute('data-act'),el);return;}
+  go(el.getAttribute('data-go'));
+});
+app.addEventListener('submit',function(e){
+  e.preventDefault();
+  if(!SHOW_SEARCH)return;
+  var inp=$('#q');var q=inp?inp.value.trim():'';
+  if(!q)return;
+  logEvent('search',q);
+  go('search:'+q);
+});
+app.addEventListener('change',function(e){
+  var el=e.target;var g=el.getAttribute&&el.getAttribute('data-fgroup');if(!g||el.type!=='checkbox')return;
+  var v=el.getAttribute('data-fval');var arr=S.filters[g];
+  if(el.checked&&arr.indexOf(v)<0)arr.push(v);
+  if(!el.checked)S.filters[g]=arr.filter(function(x){return x!==v;});
+  render();
+  var again=document.querySelector('input[data-fgroup="'+g+'"][data-fval="'+v.replace(/"/g,'\\"')+'"]');
+  if(again)again.focus();
+});
+render();
+})();
+</script>
+
+</body></html>
