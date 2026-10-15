@@ -48,8 +48,8 @@ button{font:inherit;color:var(--ink);background:var(--surface);border:1px solid 
 button:hover{background:var(--surface-2)}
 button[aria-pressed="true"],button.primary{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
 button[aria-pressed="true"]:hover,button.primary:hover{background:var(--primary);filter:brightness(1.1)}
-button:focus-visible,input:focus-visible,summary:focus-visible,textarea:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
-input[type=text],textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:9px 12px;width:100%;min-width:0}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,textarea:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+input[type=text],input[type=date],select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:9px 12px;width:100%;min-width:0}
 input::placeholder,textarea::placeholder{color:var(--ink-2);opacity:.8}
 input[type=checkbox]{width:16px;height:16px;margin:0;flex:none;accent-color:var(--primary)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -83,7 +83,7 @@ input[type=checkbox]{width:16px;height:16px;margin:0;flex:none;accent-color:var(
 .card:hover{background:var(--surface);border-color:var(--line-strong)}
 .nm{font-weight:600}
 .latin{font-style:italic;color:var(--ink-2);font-size:13px}
-.pic{display:block;width:100%;aspect-ratio:1/1;border-radius:8px;background:var(--sky);overflow:hidden}
+.pic{display:block;position:relative;width:100%;aspect-ratio:1/1;border-radius:8px;background:var(--sky);overflow:hidden}
 .pic svg{display:block;width:100%;height:100%}
 .img{display:block;width:100%;border-radius:8px;background:var(--sky)}
 .thumb{width:64px;flex:none}
@@ -165,6 +165,28 @@ th{background:var(--surface-2);font-weight:600}
 .k{fill:var(--pic-ink);stroke:var(--pic-ink);stroke-width:1.2}
 .f{fill:var(--pic-fill);stroke:none}
 svg *{stroke-linecap:round;stroke-linejoin:round}
+.pic img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}
+.pic .cr{position:absolute;left:0;right:0;bottom:0;padding:16px 8px 4px;font-size:10.5px;line-height:1.25;color:#fff;background:linear-gradient(to top,rgba(0,0,0,.78),rgba(0,0,0,0));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;text-align:left;font-weight:400;font-style:normal}
+.thumb .cr{display:none}
+input[type=file]{font:inherit;color:var(--ink);max-width:100%}
+.alert{background:var(--tan);color:var(--on-tan);border:2px solid var(--line-strong);border-radius:10px;padding:12px 14px}
+.alert a{color:inherit;font-weight:600}
+.entry{display:grid;gap:12px;grid-template-columns:minmax(0,1fr);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;min-width:0}
+@media (min-width:560px){.entry{grid-template-columns:150px minmax(0,1fr)}}
+.entry .pic,.entry .img{max-width:200px}
+.linkbtn{background:none;border:0;padding:0;min-height:0;text-align:left;text-decoration:underline;font-family:var(--serif);font-size:17px;font-weight:600}
+.linkbtn:hover{background:none}
+.linkbtn.inl{font-family:var(--sans);font-size:inherit}
+.badge{display:inline-block;border-radius:99px;padding:1px 10px;font-size:12px;font-weight:600;background:var(--blue);color:var(--on-blue);margin:0 4px 4px 0}
+.badge.warn{background:var(--tan);color:var(--on-tan)}
+form.rep{display:flex;flex-direction:column;gap:14px;max-width:560px}
+.fld{display:flex;flex-direction:column;gap:4px;min-width:0}
+.fld>label{font-weight:600}
+.hint{font-size:13px;color:var(--ink-2)}
+.err{border-left:4px solid var(--line-strong);padding-left:10px;font-weight:600}
+.err:empty{display:none}
+.idphoto{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start}
+.idphoto img{display:block;width:100%;max-width:240px;border-radius:8px;border:1px solid var(--line)}
 </style></head><body>
 
 <div class="wrap"><div id="app"></div></div>
@@ -501,7 +523,7 @@ var PLANTS=RAW.map(function(l){
   return p;
 });
 var TOOLS=[
- {id:'tool-identify',name:'Upload a photo to identify a plant',desc:'Get a match from a picture you took. Coming soon.'},
+ {id:'tool-identify',name:'Upload a photo to identify a plant',desc:'Compare a picture you took with likely matches.'},
  {id:'tool-saved',name:'Plants I bookmarked',desc:'Your saved list, in one place.'},
  {id:'tool-poison',name:'Poisonous plants',desc:'Plants that can make pets or people sick.'},
  {id:'tool-invasive',name:'Invasive species',desc:'Weeds that crowd out native Utah plants.'},
@@ -562,7 +584,7 @@ function load(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}c
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 function wide(){return typeof window.innerWidth==='number'&&window.innerWidth>=760;}
 
-var S={route:'home',leafFrom:'home',confirm:'',open:{},filters:blankFilters()};
+var S={route:'home',leafFrom:'home',via:'',idPhoto:'',repMsg:'',confirm:'',open:{},filters:blankFilters()};
 var LOG=load('uplog',[]);
 var RESULTS=load('upresults',[]);
 var BM=load('upbm',[]);
@@ -616,6 +638,7 @@ function getData(src,f){
     var prow=R.pages.map(function(p){var o={};for(var k in p)o[k]=p[k];o.avg_seconds=Math.round(p.avg_seconds*10)/10;return o;});
     return f==='csv'?toCSV(prow,REPCOLS):JSON.stringify({pages:prow,tasks:R.tasks,backtrack_paths:R.pairs},null,2);
   }
+  if(src==='sightings')return f==='csv'?toCSV(SIGHT,SIGCOLS):JSON.stringify(SIGHT,null,2);
   if(src==='log')return f==='csv'?toCSV(LOG,LOGCOLS):JSON.stringify(LOG,null,2);
   return f==='csv'?toCSV(resultRows(),RESCOLS):JSON.stringify(RESULTS,null,2);
 }
@@ -647,7 +670,7 @@ function crumbsFor(route){
   if(k==='places')return [H,PL];
   if(k==='place')return [H,PL,[route,arg]];
   if(k==='search')return [H,[route,'Search: '+arg]];
-  if(k==='leaf')return crumbsFor(S.leafFrom).concat([[route,BYID[arg].name]]);
+  if(k==='leaf'){var base=crumbsFor(S.leafFrom),vb=S.via&&BYID[S.via.slice(5)];if(vb&&!BYID[arg].tool)base=base.concat([[S.via,vb.name]]);return base.concat([[route,BYID[arg].name]]);}
   if(k==='log')return [H,[route,'Click log']];
   if(k==='test')return [H,[route,'Test mode']];
   if(k==='results')return [H,[route,'Test results']];
@@ -663,7 +686,10 @@ function go(route){
       cur.dwell=performance.now()-cur.enter;
       T.views.push({route:route,page:pageLabel(route),enter:performance.now(),clicks:0,dwell:0});
     }
-  }else if(isLeaf&&S.route.indexOf('leaf:')!==0){S.leafFrom=S.route;}
+  }else if(isLeaf){
+    if(S.route.indexOf('leaf:')!==0){S.leafFrom=S.route;S.via='';}
+    else{var cb=BYID[S.route.slice(5)],nb=BYID[route.slice(5)];S.via=(cb&&cb.tool&&nb&&!nb.tool)?S.route:((nb&&nb.tool)?'':S.via);}
+  }
   S.route=route;S.confirm='';render();window.scrollTo(0,0);
 }
 
@@ -811,7 +837,7 @@ function header(){
 }
 function footer(){
   var run=T&&T.state==='running';
-  return '<footer class="foot"><p>First-level prototype. Plant data is sample data. Pictures are generic line drawings, not photos.</p>'+
+  return '<footer class="foot"><p>First-level prototype. Plant data is sample data. '+(thumbsOn()?'Photos come from GBIF and are credited on each picture. A line drawing shows when there is no photo.':'Pictures are generic line drawings, not photos.')+'</p>'+
     (run?'':'<details class="tester"><summary data-log="group:Research tools">Research tools ('+'<span id="logcount">'+LOG.length+'</span> clicks recorded)</summary><div class="bar" style="margin-top:10px"><button data-go="test" data-log="control:Test mode">Test mode</button><button data-go="results" data-log="control:Test results">Test results</button><button data-go="report" data-log="control:Struggle report">Struggle report</button><button data-go="log" data-log="control:Click log">Click log</button></div></details>')+'</footer>';
 }
 function tagsHtml(p,skip){
@@ -835,11 +861,11 @@ function bmBtn(b){
   return '<button class="bm" data-act="bookmark" data-id="'+b.id+'" data-log="bookmark:'+(on?'Remove ':'Add ')+esc(b.name)+'"'+(on?' aria-pressed="true"':' aria-pressed="false"')+' title="'+(on?'Remove bookmark':'Bookmark this plant')+'" aria-label="'+(on?'Remove bookmark: ':'Bookmark ')+esc(b.name)+'">'+bmIcon(on)+'</button>';
 }
 function rowFor(b){
-  var main='<button class="rowbtn" data-go="leaf:'+b.id+'" data-log="leaf:'+esc(b.name)+'">'+(b.tool?'':'<span class="thumb">'+pic(b.id)+'</span>')+'<span class="nm">'+esc(b.name)+'</span>'+(b.latin?'<span class="latin">'+esc(b.latin)+'</span>':'<span class="muted">'+esc(b.desc)+'</span>')+tagsHtml(b)+'</button>';
+  var main='<button class="rowbtn" data-go="leaf:'+b.id+'" data-log="leaf:'+esc(b.name)+'">'+(b.tool?'':'<span class="thumb">'+plantPic(b.id)+'</span>')+'<span class="nm">'+esc(b.name)+'</span>'+(b.latin?'<span class="latin">'+esc(b.latin)+'</span>':'<span class="muted">'+esc(b.desc)+'</span>')+tagsHtml(b)+'</button>';
   return b.tool?main:'<div class="rowwrap">'+main+bmBtn(b)+'</div>';
 }
 function cardFor(p,skip){
-  return '<div class="cardwrap"><button class="card" data-go="leaf:'+p.id+'" data-log="leaf:'+esc(p.name)+'">'+pic(p.id)+'<span class="nm">'+esc(p.name)+'</span><span class="latin">'+esc(p.latin)+'</span>'+tagsHtml(p,skip)+'</button>'+bmBtn(p)+'</div>';
+  return '<div class="cardwrap"><button class="card" data-go="leaf:'+p.id+'" data-log="leaf:'+esc(p.name)+'">'+plantPic(p.id)+'<span class="nm">'+esc(p.name)+'</span><span class="latin">'+esc(p.latin)+'</span>'+tagsHtml(p,skip)+'</button>'+bmBtn(p)+'</div>';
 }
 function mtnPic(){return '<span class="pic" role="img" aria-label="Mountain drawing"><svg viewBox="0 0 120 120" focusable="false"><path class="s" d="M6 100L44 38L62 66L80 44L114 100Z"/><path class="n" d="M44 38L52 52L44 48L37 53Z"/><path class="n" d="M6 100H114"/></svg></span>';}
 function heroArt(){
@@ -974,14 +1000,7 @@ function shapeGbif(key,r){
   var sp=r[0]||{},vn=(r[1]&&r[1].results)||[],ds=(r[2]&&r[2].results)||[],ph=(r[3]&&r[3].results)||[],co=(r[4]&&r[4].results)||[],fc=r[5]||{};
   var names=[];
   vn.forEach(function(v){if((v.language||'').toLowerCase()==='eng'&&v.vernacularName&&names.indexOf(v.vernacularName)<0)names.push(v.vernacularName);});
-  var photos=[],seen={};
-  ph.forEach(function(o){
-    var m=(o.media||[]).filter(function(x){return x.type==='StillImage'&&x.identifier;})[0];
-    if(!m)return;
-    var lic=licShort(m.license||o.license);if(!lic)return;
-    var orig=httpsOnly(m.identifier);if(!orig||seen[orig])return;seen[orig]=1;
-    photos.push({url:sizedPhoto(orig),orig:orig,credit:m.creator||m.rightsHolder||o.recordedBy||'Unknown photographer',lic:lic,link:httpsOnly(m.references)||('https://www.gbif.org/occurrence/'+o.key)});
-  });
+  var photos=pickPhotos(ph);
   var points=[];
   co.forEach(function(o){
     if(typeof o.decimalLatitude==='number'&&typeof o.decimalLongitude==='number'&&o.decimalLatitude>=37&&o.decimalLatitude<=42&&o.decimalLongitude>=-114.06&&o.decimalLongitude<=-109.04)
@@ -1051,17 +1070,298 @@ function gbifBlock(b,d,st){
   return out+'<p class="muted small">Photos and records from <a href="https://www.gbif.org" target="_blank" rel="noopener">GBIF</a> and the people and projects that publish to it, mostly iNaturalist observers. Each photo is credited and licensed as shown.</p>';
 }
 
+/* ---------- card photos: small, lazy, cached ---------- */
+var TH_CACHE=load('upthumb1',{});
+var TH_STATE={},TH_BAD={},TH_Q=[],TH_ACTIVE=0,TH_IO=null;
+var XTRA=[
+ ['x-death-camas','Foothill death camas','Toxicoscordion paniculatum'],
+ ['x-poison-hemlock','Poison hemlock','Conium maculatum'],
+ ['x-water-hemlock','Western water hemlock','Cicuta douglasii'],
+ ['x-eurasian-milfoil','Eurasian watermilfoil','Myriophyllum spicatum'],
+ ['x-tamarisk','Tamarisk (saltcedar)','Tamarix ramosissima'],
+ ['x-russian-olive','Russian olive','Elaeagnus angustifolia'],
+ ['x-russian-knapweed','Russian knapweed','Acroptilon repens'],
+ ['x-loosestrife','Purple loosestrife','Lythrum salicaria'],
+ ['x-hoary-cress','Hoary cress (whitetop)','Lepidium draba'],
+ ['x-cheatgrass','Cheatgrass','Bromus tectorum']
+];
+var XBY={};XTRA.forEach(function(x){XBY[x[0]]={id:x[0],name:x[1],latin:x[2],extra:true};});
+function plantInfo(id){return BYID[id]||XBY[id]||null;}
+function thumbsOn(){return GBIF_LIVE&&SHOW_IMAGES&&!T;}
+function pickPhotos(ph){
+  var out=[],seen={};
+  ph.forEach(function(o){
+    var m=(o.media||[]).filter(function(x){return x.type==='StillImage'&&x.identifier;})[0];
+    if(!m)return;
+    var lic=licShort(m.license||o.license);if(!lic)return;
+    var orig=httpsOnly(m.identifier);if(!orig||seen[orig])return;seen[orig]=1;
+    out.push({url:sizedPhoto(orig),orig:orig,credit:m.creator||m.rightsHolder||o.recordedBy||'Unknown photographer',lic:lic,link:httpsOnly(m.references)||('https://www.gbif.org/occurrence/'+o.key)});
+  });
+  return out;
+}
+function thumbPhoto(id){
+  if(TH_BAD[id])return null;
+  var d=GB_CACHE[id];
+  if(d&&d.photos&&d.photos.length)return d.photos[0];
+  return TH_CACHE[id]||null;
+}
+function thumbKnown(id){return !!GB_CACHE[id]||TH_CACHE[id]!==undefined;}
+function withAttrs(html,attrs){return html.replace('<span ','<span '+attrs+' ');}
+function boxPic(txt,attrs){return '<span '+(attrs||'')+' class="img" style="aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px;font-size:12px;color:var(--ink-2)">'+txt+'</span>';}
+/* A plant picture: the GBIF photo when there is one, the line drawing until then or when there is none. */
+function plantPic(id,cls){
+  var b=plantInfo(id);
+  if(!thumbsOn()||!b)return pic(id,cls);
+  var at='data-thumb="'+esc(id)+'" data-cls="'+esc(cls||'')+'"';
+  var ph=thumbPhoto(id);
+  if(ph){
+    return '<span class="pic'+(cls?' '+cls:'')+'" '+at+'><img class="gb th" data-orig="'+esc(ph.orig)+'" src="'+esc(ph.url)+'" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"><span class="cr" aria-hidden="true">Photo: '+esc(ph.credit)+', '+esc(ph.lic)+'</span></span>';
+  }
+  var known=thumbKnown(id)||TH_BAD[id];
+  if(ART[id])return known?pic(id,cls):withAttrs(pic(id,cls),at+' data-want="1"');
+  return known?boxPic('No photo yet',''):boxPic('Loading photo…',at+' data-want="1"');
+}
+function fetchThumb(latin){
+  return gbJSON(GBIF_API+'/species/match?name='+encodeURIComponent(latin)+'&kingdom=Plantae').then(function(m){
+    if(!m||!m.usageKey||m.matchType==='NONE')return 0;
+    var key=m.acceptedUsageKey||m.usageKey;
+    return gbJSON(GBIF_API+'/occurrence/search?taxonKey='+key+'&'+UTAH_Q+'&mediaType=StillImage&limit=40').then(function(r){
+      var ph=pickPhotos((r&&r.results)||[]);
+      return ph.length?ph[0]:0;
+    });
+  });
+}
+function swapThumb(id){
+  var els=document.querySelectorAll('#app [data-thumb="'+id+'"][data-want]');
+  var known=thumbKnown(id),err=TH_STATE[id]==='error';
+  for(var i=0;i<els.length;i++){
+    var el=els[i];
+    if(known){el.outerHTML=plantPic(id,el.getAttribute('data-cls')||'');}
+    else if(err){el.removeAttribute('data-want');if(el.classList.contains('img'))el.textContent='No photo yet';}
+  }
+}
+function runThumb(id){
+  var b=plantInfo(id);if(!b){return;}
+  TH_ACTIVE++;TH_STATE[id]='loading';
+  fetchThumb(b.latin).then(function(ph){
+    TH_CACHE[id]=ph||0;save('upthumb1',TH_CACHE);TH_STATE[id]='ok';
+  },function(){TH_STATE[id]='error';}).then(function(){
+    TH_ACTIVE--;swapThumb(id);pumpThumbs();
+  });
+}
+function pumpThumbs(){while(TH_ACTIVE<4&&TH_Q.length){runThumb(TH_Q.shift());}}
+function queueThumb(id){
+  if(!id||thumbKnown(id)||TH_STATE[id])return;
+  TH_STATE[id]='queued';TH_Q.push(id);pumpThumbs();
+}
+function observeThumbs(){
+  if(!thumbsOn())return;
+  var els=document.querySelectorAll('#app [data-want]'),i;
+  if(!els.length)return;
+  if(!('IntersectionObserver' in window)){for(i=0;i<els.length;i++)queueThumb(els[i].getAttribute('data-thumb'));return;}
+  if(!TH_IO)TH_IO=new IntersectionObserver(function(es){
+    es.forEach(function(en){if(en.isIntersecting){TH_IO.unobserve(en.target);queueThumb(en.target.getAttribute('data-thumb'));}});
+  },{rootMargin:'300px 0px'});
+  TH_IO.disconnect();
+  for(i=0;i<els.length;i++)TH_IO.observe(els[i]);
+}
+
+/* ---------- tool pages ---------- */
+var SIGHT=load('upsight',[]);
+var SIGCOLS=['id','saved','plant','latin','date','place','location','lat','lon','notes'];
+function localDate(){var d=new Date();function z(n){return (n<10?'0':'')+n;}return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate());}
+function val(id){var e=$('#'+id);return e?String(e.value||'').trim():'';}
+function extLink(u,t){return '<a href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(t)+'</a>';}
+function relLinks(ids){return ids.map(function(id){var b=BYID[id];return '<button class="linkbtn inl" data-go="leaf:'+esc(id)+'" data-log="leaf:'+esc(b.name)+'">'+esc(b.name)+'</button>';}).join(', ');}
+function factsHtml(rows){
+  return '<dl class="facts">'+rows.filter(function(r){return r[1]||r[2];}).map(function(r){return '<dt>'+esc(r[0])+'</dt><dd>'+(r[2]||esc(r[1]))+'</dd>';}).join('')+'</dl>';
+}
+function entryHtml(id,badge,rows){
+  var b=plantInfo(id);
+  var head=BYID[id]?'<button class="linkbtn" data-go="leaf:'+esc(id)+'" data-log="leaf:'+esc(b.name)+'">'+esc(b.name)+'</button>':esc(b.name);
+  return '<article class="entry"><div>'+plantPic(id)+'</div><div class="col"><h3>'+head+'</h3><span class="latin">'+esc(b.latin)+'</span>'+(badge?'<div class="tags">'+badge+'</div>':'')+factsHtml(rows)+'</div></article>';
+}
+
+/* Poisonous plants. Sources: Utah Poison Control Center, ASPCA, USDA Poisonous Plant Research Lab (Logan, Utah), USU Extension, Oregon State Extension. */
+var TOX_ORDER=['chokecherry','lupine','elderberry','gambel-oak','yarrow','marsh-marigold','water-buttercup','columbine'];
+var TOX={
+ 'chokecherry':{who:'Cattle, sheep, and other grazers. People and pets can be harmed too.',part:'Leaves (fresh or wilted), stems, and pits',note:'Releases cyanide when eaten. In livestock, signs can start within minutes. The ripe fruit is used for jelly, but never chew or swallow the pits.',short:'Leaves, stems, and pits are poisonous. Do not chew or swallow pits.'},
+ 'lupine':{who:'Sheep, cattle, and other grazers. Keep pets and children from eating any part.',part:'The whole plant, especially seeds and pods',note:'Many lupines contain alkaloids that poison livestock. Treat every lupine as unsafe to eat.',short:'Poisonous if eaten, especially the seeds and pods.'},
+ 'elderberry':{who:'People, pets, and livestock',part:'Raw berries, leaves, stems, bark, and roots',note:'Contains compounds that release cyanide. Raw berries can cause nausea and vomiting. Ripe berries are only safe after cooking, with every stem and leaf removed first.',short:'Raw berries, leaves, stems, bark, and roots are poisonous. Cooked ripe berries are edible.'},
+ 'gambel-oak':{who:'Cattle, sheep, and horses. Dogs that eat acorns can get sick too.',part:'Young leaves, buds, and acorns',note:'Tannins cause poisoning when animals eat a lot of oak. New growth that has been frozen is the most toxic.',short:'Young leaves and acorns can poison grazing animals. Dogs that eat acorns can get sick.'},
+ 'yarrow':{who:'Dogs, cats, and horses',part:'All parts',note:'Causes vomiting, diarrhea, drooling, and skin irritation. Usually not severe, but call your vet if your pet ate it.',short:'Toxic to dogs, cats, and horses.'},
+ 'marsh-marigold':{who:'People and livestock',part:'The whole plant, older parts most',note:'Contains protoanemonin, which burns the mouth and stomach and can irritate skin. Cooking breaks it down, but do not eat it from the wild.',short:'The whole plant is poisonous. The sap can irritate skin.'},
+ 'water-buttercup':{who:'People, pets, and livestock',part:'The whole plant',note:'Like other plants in the buttercup family, the sap can blister skin and irritate the mouth and stomach.',short:'The sap can irritate skin and mouth. Do not eat.'},
+ 'columbine':{who:'People, pets, and livestock',part:'Seeds and roots most of all',note:'A buttercup-family plant that reference books list as toxic. Serious cases are rare because it tastes bad, but children sometimes mistake the flowers for honeysuckle and bite the spurs. Do not eat any part.',short:'Seeds and roots are poisonous. Do not eat any part.'}
+};
+var LOOK=[
+ {id:'x-death-camas',rows:[['Where','Foothills and mountain meadows in early spring'],['Harmful parts','The whole plant, bulb included'],['Why it matters','Grows in the same places as sego lily. The bulb has been mistaken for edible wild bulbs, and people in Utah have been poisoned this way. Deadly to sheep and other livestock too.']],rel:['sego-lily']},
+ {id:'x-poison-hemlock',rows:[['Where','Ditch banks, fields, and wet ground'],['Harmful parts','Every part of the plant'],['Why it matters','Tall, with smooth hollow stems blotched with purple and lacy leaves. Its white flower clusters can be mistaken for wild carrot or yarrow. Also a Utah noxious weed.']],rel:['yarrow']},
+ {id:'x-water-hemlock',rows:[['Where','Wet ground: streams, ditches, and pond edges'],['Harmful parts','The whole plant, especially the roots'],['Why it matters','One of the most poisonous plants in North America. Do not eat or handle wild plants from wet ground unless an expert has identified them.']],rel:[]}
+];
+function poisonBody(){
+  var rules=['Never eat a wild plant, berry, bulb, or mushroom unless an expert has identified it.','Do not assume a plant is safe because birds or animals eat it.','Teach children not to put leaves, stems, seeds, or berries in their mouths.','Poison control cannot identify a plant over the phone. Take a photo, and have the plant identified in person at a garden center or extension office.'];
+  var alert='<div class="alert col" role="note"><p><b>If a person ate a plant:</b> call Poison Help at <a href="tel:18002221222">1-800-222-1222</a>. It is free, open 24 hours, and connects you to your local poison center (in Utah, the Utah Poison Control Center). Do not wait for signs of illness. If the person has trouble breathing, has a seizure, or passes out, call 911.</p><p><b>If a pet ate a plant:</b> call your vet, or the ASPCA Animal Poison Control Center at <a href="tel:8884264435">(888) 426-4435</a>. A consultation fee may apply.</p><p>Bring a sample or a photo of the plant if you can.</p></div>';
+  var list=TOX_ORDER.map(function(id){
+    var t=TOX[id];
+    return entryHtml(id,'<span class="badge warn">Harmful if eaten</span>',[['Who is at risk',t.who],['Harmful parts',t.part],['What to know',t.note]]);
+  }).join('');
+  var look=LOOK.map(function(x){
+    var rows=x.rows.slice();
+    if(x.rel.length)rows.push(['Compare with','',relLinks(x.rel)]);
+    return entryHtml(x.id,'<span class="badge warn">Not in this guide</span>',rows);
+  }).join('');
+  return alert+
+    '<section class="col"><h2>Basic rules</h2><ul class="notes">'+rules.map(function(r){return '<li>'+esc(r)+'</li>';}).join('')+'</ul></section>'+
+    '<section class="col"><h2>Plants in this guide that can cause harm</h2><p class="muted">A plant that is not on this list is not guaranteed safe. This is a short list, not a complete one.</p><div class="col">'+list+'</div></section>'+
+    '<section class="col"><h2>Dangerous plants that are not in this guide</h2><p class="muted">These grow in Utah and are easy to mistake for harmless plants.</p><div class="col">'+look+'</div></section>'+
+    '<p class="muted small">Sources: '+extLink('https://poisoncontrol.utah.edu','Utah Poison Control Center')+', '+extLink('https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants','ASPCA toxic plant list')+', the USDA Poisonous Plant Research Laboratory in Logan, Utah, '+extLink('https://extension.usu.edu/rangeplants/shrubs-and-trees/gambel-oak.php','USU Extension (Gambel oak)')+', and Oregon State University Extension (elderberries). This page is general information, not medical or veterinary advice.</p>';
+}
+
+/* Invasive plants. Sources: Utah Department of Agriculture and Food noxious weed list, Utah county weed programs, USU Extension. */
+var INV=[
+ {id:'phragmites',guide:true,badge:'Utah noxious weed (Class 3)',rows:[['Where','Marshes, ditches, and the edges of ponds and lakes. Thick stands line parts of the Utah Lake shore.'],['Why it matters','Grows in dense stands taller than a person that crowd out native wetland plants and the animals that use them.'],['Good to know','Only the non-native form is on the state list. A native form of common reed also grows in North America, and the two can look alike. Report stands instead of removing them yourself.']]},
+ {id:'milfoil',guide:true,badge:'Native, not invasive',rows:[['Look-alike alert','The northern watermilfoil in this guide is a native plant. Eurasian watermilfoil, listed below, looks very similar and is not.'],['What to do','If you see milfoil in a lake or pond, do not pull it. Take photos and report it. Telling the two apart takes a close look at the leaves.']]},
+ {id:'x-eurasian-milfoil',badge:'Utah noxious weed (Class 1A, watch list)',rows:[['Where','Lakes, ponds, and slow streams'],['Why it matters','Forms thick mats that tangle swimmers and boat propellers and crowd out native water plants. Pieces break off and spread on boats and trailers.'],['What to do','Clean, drain, and dry boats and gear. Report suspected plants right away.']],rel:['milfoil']},
+ {id:'x-tamarisk',badge:'Utah noxious weed (Class 3)',rows:[['Where','River banks, streams, and lake shores, including around Utah Lake'],['Why it matters','Uses a lot of water, leaves salt in the soil, and crowds out native cottonwoods and willows.']]},
+ {id:'x-russian-olive',badge:'Utah noxious weed',rows:[['Where','Along rivers, streams, and irrigation ditches'],['Why it matters','Thorny, silvery-leaved trees that shade out and replace native trees along waterways.']],rel:['fremont-cottonwood'],relLabel:'Native tree it pushes out'},
+ {id:'x-russian-knapweed',badge:'Utah noxious weed (Class 3)',rows:[['Where','Fields, roadsides, and disturbed dry ground'],['Why it matters','Spreads by roots into dense patches that crowd out other plants and are hard to remove.']]},
+ {id:'x-loosestrife',badge:'Utah noxious weed',rows:[['Where','Marshes, pond edges, and wet ditches'],['Why it matters','Tall spikes of purple-pink flowers. Takes over wetlands and replaces native plants.']],rel:['cattail'],relLabel:'Native plant it pushes out'},
+ {id:'x-hoary-cress',badge:'Utah noxious weed',rows:[['Where','Fields, roadsides, ditch banks, and irrigated land'],['Why it matters','Spreads by deep roots and seed into dense patches. Small white flowers in flat clusters in spring.']]},
+ {id:'x-cheatgrass',badge:'Widespread invader',rows:[['Where','Sagebrush flats, foothills, and roadsides'],['Why it matters','Dries out early in summer and carries wildfire fast. After a fire it takes over from native grasses and sagebrush.']],rel:['sagebrush'],relLabel:'Native plant it pushes out'},
+ {id:'x-poison-hemlock',badge:'Utah noxious weed',rows:[['Where','Ditch banks, fields, and wet ground'],['Why it matters','Every part is poisonous to people and animals, and it spreads fast along ditches and waterways.']],extra:'poison'}
+];
+function invasiveBody(){
+  function one(x){
+    var rows=x.rows.slice();
+    if(x.rel&&x.rel.length)rows.push([x.relLabel||'Look-alike or native plant','',relLinks(x.rel)]);
+    if(x.extra==='poison')rows.push(['Safety','','<button class="linkbtn inl" data-go="leaf:tool-poison" data-log="leaf:Poisonous plants">See Poisonous plants</button>']);
+    return entryHtml(x.id,'<span class="badge'+(/native, not/i.test(x.badge)?'':' warn')+'">'+esc(x.badge)+'</span>',rows);
+  }
+  var inGuide=INV.filter(function(x){return x.guide;}).map(one).join('');
+  var others=INV.filter(function(x){return !x.guide;}).map(one).join('');
+  return '<div class="alert col" role="note"><p><b>What to do if you find one:</b> take clear photos, note the place, and report it to your county weed control program or on EDDMapS. Do not pull, mow, or spray a plant you have not identified, because some spread from small pieces and some, like poison hemlock, are poisonous.</p><p>Utah law makes property owners responsible for controlling state-listed noxious weeds on their land.</p><div><button class="primary" data-go="leaf:tool-report" data-log="leaf:Report a sighting">Save a note in Report a sighting</button></div></div>'+
+    '<section class="col"><h2>In this guide</h2><p class="muted">Two plants here need a closer look.</p><div class="col">'+inGuide+'</div></section>'+
+    '<section class="col"><h2>Others to watch for</h2><p class="muted">Not in this guide yet, but common enough in Utah that you may run into them. Class numbers are from the state list.</p><div class="col">'+others+'</div></section>'+
+    '<p class="muted small">Sources: '+extLink('https://ag.utah.gov/plant-industry/noxious-weed-control-resources/state-of-utah-noxious-weed-list','State of Utah Noxious Weed List')+', '+extLink('https://www.eddmaps.org/lists/state.cfm?id=us_ut','EDDMapS (Utah)')+', and the '+extLink('https://www.slcdocs.com/openspace/NoxiousWeedFieldGuideforUtah_Ed4.pdf','Noxious Weed Field Guide for Utah')+'. The state list changes, so check it for the current version.</p>';
+}
+
+function savedBody(){
+  var list=BM.map(function(x){return BYID[x];}).filter(Boolean);
+  if(!list.length)return '<div class="ph col"><p>No bookmarks yet. Select the bookmark on any plant to save it here.</p><div class="bar"><button data-go="type:Flower" data-log="nav:Flowers">Browse flowers</button><button data-go="type:Tree" data-log="nav:Trees">Browse trees</button><button data-go="places" data-log="nav:Where you saw it">Browse by place</button></div></div>';
+  return '<p role="status">'+list.length+(list.length===1?' plant saved':' plants saved')+'</p><div class="col">'+list.map(rowFor).join('')+'</div>';
+}
+
+function identifyBody(){
+  var o={};
+  var list=PLANTS.filter(function(p){return passes(p,S.filters,o);}).sort(byName);
+  var keys=visibleKeys(o,false);
+  var chips=chipsHtml(keys);
+  var grid=list.length?'<div class="grid">'+list.map(function(p){return cardFor(p);}).join('')+'</div>':emptyBox(anyFilter(keys),PLANTS,o,keys);
+  var has=!!S.idPhoto;
+  var pick='<div class="idphoto">'+(has?'<div class="col" style="flex:0 1 240px"><img src="'+S.idPhoto+'" alt="The picture you chose"><button type="button" data-act="idclear" data-log="tool:Remove picture">Remove picture</button></div>':'')+
+    '<div class="col" style="flex:1 1 260px"><label for="idfile"><b>'+(has?'Choose a different picture':'Choose a picture')+'</b></label><input type="file" id="idfile" accept="image/*"><p class="hint">Your picture stays in this browser tab. It is not uploaded or saved.</p><p id="idstatus" class="hint" role="status"></p></div></div>';
+  return '<ol class="notes"><li><b>1.</b> Choose a picture of the plant. This tool does not read the picture for you.</li><li><b>2.</b> Pick what you can see: the color, the leaf shape, where you were. The matches below shrink as you go.</li><li><b>3.</b> Compare your picture with the photos, then open the one that looks right.</li></ol>'+pick+
+    '<div class="split">'+filterAside(PLANTS,o,false)+'<div class="col"><p role="status">'+list.length+' of '+PLANTS.length+' plants match</p>'+(chips?'<div class="chips" aria-label="Active filters">'+chips+'</div>':'')+grid+'</div></div>';
+}
+function handleIdFile(inp){
+  var f=inp.files&&inp.files[0];if(!f)return;
+  var st=$('#idstatus');
+  if(!/^image\//.test(f.type)){if(st)st.textContent='That file is not a picture. Choose a JPG, PNG, or similar image.';return;}
+  if(st)st.textContent='Loading picture…';
+  var rd=new FileReader();
+  rd.onerror=function(){var s=$('#idstatus');if(s)s.textContent='Could not read that file.';};
+  rd.onload=function(){
+    var im=new Image();
+    im.onerror=function(){var s=$('#idstatus');if(s)s.textContent='This browser cannot show that kind of picture. You can still use the filters below.';};
+    im.onload=function(){
+      var w=im.naturalWidth||im.width,h=im.naturalHeight||im.height,sc=Math.min(1,900/Math.max(w,h,1));
+      var c=document.createElement('canvas');c.width=Math.max(1,Math.round(w*sc));c.height=Math.max(1,Math.round(h*sc));
+      c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+      S.idPhoto=c.toDataURL('image/jpeg',0.85);
+      logEvent('tool','Chose a picture');
+      render();
+    };
+    im.src=rd.result;
+  };
+  rd.readAsDataURL(f);
+}
+
+function reportBody(){
+  var msg=S.repMsg||'';S.repMsg='';
+  var plants=PLANTS.slice().sort(byName).map(function(p){return '<option value="'+esc(p.id)+'">'+esc(p.name)+' ('+esc(p.latin)+')</option>';}).join('');
+  var others=XTRA.map(function(x){return '<option value="'+esc(x[0])+'">'+esc(x[1])+' ('+esc(x[2])+')</option>';}).join('');
+  var places=REGIONS.map(function(r){return '<option value="'+esc(r)+'">'+esc(r)+'</option>';}).join('');
+  var today=localDate();
+  var form='<form id="repform" class="rep" novalidate>'+
+    '<div class="fld"><label for="rp">Which plant did you see?</label><select id="rp"><option value="">Choose a plant</option><optgroup label="Plants in this guide">'+plants+'</optgroup><optgroup label="Other plants worth reporting">'+others+'</optgroup><option value="unknown">I am not sure what it is</option></select></div>'+
+    '<div class="fld"><label for="rd">Date you saw it</label><input type="date" id="rd" value="'+today+'" max="'+today+'"></div>'+
+    '<div class="fld"><label for="rr">Kind of place</label><select id="rr">'+places+'</select></div>'+
+    '<div class="fld"><label for="rl">Trail, park, or nearest town</label><input type="text" id="rl" autocomplete="off" placeholder="Example: Rock Canyon trail, Provo"></div>'+
+    '<div class="fld"><div><button type="button" data-act="geo" data-log="tool:Add my location">Add my current location</button></div><p id="geostatus" class="hint" role="status"></p><input type="hidden" id="rlat"><input type="hidden" id="rlon"></div>'+
+    '<div class="fld"><label for="rn">Notes (optional)</label><textarea id="rn" rows="3" placeholder="How many plants? Near water or a trail? Anything unusual? If you are not sure what it is, describe it here."></textarea></div>'+
+    '<p id="repmsg" class="err" role="alert"></p>'+
+    '<div class="bar"><button type="submit" class="primary">Save report</button></div></form>';
+  var saved=SIGHT.length?'<section class="col"><h2>Your saved reports ('+SIGHT.length+')</h2><div class="col">'+SIGHT.map(function(s){
+    return '<div class="box col"><div class="row"><b>'+esc(s.plant)+'</b><span class="muted">'+esc(s.date)+'</span></div>'+(s.latin?'<span class="latin">'+esc(s.latin)+'</span>':'')+'<p>'+esc([s.place,s.location].filter(Boolean).join(', '))+(s.lat?' ('+esc(s.lat)+', '+esc(s.lon)+')':'')+'</p>'+(s.notes?'<p class="muted">'+esc(s.notes)+'</p>':'')+'<div><button data-act="delsight" data-id="'+esc(s.id)+'" data-log="tool:Delete report">Delete this report</button></div></div>';
+  }).join('')+'</div></section>'+exportBox('sightings','Export my reports'):'';
+  return (msg?'<p class="strip" role="status">'+esc(msg)+'</p>':'')+
+    '<p class="muted">This prototype keeps your reports in this browser only. Nothing is sent to anyone. To share a sighting, copy it from the export at the bottom. For invasive plants, you can also report to your county weed control program or on '+extLink('https://www.eddmaps.org/lists/state.cfm?id=us_ut','EDDMapS')+'.</p>'+form+saved;
+}
+function saveSighting(){
+  var msg=$('#repmsg');
+  function fail(t,fid){if(msg)msg.textContent=t;var f=$('#'+fid);if(f&&f.focus)f.focus();}
+  var pid=val('rp'),loc=val('rl'),lat=val('rlat'),lon=val('rlon'),notes=val('rn');
+  if(!pid){fail('Choose a plant, or pick "I am not sure what it is".','rp');return;}
+  if(pid==='unknown'&&!notes){fail('Describe the plant in the notes so someone can help work out what it is.','rn');return;}
+  if(!loc&&!lat){fail('Tell us where you saw it. Type a place, or add your current location.','rl');return;}
+  var inf=pid==='unknown'?null:plantInfo(pid);
+  SIGHT.unshift({id:'r'+Date.now(),saved:new Date().toISOString(),plant:inf?inf.name:'Not sure',latin:inf?inf.latin:'',date:val('rd')||localDate(),place:val('rr'),location:loc,lat:lat,lon:lon,notes:notes});
+  if(SIGHT.length>500)SIGHT.pop();
+  save('upsight',SIGHT);
+  logEvent('tool','Saved report');
+  S.repMsg='Saved. The report is stored in this browser only.';
+  render();window.scrollTo(0,0);
+}
+function toolBody(id){
+  if(id==='tool-identify')return identifyBody();
+  if(id==='tool-saved')return savedBody();
+  if(id==='tool-poison')return poisonBody();
+  if(id==='tool-invasive')return invasiveBody();
+  if(id==='tool-report')return reportBody();
+  return '<div class="ph">Nothing here yet.</div>';
+}
+function toolAct(name,el){
+  if(name==='idclear'){S.idPhoto='';render();return true;}
+  if(name==='geo'){
+    var gs=function(t){var s=$('#geostatus');if(s)s.textContent=t;};
+    if(!navigator.geolocation){gs('This browser cannot share a location. Type the place instead.');return true;}
+    gs('Finding your location…');
+    navigator.geolocation.getCurrentPosition(function(pos){
+      var la=Math.round(pos.coords.latitude*10000)/10000,lo=Math.round(pos.coords.longitude*10000)/10000;
+      var a=$('#rlat'),b=$('#rlon');if(a)a.value=la;if(b)b.value=lo;
+      gs('Location added: '+la+', '+lo+'.');
+    },function(){gs('Could not get your location. Type the place instead.');},{timeout:10000,maximumAge:60000});
+    return true;
+  }
+  if(name==='delsight'){
+    var sid=el.getAttribute('data-id'),ix=-1;
+    SIGHT.forEach(function(s,i){if(s.id===sid)ix=i;});
+    if(ix<0)return true;
+    var removed=SIGHT.splice(ix,1)[0];save('upsight',SIGHT);render();
+    showToast('Report deleted',function(){SIGHT.splice(Math.min(ix,SIGHT.length),0,removed);save('upsight',SIGHT);render();});
+    return true;
+  }
+  return false;
+}
+
 function leafPage(id){
   var b=BYID[id];
   var path=crumbsFor('leaf:'+id).map(function(c){return c[1];}).join(' > ');
-  var foot='<div class="bar"><button data-go="'+esc(S.leafFrom)+'" data-log="nav:Back">Back</button><button data-go="home" data-log="nav:Home">Home</button></div>';
+  var foot='<div class="bar"><button data-go="'+esc((S.via&&!b.tool)?S.via:S.leafFrom)+'" data-log="nav:Back">Back</button><button data-go="home" data-log="nav:Home">Home</button></div>';
   var meta='<details class="tester"><summary>Test details</summary><p>Block ID: '+esc(b.id)+'. Path taken: '+esc(path)+'</p></details>';
   if(b.tool){
-    var inner='<div class="ph">Tool page. Content goes here.</div>';
-    if(id==='tool-saved'){
-      var list=BM.map(function(x){return BYID[x];}).filter(Boolean);
-      inner=list.length?'<div class="col">'+list.map(rowFor).join('')+'</div>':'<div class="ph">No bookmarks yet. Select the bookmark on any plant to save it here.</div>';
-    }
+    var inner=toolBody(id);
     return crumbs('leaf:'+id)+'<section class="box col"><p class="eyebrow">You selected</p><h1>'+esc(b.name)+'</h1><p>'+esc(b.desc)+'</p>'+inner+meta+foot+'</section>';
   }
   var d=GB_CACHE[b.id],st=GB_STATE[b.id];
@@ -1069,13 +1369,14 @@ function leafPage(id){
   var on=isBM(b.id);
   var mark='<button class="bmtext" data-act="bookmark" data-id="'+b.id+'" data-log="bookmark:'+(on?'Remove ':'Add ')+esc(b.name)+'"'+(on?' aria-pressed="true"':' aria-pressed="false"')+'>'+bmIcon(on)+'<span>'+(on?'Bookmarked. Select to remove':'Bookmark this plant')+'</span></button>';
   var facts=[['Latin name',b.latin],['Plant types',b.types.map(function(t){return TL[t];}).join(', ')],['Color',b.colors.join(', ')],['Notable feature',b.features.join(', ')],['Leaf shape',b.leaf],['Evergreen or not',b.growth],['Height',b.height],['Ground',b.moisture],['Where you saw it',b.regions.join(', ')],['Season seen',b.seasons.join(', ')]];
+  if(TOX[b.id])facts.push(['Safety',TOX[b.id].short]);
   if(d){
     if(d.names.length)facts.splice(1,0,['Also called',d.names.slice(0,5).join(', ')]);
     if(d.family)facts.push(['Family',d.family]);
     if(d.threat&&d.threat.length)facts.push(['Conservation status',d.threat.join(', ')]);
     if(typeof d.total==='number')facts.push(['Recorded in Utah',d.total.toLocaleString('en-US')+' records on GBIF']);
   }
-  var lead=(d&&d.photos.length)?photoFig(d.photos[0],b,true):pic(b.id);
+  var tp=thumbPhoto(b.id),lead=(d&&d.photos.length)?photoFig(d.photos[0],b,true):((!d&&tp&&thumbsOn())?photoFig(tp,b,true):pic(b.id));
   return crumbs('leaf:'+id)+'<section class="box col"><p class="eyebrow">You selected</p><h1>'+esc(b.name)+'</h1><div class="plantgrid"><div class="col">'+lead+mark+'</div><div class="col"><dl class="facts">'+facts.map(function(f){return '<dt>'+esc(f[0])+'</dt><dd>'+esc(f[1])+'</dd>';}).join('')+'</dl></div></div>'+gbifBlock(b,d,st)+foot+'</section>';
 }
 
@@ -1171,10 +1472,12 @@ function render(){
     html='<div class="col'+((T&&T.state==='running')?' testing':'')+'" style="gap:22px">'+((T&&T.state==='running')?testBar():'')+header()+body+footer()+'</div>';
   }
   a.innerHTML=html;
+  observeThumbs();
 }
 
 /* ---------- events ---------- */
 function act(name,el){
+  if(toolAct(name,el))return;
   if(name==='clearfilters'){
     var prev=S.filters;S.filters=blankFilters();render();
     if(FKEYS.some(function(k){return prev[k].length>0;}))showToast('Filters cleared',function(){S.filters=prev;render();});
@@ -1213,6 +1516,7 @@ app.addEventListener('click',function(e){
 });
 app.addEventListener('submit',function(e){
   e.preventDefault();
+  if(e.target&&e.target.id==='repform'){saveSighting();return;}
   if(!SHOW_SEARCH)return;
   var inp=$('#q');var q=inp?inp.value.trim():'';
   if(!q)return;
@@ -1220,7 +1524,8 @@ app.addEventListener('submit',function(e){
   go('search:'+q);
 });
 app.addEventListener('change',function(e){
-  var el=e.target;var g=el.getAttribute&&el.getAttribute('data-fgroup');if(!g||el.type!=='checkbox')return;
+  var el=e.target;if(el&&el.id==='idfile'){handleIdFile(el);return;}
+  var g=el.getAttribute&&el.getAttribute('data-fgroup');if(!g||el.type!=='checkbox')return;
   var v=el.getAttribute('data-fval');var arr=S.filters[g];
   if(el.checked&&arr.indexOf(v)<0)arr.push(v);
   if(!el.checked)S.filters[g]=arr.filter(function(x){return x!==v;});
@@ -1243,6 +1548,7 @@ app.addEventListener('error',function(e){
   if(!im||im.tagName!=='IMG'||!im.classList.contains('gb'))return;
   var orig=im.getAttribute('data-orig');
   if(orig&&im.getAttribute('src')!==orig&&!im.getAttribute('data-tried')){im.setAttribute('data-tried','1');im.src=orig;return;}
+  if(im.classList.contains('th')){var bx=im.closest('[data-thumb]');if(bx){var tid=bx.getAttribute('data-thumb');TH_BAD[tid]=1;bx.outerHTML=plantPic(tid,bx.getAttribute('data-cls')||'');}return;}
   var fig=im.closest('figure');if(!fig)return;
   if(im.classList.contains('main')){var pl=BYID[im.getAttribute('data-id')];if(pl)fig.outerHTML=pic(pl.id);}
   else fig.hidden=true;
