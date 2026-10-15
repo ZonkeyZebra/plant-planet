@@ -1,160 +1,256 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Utah Plant Wireframe</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>[hidden]{display:none!important}img{max-width:100%}</style><title>Utah Plant Finder</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600&family=Source+Sans+3:wght@400;600&display=swap">
 <style>
-:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-[hidden]:not([hidden=until-found i]){display:none!important}
-/* Layout concept: one centered column, boxes only. Black on white, one font, one size. Pictures are black line drawings. */
-:root{--ink:#000;--paper:#fff}
+/* Layout concept: alpine meadow field guide. Pale blue sky page, olive and khaki surfaces, dusty blue reserved for tools. One column, tabs and search on top. */
+:root{
+  --bg:#EEF5F9;--surface:#FFFFFF;--surface-2:#DDEBF3;--brand:#585331;
+  --ink:#2B2917;--ink-2:#585331;
+  --line:#CDD6C3;--line-strong:#8D8849;
+  --primary:#C0B47F;--on-primary:#2B2917;
+  --olive:#8D8849;--on-olive:#1F1E0E;
+  --tan:#DDD5AA;--on-tan:#2B2917;--tag:#E8E4C6;
+  --blue:#BCCFE0;--on-blue:#14212D;
+  --sky:#DDEBF3;--pic-fill:#F7F3DC;--pic-ink:#3E3B1F;
+  --hero-sky:#DDEBF3;--hero-far:#A6BDD3;--hero-forest:#8D8849;--hero-meadow:#C0B47F;--hero-front:#E3DBB3;
+  --focus:#1F4E79;
+  --serif:'Literata',Georgia,'Times New Roman',serif;
+  --sans:'Source Sans 3',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#171810;--surface:#22231A;--surface-2:#2B2C20;
+  --ink:#EEF0E0;--ink-2:#C9C8A4;
+  --line:#3D3E2C;--line-strong:#8D8849;
+  --primary:#C0B47F;--on-primary:#23220F;
+  --olive:#6E6A38;--on-olive:#F3F1DA;
+  --tan:#4B472A;--on-tan:#F0EBCB;--tag:#3A3A24;
+  --blue:#34506B;--on-blue:#E4EEF6;
+  --sky:#2A3A47;--pic-fill:#4A4A2E;--pic-ink:#E8E4BE;
+  --hero-sky:#20303C;--hero-far:#34506B;--hero-forest:#3A3822;--hero-meadow:#55522B;--hero-front:#6A6338;
+  --brand:#C0B47F;--focus:#8DB9E6;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#171810;--surface:#22231A;--surface-2:#2B2C20;
+  --ink:#EEF0E0;--ink-2:#C9C8A4;
+  --line:#3D3E2C;--line-strong:#8D8849;
+  --primary:#C0B47F;--on-primary:#23220F;
+  --olive:#6E6A38;--on-olive:#F3F1DA;
+  --tan:#4B472A;--on-tan:#F0EBCB;--tag:#3A3A24;
+  --blue:#34506B;--on-blue:#E4EEF6;
+  --sky:#2A3A47;--pic-fill:#4A4A2E;--pic-ink:#E8E4BE;
+  --hero-sky:#20303C;--hero-far:#34506B;--hero-forest:#3A3822;--hero-meadow:#55522B;--hero-front:#6A6338;
+  --brand:#C0B47F;--focus:#8DB9E6;color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--paper);color:var(--ink);font:14px/1.5 Arial,Helvetica,sans-serif;margin:0;padding-inline:16px;padding-block:16px 48px}
-.wrap{max-width:980px;margin-inline:auto;display:flex;flex-direction:column;gap:14px}
-h1,h2,h3,p,ul,fieldset{font:inherit;margin:0;padding:0}
-h2{border-bottom:1px solid var(--ink);padding-bottom:4px;margin-bottom:10px}
-button{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--ink);border-radius:0;padding:6px 10px;cursor:pointer;text-align:left}
-button:hover{text-decoration:underline}
-button[aria-pressed="true"],button.on{background:var(--ink);color:var(--paper)}
-button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px double var(--ink);outline-offset:2px}
-input[type=text],textarea{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--ink);border-radius:0;padding:6px 8px;width:100%}
-input[type=checkbox]{accent-color:#000;width:14px;height:14px;margin:0;flex:none}
-.box{border:1px solid var(--ink);padding:12px;min-width:0}
-.ph{border:1px dashed var(--ink);padding:12px;min-width:0}
-.screen{border:1px dashed var(--ink);padding:4px 8px}
-.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px solid var(--ink);padding:8px}
-.grow{flex:1 1 auto}
-form.bar input{flex:1 1 200px;width:auto;min-width:0}
-.crumbs{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.crumbs button{border:0;padding:0;text-decoration:underline}
-.img{display:block;min-height:84px;border:1px solid var(--ink);background:linear-gradient(to top right,transparent calc(50% - 1px),var(--ink) 50%,transparent calc(50% + 1px)),linear-gradient(to bottom right,transparent calc(50% - 1px),var(--ink) 50%,transparent calc(50% + 1px))}
-.pic{display:block;width:100%;aspect-ratio:1/1;border:1px solid var(--ink);background:var(--paper)}
-.pic svg{display:block;width:100%;height:100%}
-.thumb{width:72px;flex:none}
-.bigpic{width:100%;max-width:260px}
-.hero{display:flex;flex-direction:column;gap:12px;padding:20px;max-width:720px;margin-inline:auto;width:100%}
-.hero .img{min-height:150px}
-.hero p{text-align:center}
-.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
-.grid.wide{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
-.split{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
-@media (min-width:720px){.split{grid-template-columns:200px minmax(0,1fr)}}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans);margin:0;padding-inline:16px;padding-block:14px 48px}
+.wrap{max-width:1040px;margin-inline:auto;display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;margin:0;line-height:1.25;text-wrap:balance}
+h1{font-size:28px}h2{font-size:20px}h3{font-size:17px}
+p,dl,fieldset{margin:0;padding:0}
+button{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:8px 12px;cursor:pointer;text-align:left;min-height:40px}
+button:hover{background:var(--surface-2)}
+button[aria-pressed="true"],button.primary{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+button[aria-pressed="true"]:hover,button.primary:hover{background:var(--primary);filter:brightness(1.1)}
+button:focus-visible,input:focus-visible,summary:focus-visible,textarea:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+input[type=text],textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:9px 12px;width:100%;min-width:0}
+input::placeholder,textarea::placeholder{color:var(--ink-2);opacity:.8}
+input[type=checkbox]{width:16px;height:16px;margin:0;flex:none;accent-color:var(--primary)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.muted{color:var(--ink-2)}
 .col{display:flex;flex-direction:column;gap:10px;min-width:0}
 .row{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;align-items:center}
-.card{display:flex;flex-direction:column;gap:6px;width:100%;height:100%}
-.tag{border:1px solid var(--ink);padding:0 6px;display:inline-block;margin:0 4px 4px 0}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0}
+.ph{border:1px dashed var(--line-strong);border-radius:10px;padding:12px;color:var(--ink-2);min-width:0}
+.top{display:flex;flex-direction:column;gap:10px}
+.topbar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.brand{font-family:var(--serif);font-weight:600;font-size:22px;background:none;border:0;padding:4px 0;min-height:0;color:var(--brand)}
+.brand:hover{background:none;text-decoration:underline}
+.search{display:flex;gap:8px;flex:1 1 300px;min-width:0;position:relative}
+.suggest{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:10;background:var(--surface);border:1px solid var(--line-strong);border-radius:10px;padding:10px 12px}
+.search:focus-within .suggest{display:block}
+.search[data-typed="1"] .suggest{display:none}
+.search input{flex:1 1 auto}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tabs button{border-radius:99px;padding:6px 14px;min-height:40px}
+.crumbs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;color:var(--ink-2)}
+.crumbs button{border:0;background:none;padding:0;min-height:0;text-decoration:underline;color:var(--ink-2)}
+.hero{position:relative;display:grid;align-items:end;min-height:300px;overflow:hidden;border-radius:14px;border:1px solid var(--line)}
+.hero svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.heroCard{position:relative;margin:16px;padding:16px 20px;background:var(--surface);border-radius:10px;max-width:560px;border:1px solid var(--line)}
+.hs{fill:var(--hero-sky)}.hf{fill:var(--hero-far)}.hm{fill:var(--hero-forest)}.hg{fill:var(--hero-meadow)}.hn{fill:var(--hero-front)}
+.sec{display:flex;flex-direction:column;gap:10px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.grid.wide{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.card{display:flex;flex-direction:column;gap:6px;width:100%;height:100%;padding:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.card:hover{background:var(--surface);border-color:var(--line-strong)}
+.nm{font-weight:600}
+.latin{font-style:italic;color:var(--ink-2);font-size:13px}
+.pic{display:block;width:100%;aspect-ratio:1/1;border-radius:8px;background:var(--sky);overflow:hidden}
+.pic svg{display:block;width:100%;height:100%}
+.img{display:block;width:100%;border-radius:8px;background:var(--sky)}
+.thumb{width:64px;flex:none}
+.bigpic{max-width:280px}
+.tag{display:inline-block;background:var(--tag);color:var(--ink);border-radius:99px;padding:1px 9px;font-size:12px;margin:0 4px 4px 0}
 .tags{display:flex;flex-wrap:wrap}
-.fs{border:1px solid var(--ink);padding:8px 10px;min-width:0}
-.fs legend{padding:0 4px}
-.chk{display:flex;gap:8px;align-items:center;padding:2px 0;cursor:pointer}
+.tools{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.tool{display:flex;flex-direction:column;gap:4px;background:var(--blue);color:var(--on-blue);border:0;border-radius:0 18px 0 18px;padding:14px 16px}
+.tool:hover{background:var(--blue);filter:brightness(1.07)}
+.tool .nm{font-family:var(--serif)}
+.stats{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font-family:var(--serif);font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.more{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.more>summary{font-weight:600;cursor:pointer}
+.more .col{margin-top:12px}
+.split{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:760px){.split{grid-template-columns:260px minmax(0,1fr);align-items:start}}
+.fpanel{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.fpanel>summary{padding:10px 14px;font-weight:600;cursor:pointer}
+.fbody{display:flex;flex-direction:column;gap:6px;padding:0 14px 14px}
+.fgroup{border-top:1px solid var(--line);padding-top:4px}
+.fgroup>summary{cursor:pointer;font-weight:600;padding:6px 0}
+.fs{border:0;margin:6px 0 10px;min-width:0}
+.fs legend{font-size:13px;color:var(--ink-2);padding:0;margin-bottom:2px}
+.chk{display:flex;gap:8px;align-items:center;padding:6px 0;min-height:36px;cursor:pointer}
+.chk .ct{margin-left:auto;color:var(--ink-2);font-size:13px;font-variant-numeric:tabular-nums}
+.chk.zero span:nth-child(2){color:var(--ink-2)}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
-.chips button{border-radius:99px;padding:2px 10px}
-.rowbtn{display:flex;flex-wrap:wrap;gap:4px 14px;width:100%;align-items:center}
-.stat{display:flex;flex-direction:column;gap:2px}
-.scroll{overflow:auto;max-height:320px;border:1px solid var(--ink)}
-table{border-collapse:collapse;width:100%;min-width:560px}
-th,td{border:1px solid var(--ink);padding:4px 8px;text-align:left;font-weight:normal;vertical-align:top}
-.meter{display:block;height:8px;background:var(--ink);margin-top:3px}
-.sticky{position:sticky;top:env(safe-area-inset-top,0px);background:var(--paper);z-index:2}
-details.admin{border:1px dashed var(--ink);padding:8px 12px}
-details.admin summary{cursor:pointer}
-details.admin[open] summary{margin-bottom:8px}
-.s{fill:var(--paper);stroke:var(--ink);stroke-width:1.6}
-.n{fill:none;stroke:var(--ink);stroke-width:1.6}
-.k{fill:var(--ink);stroke:var(--ink);stroke-width:1.2}
-.f{fill:var(--paper);stroke:none}
+.chips button{border-radius:99px;padding:3px 12px;min-height:32px;background:var(--tan);color:var(--on-tan);border-color:var(--tan)}
+.rowbtn{display:flex;flex-wrap:wrap;gap:4px 14px;width:100%;align-items:center;padding:8px 12px;border-radius:10px;background:var(--surface);border:1px solid var(--line)}
+.facts{display:grid;grid-template-columns:minmax(0,max-content) minmax(0,1fr);gap:6px 18px}
+.facts dt{color:var(--ink-2)}
+.facts dd{margin:0}
+.strip{background:var(--tan);color:var(--on-tan);padding:8px 12px;border-radius:8px;font-weight:600}
+.sticky{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border:1px solid var(--line-strong);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.scroll{overflow:auto;max-height:340px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--surface-2);font-weight:600}
+.meter{display:block;height:8px;background:var(--olive);border-radius:4px;margin-top:3px}
+.foot{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--ink-2)}
+.cardwrap{position:relative;height:100%}
+.bm{position:absolute;top:16px;right:16px;width:40px;height:40px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:99px;background:var(--surface)}
+.bm svg,.bmtext svg{width:20px;height:20px;flex:none}
+.rowwrap{display:flex;gap:8px;align-items:center}
+.rowwrap .rowbtn{flex:1 1 auto;width:auto;min-width:0}
+.rowwrap .bm{position:static;flex:none}
+.bmtext{display:inline-flex;gap:8px;align-items:center;align-self:flex-start}
+.card:hover .nm,.rowbtn:hover .nm,.tool:hover .nm{text-decoration:underline}
+.eyebrow{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);font-weight:600}
+.try{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.try button{border-radius:99px;padding:3px 12px;min-height:32px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20;display:flex;gap:12px;align-items:center;background:var(--ink);color:var(--bg);padding:8px 8px 8px 16px;border-radius:10px;max-width:calc(100% - 32px)}
+.toast[hidden]{display:none}
+.plantgrid{display:grid;gap:20px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:720px){.plantgrid{grid-template-columns:280px minmax(0,1fr);align-items:start}}
+.photo{margin:0;display:flex;flex-direction:column;gap:6px}
+.photo img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;background:var(--sky)}
+.photo figcaption{font-size:12px;color:var(--ink-2);line-height:1.4}
+.photo figcaption a{color:var(--ink-2)}
+.gallery{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+.twocol{display:grid;gap:20px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:720px){.twocol{grid-template-columns:minmax(0,260px) minmax(0,1fr);align-items:start}}
+.utahmap{width:100%;height:auto;display:block;background:var(--sky);border-radius:8px}
+.utahmap .border{fill:var(--surface);stroke:var(--ink-2);stroke-width:1.5}
+.utahmap .dot{fill:var(--brand);fill-opacity:.55}
+.months{display:flex;gap:4px;align-items:flex-end;height:110px}
+.mcol{flex:1 1 0;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;font-size:12px;color:var(--ink-2)}
+.mcol .bar{width:100%;background:var(--olive);border-radius:3px 3px 0 0;min-height:2px}
+.notes{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.notes .src{display:block;font-size:12px;color:var(--ink-2)}
+.tester{font-size:13px;color:var(--ink-2)}
+.tester>summary{cursor:pointer}
+.relax{display:flex;flex-wrap:wrap;gap:8px}
+@media (min-width:760px){.split>.fpanel{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}.testing .split>.fpanel{position:static;max-height:none}}
+.s{fill:var(--pic-fill);stroke:var(--pic-ink);stroke-width:1.6}
+.n{fill:none;stroke:var(--pic-ink);stroke-width:1.6}
+.k{fill:var(--pic-ink);stroke:var(--pic-ink);stroke-width:1.2}
+.f{fill:var(--pic-fill);stroke:none}
 svg *{stroke-linecap:round;stroke-linejoin:round}
-</style>
-</head>
-<body>
+</style></head><body>
 
 <div class="wrap"><div id="app"></div></div>
+<div id="toast" class="toast" role="status" hidden></div>
 
 <script>
 (function(){
 'use strict';
-/* Set to false to swap every picture back to a plain box with an X. */
+/* Pictures are generic line drawings. Set to false to swap them for plain blocks. */
 var SHOW_IMAGES=true;
-/* Search is built but switched off for now. Set to true to bring the search bar back on every page. */
-var SHOW_SEARCH=false;
+var SHOW_SEARCH=true;
+/* Live photos and facts from the GBIF API. Needs a host that allows requests to api.gbif.org, so it is off in the Claude preview. The live build sets this to true. */
+var GBIF_LIVE=true;
 
-var TYPES=[['Flower','Flowers'],['Tree','Trees'],['Bush','Bushes'],['Aquatic','Aquatics']];
-var TL={Flower:'Flowers',Tree:'Trees',Bush:'Bushes',Aquatic:'Aquatics'};
-var REGIONS=['Wasatch Front','Uinta Mountains','Red rock desert','Great Basin','Wetlands and lakes'];
+var TYPES=[['Flower','Flowers'],['NonFlower','Non-Flower'],['Tree','Trees'],['Bush','Bushes'],['Aquatic','Aquatics']];
+var TL={};TYPES.forEach(function(t){TL[t[0]]=t[1];});
+var TBLURB={
+ Flower:'Plants you can tell apart by their blooms.',
+ NonFlower:'Plants you can tell apart by berries, cones, seed heads, or other parts that are not flowers.',
+ Tree:'Tall plants with a single trunk.',
+ Bush:'Woody plants with several stems, usually shorter than a tree.',
+ Aquatic:'Plants that grow in or on water, or along the edge.'
+};
+var PLACES=[
+ ['Mountains','High country, such as the Uinta and Wasatch peaks'],
+ ['Foothills and neighborhoods','Canyon trails, parks, and yards along the Wasatch Front'],
+ ['Desert and red rock','Southern Utah canyon country'],
+ ['Sagebrush flats','The west desert and the Great Basin'],
+ ['Lakes and wetlands','Great Salt Lake shore, ponds, and streams']
+];
+var PHINT={};PLACES.forEach(function(p){PHINT[p[0]]=p[1];});
+var REGIONS=PLACES.map(function(p){return p[0];});
 var SEASONS=['Spring','Summer','Fall','Year-round'];
 var COLORS=['White','Yellow','Pink','Purple','Red','Orange','Blue','Green or gray'];
 var LEAVES=['Lance-shaped','Round or oval','Lobed','Needle or scale-like','Narrow or grass-like','Compound (leaflets)','Heart-shaped'];
+var FEATURES=['Showy flowers','Berries or fruit','Cones','Seed head or bulb','Fluffy or feathery seeds','Acorns or nuts','None'];
+var NONF=['Berries or fruit','Cones','Seed head or bulb','Fluffy or feathery seeds','Acorns or nuts'];
+var GROWTH=['Evergreen','Drops leaves in fall','Dies back each year'];
+var HEIGHTS=['Under 1 ft','1 to 3 ft','3 to 10 ft','Over 10 ft'];
+var MOISTURE=['Dry ground','Moist ground','In or on water'];
 
 var RAW=[
-'sego-lily|Sego lily|Calochortus nuttallii|Flower|White|Narrow or grass-like|Wasatch Front,Uinta Mountains,Great Basin|Spring,Summer',
-'wild-rose|Woods\' rose|Rosa woodsii|Flower,Bush|Pink|Compound (leaflets)|Wasatch Front,Uinta Mountains,Wetlands and lakes|Summer',
-'utah-serviceberry|Utah serviceberry|Amelanchier utahensis|Flower,Tree,Bush|White|Round or oval|Wasatch Front,Red rock desert,Great Basin|Spring',
-'yellow-pond-lily|Yellow pond-lily|Nuphar polysepala|Flower,Aquatic|Yellow|Heart-shaped|Wetlands and lakes,Uinta Mountains|Summer',
-'columbine|Rocky Mountain columbine|Aquilegia coerulea|Flower|Blue,White|Lobed|Uinta Mountains,Wasatch Front|Summer',
-'yarrow|Common yarrow|Achillea millefolium|Flower|White|Compound (leaflets)|Wasatch Front,Uinta Mountains,Great Basin|Summer,Fall',
-'utah-penstemon|Utah penstemon|Penstemon utahensis|Flower|Red|Lance-shaped|Red rock desert|Spring',
-'globemallow|Desert globemallow|Sphaeralcea ambigua|Flower|Orange|Lobed|Red rock desert,Great Basin|Spring,Summer',
-'sunflower|Common sunflower|Helianthus annuus|Flower|Yellow|Heart-shaped|Wasatch Front,Great Basin,Red rock desert|Summer,Fall',
-'paintbrush|Desert Indian paintbrush|Castilleja chromosa|Flower|Red|Lance-shaped|Great Basin,Red rock desert,Wasatch Front|Spring,Summer',
-'lupine|Silvery lupine|Lupinus argenteus|Flower|Purple|Compound (leaflets)|Uinta Mountains,Wasatch Front|Summer',
-'rabbitbrush|Rubber rabbitbrush|Ericameria nauseosa|Bush,Flower|Yellow|Narrow or grass-like|Great Basin,Red rock desert,Wasatch Front|Fall',
-'sagebrush|Big sagebrush|Artemisia tridentata|Bush|Green or gray|Lobed|Great Basin,Wasatch Front,Red rock desert|Year-round',
-'gambel-oak|Gambel oak|Quercus gambelii|Tree,Bush|Green or gray|Lobed|Wasatch Front,Red rock desert|Summer,Fall',
-'aspen|Quaking aspen|Populus tremuloides|Tree|Yellow,Green or gray|Round or oval|Uinta Mountains,Wasatch Front|Summer,Fall',
-'blue-spruce|Blue spruce|Picea pungens|Tree|Green or gray|Needle or scale-like|Uinta Mountains,Wasatch Front|Year-round',
-'subalpine-fir|Subalpine fir|Abies lasiocarpa|Tree|Green or gray|Needle or scale-like|Uinta Mountains|Year-round',
-'utah-juniper|Utah juniper|Juniperus osteosperma|Tree|Green or gray|Needle or scale-like|Red rock desert,Great Basin|Year-round',
-'pinyon-pine|Pinyon pine|Pinus edulis|Tree|Green or gray|Needle or scale-like|Red rock desert,Great Basin|Year-round',
-'bigtooth-maple|Bigtooth maple|Acer grandidentatum|Tree|Red,Green or gray|Lobed|Wasatch Front|Fall',
-'fremont-cottonwood|Fremont cottonwood|Populus fremontii|Tree|Green or gray|Heart-shaped|Red rock desert,Wetlands and lakes|Summer,Fall',
-'chokecherry|Chokecherry|Prunus virginiana|Bush,Tree|White|Round or oval|Wasatch Front,Uinta Mountains,Great Basin|Spring',
-'mountain-mahogany|Curl-leaf mountain mahogany|Cercocarpus ledifolius|Bush,Tree|Green or gray|Narrow or grass-like|Great Basin,Wasatch Front|Year-round',
-'elderberry|Blue elderberry|Sambucus cerulea|Bush,Tree|White|Compound (leaflets)|Wasatch Front,Wetlands and lakes|Summer',
-'cliffrose|Stansbury cliffrose|Purshia stansburyana|Bush|White|Lobed|Red rock desert,Great Basin|Spring',
-'saltbush|Fourwing saltbush|Atriplex canescens|Bush|Green or gray|Narrow or grass-like|Great Basin,Red rock desert|Year-round',
-'cattail|Broadleaf cattail|Typha latifolia|Aquatic|Green or gray|Narrow or grass-like|Wetlands and lakes|Summer',
-'bulrush|Hardstem bulrush|Schoenoplectus acutus|Aquatic|Green or gray|Narrow or grass-like|Wetlands and lakes|Summer',
-'smartweed|Water smartweed|Persicaria amphibia|Aquatic,Flower|Pink|Lance-shaped|Wetlands and lakes|Summer',
-'coontail|Coontail|Ceratophyllum demersum|Aquatic|Green or gray|Needle or scale-like|Wetlands and lakes|Summer',
-'sago-pondweed|Sago pondweed|Stuckenia pectinata|Aquatic|Green or gray|Narrow or grass-like|Wetlands and lakes|Summer',
-'monkeyflower|Yellow monkeyflower|Erythranthe guttata|Flower|Yellow|Round or oval|Wetlands and lakes,Uinta Mountains|Spring,Summer',
-'marsh-marigold|Elkslip marsh marigold|Caltha leptosepala|Flower|White|Heart-shaped|Uinta Mountains|Summer',
-'mules-ears|Mule\'s ears|Wyethia amplexicaulis|Flower|Yellow|Lance-shaped|Wasatch Front,Uinta Mountains|Spring,Summer',
-'fireweed|Fireweed|Chamaenerion angustifolium|Flower|Pink,Purple|Lance-shaped|Uinta Mountains,Wasatch Front|Summer,Fall',
-'scarlet-gilia|Scarlet gilia|Ipomopsis aggregata|Flower|Red|Compound (leaflets)|Uinta Mountains,Wasatch Front,Red rock desert|Summer',
-'duckweed|Common duckweed|Lemna minor|Aquatic|Green or gray|Round or oval|Wetlands and lakes|Summer',
-'elodea|Canadian waterweed|Elodea canadensis|Aquatic|Green or gray|Lance-shaped|Wetlands and lakes|Summer',
-'water-buttercup|White water buttercup|Ranunculus aquatilis|Aquatic,Flower|White|Lobed|Wetlands and lakes,Uinta Mountains|Spring,Summer',
-'watercress|Watercress|Nasturtium officinale|Aquatic,Flower|White|Compound (leaflets)|Wetlands and lakes,Wasatch Front|Spring,Summer',
-'arrowhead|Broadleaf arrowhead|Sagittaria latifolia|Aquatic,Flower|White|Heart-shaped|Wetlands and lakes|Summer,Fall',
-'mares-tail|Common mare\'s tail|Hippuris vulgaris|Aquatic|Green or gray|Narrow or grass-like|Wetlands and lakes,Uinta Mountains|Summer',
-'phragmites|Common reed|Phragmites australis|Aquatic|Green or gray|Narrow or grass-like|Wetlands and lakes|Summer,Fall',
-'milfoil|Northern watermilfoil|Myriophyllum sibiricum|Aquatic|Green or gray|Compound (leaflets)|Wetlands and lakes|Summer'
-];
-var PLANTS=RAW.map(function(l){var f=l.split('|');return{id:f[0],name:f[1],latin:f[2],types:f[3].split(','),colors:f[4].split(','),leaf:f[5],regions:f[6].split(','),seasons:f[7].split(',')};});
-var TOOLS=[
- {id:'tool-identify',name:'Identify from a photo'},
- {id:'tool-saved',name:'My saved plants'},
- {id:'tool-poison',name:'Poisonous plants'},
- {id:'tool-invasive',name:'Invasive species'},
- {id:'tool-report',name:'Report a sighting'}
-].map(function(t){t.tool=true;t.latin='';t.types=[];t.colors=[];t.regions=[];t.seasons=[];t.leaf='';return t;});
-var BYID={};PLANTS.concat(TOOLS).forEach(function(b){BYID[b.id]=b;});
-var KW={'tool-identify':'photo picture camera identify unknown what is this','tool-saved':'saved favorites bookmarks list','tool-poison':'poisonous toxic dog cat pet pets sick danger safety','tool-invasive':'invasive weeds noxious species','tool-report':'report sighting submit'};
-
-var TASKS=[
- {id:'T1',img:'columbine',text:'You are hiking in the Uinta Mountains in summer and take a picture of this flower. The petals were blue and white. Find its page.',ok:['columbine']},
- {id:'T2',img:'sego-lily',text:'You photograph this flower on a spring hike along the Wasatch Front. Find its page.',ok:['sego-lily']},
- {id:'T3',img:'aspen',text:'You take this picture of a tree on a mountain hillside in the fall. Its leaves had turned yellow. Find its page.',ok:['aspen']},
- {id:'T4',img:'blue-spruce',text:'You photograph this evergreen in the mountains. A ranger tells you it is the state tree. Find its page.',ok:['blue-spruce']},
- {id:'T5',img:'bigtooth-maple',text:'It is fall along the Wasatch Front and you photograph this tree. Its leaves were red. Find its page.',ok:['bigtooth-maple']},
- {id:'T6',img:'cattail',text:'At a wetland near the Great Salt Lake you photograph this tall plant. Find its page.',ok:['cattail']},
- {id:'T7',img:'yellow-pond-lily',text:'You photograph this plant floating on a lake in summer. The flower was yellow. Find its page.',ok:['yellow-pond-lily']},
- {id:'T8',img:'rabbitbrush',text:'In the Great Basin in the fall you photograph this shrub. The flowers were yellow. Find its page.',ok:['rabbitbrush']},
- {id:'T9',img:'',text:'You took a photo of a plant and want help figuring out what it is. Find the tool for that.',ok:['tool-identify']},
- {id:'T10',img:'',text:'You have a dog and want to know which plants could make it sick. Find that information.',ok:['tool-poison']}
+'sego-lily|Sego lily|Calochortus nuttallii|Flower|White|Narrow or grass-like|Foothills and neighborhoods,Mountains,Sagebrush flats|Spring,Summer|Under 1 ft|Showy flowers|Dies back each year|Dry ground',
+'wild-rose|Woods\' rose|Rosa woodsii|Flower,Bush|Pink|Compound (leaflets)|Foothills and neighborhoods,Mountains,Lakes and wetlands|Summer|3 to 10 ft|Showy flowers,Berries or fruit|Drops leaves in fall|Moist ground',
+'utah-serviceberry|Utah serviceberry|Amelanchier utahensis|Flower,Tree,Bush|White|Round or oval|Foothills and neighborhoods,Desert and red rock,Sagebrush flats|Spring|3 to 10 ft|Berries or fruit|Drops leaves in fall|Dry ground',
+'yellow-pond-lily|Yellow pond-lily|Nuphar polysepala|Flower,Aquatic|Yellow|Heart-shaped|Lakes and wetlands,Mountains|Summer|Under 1 ft|Showy flowers|Dies back each year|In or on water',
+'columbine|Rocky Mountain columbine|Aquilegia coerulea|Flower|Blue,White|Lobed|Mountains,Foothills and neighborhoods|Summer|1 to 3 ft|Showy flowers|Dies back each year|Moist ground',
+'yarrow|Common yarrow|Achillea millefolium|Flower|White|Compound (leaflets)|Foothills and neighborhoods,Mountains,Sagebrush flats|Summer,Fall|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'utah-penstemon|Utah penstemon|Penstemon utahensis|Flower|Red|Lance-shaped|Desert and red rock|Spring|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'globemallow|Desert globemallow|Sphaeralcea ambigua|Flower|Orange|Lobed|Desert and red rock,Sagebrush flats|Spring,Summer|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'sunflower|Common sunflower|Helianthus annuus|Flower|Yellow|Heart-shaped|Foothills and neighborhoods,Sagebrush flats,Desert and red rock|Summer,Fall|3 to 10 ft|Showy flowers|Dies back each year|Dry ground',
+'paintbrush|Desert Indian paintbrush|Castilleja chromosa|Flower|Red|Lance-shaped|Sagebrush flats,Desert and red rock,Foothills and neighborhoods|Spring,Summer|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'lupine|Silvery lupine|Lupinus argenteus|Flower|Purple|Compound (leaflets)|Mountains,Foothills and neighborhoods|Summer|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'rabbitbrush|Rubber rabbitbrush|Ericameria nauseosa|Bush,Flower|Yellow|Narrow or grass-like|Sagebrush flats,Desert and red rock,Foothills and neighborhoods|Fall|3 to 10 ft|Showy flowers,Fluffy or feathery seeds|Evergreen|Dry ground',
+'sagebrush|Big sagebrush|Artemisia tridentata|Bush|Green or gray|Lobed|Sagebrush flats,Foothills and neighborhoods,Desert and red rock|Year-round|3 to 10 ft|None|Evergreen|Dry ground',
+'gambel-oak|Gambel oak|Quercus gambelii|Tree,Bush|Green or gray|Lobed|Foothills and neighborhoods,Desert and red rock|Summer,Fall|Over 10 ft|Acorns or nuts|Drops leaves in fall|Dry ground',
+'aspen|Quaking aspen|Populus tremuloides|Tree|Yellow,Green or gray|Round or oval|Mountains,Foothills and neighborhoods|Summer,Fall|Over 10 ft|None|Drops leaves in fall|Moist ground',
+'blue-spruce|Blue spruce|Picea pungens|Tree|Green or gray|Needle or scale-like|Mountains,Foothills and neighborhoods|Year-round|Over 10 ft|Cones|Evergreen|Moist ground',
+'subalpine-fir|Subalpine fir|Abies lasiocarpa|Tree|Green or gray|Needle or scale-like|Mountains|Year-round|Over 10 ft|Cones|Evergreen|Moist ground',
+'utah-juniper|Utah juniper|Juniperus osteosperma|Tree|Green or gray|Needle or scale-like|Desert and red rock,Sagebrush flats|Year-round|Over 10 ft|Berries or fruit|Evergreen|Dry ground',
+'pinyon-pine|Pinyon pine|Pinus edulis|Tree|Green or gray|Needle or scale-like|Desert and red rock,Sagebrush flats|Year-round|Over 10 ft|Cones,Acorns or nuts|Evergreen|Dry ground',
+'bigtooth-maple|Bigtooth maple|Acer grandidentatum|Tree|Red,Green or gray|Lobed|Foothills and neighborhoods|Fall|Over 10 ft|None|Drops leaves in fall|Moist ground',
+'fremont-cottonwood|Fremont cottonwood|Populus fremontii|Tree|Green or gray|Heart-shaped|Desert and red rock,Lakes and wetlands|Summer,Fall|Over 10 ft|Fluffy or feathery seeds|Drops leaves in fall|Moist ground',
+'chokecherry|Chokecherry|Prunus virginiana|Bush,Tree|White|Round or oval|Foothills and neighborhoods,Mountains,Sagebrush flats|Spring|3 to 10 ft|Berries or fruit|Drops leaves in fall|Moist ground',
+'mountain-mahogany|Curl-leaf mountain mahogany|Cercocarpus ledifolius|Bush,Tree|Green or gray|Narrow or grass-like|Sagebrush flats,Foothills and neighborhoods|Year-round|3 to 10 ft|Fluffy or feathery seeds|Evergreen|Dry ground',
+'elderberry|Blue elderberry|Sambucus cerulea|Bush,Tree|White|Compound (leaflets)|Foothills and neighborhoods,Lakes and wetlands|Summer|3 to 10 ft|Berries or fruit|Drops leaves in fall|Moist ground',
+'cliffrose|Stansbury cliffrose|Purshia stansburyana|Bush|White|Lobed|Desert and red rock,Sagebrush flats|Spring|3 to 10 ft|Showy flowers,Fluffy or feathery seeds|Evergreen|Dry ground',
+'saltbush|Fourwing saltbush|Atriplex canescens|Bush|Green or gray|Narrow or grass-like|Sagebrush flats,Desert and red rock|Year-round|3 to 10 ft|None|Evergreen|Dry ground',
+'cattail|Broadleaf cattail|Typha latifolia|Aquatic|Green or gray|Narrow or grass-like|Lakes and wetlands|Summer|3 to 10 ft|Seed head or bulb|Dies back each year|In or on water',
+'bulrush|Hardstem bulrush|Schoenoplectus acutus|Aquatic|Green or gray|Narrow or grass-like|Lakes and wetlands|Summer|3 to 10 ft|Seed head or bulb|Dies back each year|In or on water',
+'smartweed|Water smartweed|Persicaria amphibia|Aquatic,Flower|Pink|Lance-shaped|Lakes and wetlands|Summer|Under 1 ft|Showy flowers|Dies back each year|In or on water',
+'coontail|Coontail|Ceratophyllum demersum|Aquatic|Green or gray|Needle or scale-like|Lakes and wetlands|Summer|Under 1 ft|None|Evergreen|In or on water',
+'sago-pondweed|Sago pondweed|Stuckenia pectinata|Aquatic|Green or gray|Narrow or grass-like|Lakes and wetlands|Summer|Under 1 ft|None|Dies back each year|In or on water',
+'monkeyflower|Yellow monkeyflower|Erythranthe guttata|Flower|Yellow|Round or oval|Lakes and wetlands,Mountains|Spring,Summer|1 to 3 ft|Showy flowers|Dies back each year|Moist ground',
+'marsh-marigold|Elkslip marsh marigold|Caltha leptosepala|Flower|White|Heart-shaped|Mountains|Summer|Under 1 ft|Showy flowers|Dies back each year|Moist ground',
+'mules-ears|Mule\'s ears|Wyethia amplexicaulis|Flower|Yellow|Lance-shaped|Foothills and neighborhoods,Mountains|Spring,Summer|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'fireweed|Fireweed|Chamaenerion angustifolium|Flower|Pink,Purple|Lance-shaped|Mountains,Foothills and neighborhoods|Summer,Fall|3 to 10 ft|Showy flowers,Fluffy or feathery seeds|Dies back each year|Moist ground',
+'scarlet-gilia|Scarlet gilia|Ipomopsis aggregata|Flower|Red|Compound (leaflets)|Mountains,Foothills and neighborhoods,Desert and red rock|Summer|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'duckweed|Common duckweed|Lemna minor|Aquatic|Green or gray|Round or oval|Lakes and wetlands|Summer|Under 1 ft|None|Evergreen|In or on water',
+'elodea|Canadian waterweed|Elodea canadensis|Aquatic|Green or gray|Lance-shaped|Lakes and wetlands|Summer|Under 1 ft|None|Evergreen|In or on water',
+'water-buttercup|White water buttercup|Ranunculus aquatilis|Aquatic,Flower|White|Lobed|Lakes and wetlands,Mountains|Spring,Summer|Under 1 ft|Showy flowers|Dies back each year|In or on water',
+'watercress|Watercress|Nasturtium officinale|Aquatic,Flower|White|Compound (leaflets)|Lakes and wetlands,Foothills and neighborhoods|Spring,Summer|Under 1 ft|Showy flowers|Evergreen|In or on water',
+'arrowhead|Broadleaf arrowhead|Sagittaria latifolia|Aquatic,Flower|White|Heart-shaped|Lakes and wetlands|Summer,Fall|1 to 3 ft|Showy flowers|Dies back each year|In or on water',
+'mares-tail|Common mare\'s tail|Hippuris vulgaris|Aquatic|Green or gray|Narrow or grass-like|Lakes and wetlands,Mountains|Summer|Under 1 ft|None|Evergreen|In or on water',
+'phragmites|Common reed|Phragmites australis|Aquatic|Green or gray|Narrow or grass-like|Lakes and wetlands|Summer,Fall|Over 10 ft|Fluffy or feathery seeds|Dies back each year|In or on water',
+'milfoil|Northern watermilfoil|Myriophyllum sibiricum|Aquatic|Green or gray|Compound (leaflets)|Lakes and wetlands|Summer|Under 1 ft|None|Evergreen|In or on water'
 ];
 
 /* ---------- line drawings (black on white, generic) ---------- */
@@ -394,107 +490,96 @@ function pic(id,cls){
   return '<span class="pic'+(cls?' '+cls:'')+'" role="img" aria-label="Line drawing of a plant">'+art(id)+'</span>';
 }
 
+/* ---------- data ---------- */
+var PLANTS=RAW.map(function(l){
+  var f=l.split('|');
+  var p={id:f[0],name:f[1],latin:f[2],types:f[3].split(','),colors:f[4].split(','),leaf:f[5],regions:f[6].split(','),seasons:f[7].split(','),height:f[8],features:f[9].split(','),growth:f[10],moisture:f[11]};
+  if(p.features.some(function(x){return NONF.indexOf(x)>=0;})&&p.types.indexOf('NonFlower')<0)p.types.push('NonFlower');
+  if(p.features.indexOf('Showy flowers')<0)p.types=p.types.filter(function(t){return t!=='Flower';});
+  var order=TYPES.map(function(t){return t[0];});
+  p.types.sort(function(a,b){return order.indexOf(a)-order.indexOf(b);});
+  return p;
+});
+var TOOLS=[
+ {id:'tool-identify',name:'Upload a photo to identify a plant',desc:'Get a match from a picture you took. Coming soon.'},
+ {id:'tool-saved',name:'Plants I bookmarked',desc:'Your saved list, in one place.'},
+ {id:'tool-poison',name:'Poisonous plants',desc:'Plants that can make pets or people sick.'},
+ {id:'tool-invasive',name:'Invasive species',desc:'Weeds that crowd out native Utah plants.'},
+ {id:'tool-report',name:'Report a sighting',desc:'Tell us where you spotted a plant.'}
+].map(function(t){t.tool=true;t.latin='';t.types=[];t.colors=[];t.leaf='';t.regions=[];t.seasons=[];t.features=[];t.growth='';t.height='';t.moisture='';return t;});
+var BYID={};PLANTS.concat(TOOLS).forEach(function(b){BYID[b.id]=b;});
+var KW={'tool-identify':'photo picture camera identify unknown upload what is this','tool-saved':'saved favorites bookmarks bookmarked list','tool-poison':'poisonous toxic dog cat pet pets sick danger safety','tool-invasive':'invasive weeds noxious species','tool-report':'report sighting submit'};
+
+var TASKS=[
+ {id:'T1',img:'columbine',text:'You are hiking in the Uinta Mountains in summer and take a picture of this flower. The petals were blue and white. Find its page.',ok:['columbine']},
+ {id:'T2',img:'sego-lily',text:'You photograph this flower on a spring hike along the Wasatch Front. Find its page.',ok:['sego-lily']},
+ {id:'T3',img:'aspen',text:'You take this picture of a tree on a mountain hillside in the fall. Its leaves had turned yellow. Find its page.',ok:['aspen']},
+ {id:'T4',img:'blue-spruce',text:'You photograph this evergreen in the mountains. A ranger tells you it is the state tree. Find its page.',ok:['blue-spruce']},
+ {id:'T5',img:'bigtooth-maple',text:'It is fall along the Wasatch Front and you photograph this tree. Its leaves were red. Find its page.',ok:['bigtooth-maple']},
+ {id:'T6',img:'cattail',text:'At a wetland near the Great Salt Lake you photograph this tall plant. Find its page.',ok:['cattail']},
+ {id:'T7',img:'yellow-pond-lily',text:'You photograph this plant floating on a lake in summer. The flower was yellow. Find its page.',ok:['yellow-pond-lily']},
+ {id:'T8',img:'rabbitbrush',text:'In the Great Basin in the fall you photograph this shrub. The flowers were yellow. Find its page.',ok:['rabbitbrush']},
+ {id:'T9',img:'',text:'You took a photo of a plant and want help figuring out what it is. Find the tool for that.',ok:['tool-identify']},
+ {id:'T10',img:'',text:'You have a dog and want to know which plants could make it sick. Find that information.',ok:['tool-poison']}
+];
+
+/* ---------- filters ---------- */
+var FKEYS=['type','color','feature','leaf','growth','height','region','moisture','season'];
+var FTITLE={type:'Plant type',color:'Color',feature:'Notable feature',leaf:'Leaf shape',growth:'Evergreen or not',height:'Height',region:'Where you saw it',moisture:'Ground',season:'Season seen'};
+var FOPTS={color:COLORS,feature:FEATURES,leaf:LEAVES,growth:GROWTH,height:HEIGHTS,region:REGIONS,moisture:MOISTURE,season:SEASONS};
+var FGROUPS=[
+ {id:'looks',title:'Look',open:true,items:['color','feature']},
+ {id:'leaves',title:'Leaves',open:true,items:['leaf','growth']},
+ {id:'size',title:'Size',open:false,items:['height']},
+ {id:'where',title:'Where and when',open:false,items:['region','moisture','season']}
+];
+function blankFilters(){var f={};FKEYS.forEach(function(k){f[k]=[];});return f;}
+function attr(p,k){
+  if(k==='type')return p.types;if(k==='color')return p.colors;if(k==='feature')return p.features;
+  if(k==='leaf')return [p.leaf];if(k==='growth')return [p.growth];if(k==='height')return [p.height];
+  if(k==='region')return p.regions;if(k==='moisture')return [p.moisture];return p.seasons;
+}
+function passes(p,f,o){
+  o=o||{};
+  if(o.type&&p.types.indexOf(o.type)<0)return false;
+  if(o.region&&p.regions.indexOf(o.region)<0)return false;
+  for(var i=0;i<FKEYS.length;i++){
+    var k=FKEYS[i];
+    if(o.skip&&o.skip.indexOf(k)>=0)continue;
+    if(k==='type'&&!o.useType)continue;
+    var sel=f[k];if(!sel.length)continue;
+    if(!attr(p,k).some(function(v){return sel.indexOf(v)>=0;}))return false;
+  }
+  return true;
+}
+function visibleKeys(o,showType){return FKEYS.filter(function(k){return (o.skip||[]).indexOf(k)<0&&(k!=='type'||showType);});}
+function anyFilter(keys){return keys.some(function(k){return S.filters[k].length>0;});}
+
 /* ---------- state, storage ---------- */
 function $(s){return document.querySelector(s);}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function load(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function wide(){return typeof window.innerWidth==='number'&&window.innerWidth>=760;}
 
-var S={route:'home',leafFrom:'home',confirm:'',query:'',filters:{type:[],color:[],leaf:[],region:[],season:[]}};
+var S={route:'home',leafFrom:'home',confirm:'',open:{},filters:blankFilters()};
 var LOG=load('uplog',[]);
 var RESULTS=load('upresults',[]);
+var BM=load('upbm',[]);
+var toastTimer=null,toastUndo=null;
+function showToast(msg,undo){
+  var t=$('#toast');if(!t)return;
+  toastUndo=undo||null;
+  t.innerHTML='<span>'+esc(msg)+'</span>'+(undo?'<button type="button" class="primary" id="undo">Undo</button>':'');
+  t.hidden=false;clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){t.hidden=true;toastUndo=null;},6000);
+}
 var T=null;
 var T0=Date.now();
 
-/* ---------- shared results (Google Sheet via Apps Script) and admin gate ----------
-   Every finished task is saved in this browser AND posted to the Apps Script web app, which adds a row to the sheet.
-   Results, report, click log, and delete controls stay hidden until someone enters the admin key (ADMIN_KEY in the script).
-   The key is only checked by the script when data is listed or cleared, and is kept for this browser tab only. */
-var BACKEND_URL='https://script.google.com/macros/s/AKfycbylzPgk7XDZkrq_6th89aLelKf-eDN1KDY2eDzGy0EeffG4iee7NzYpY0_onyqY36N0/exec';
-var ADMIN=false,ADMIN_KEY='',CLOUD=[],CLOUDERR='';
-var SYNC={pending:0,fail:0};
-var ADMIN_ROUTES=/^(results|report|log)$/;
-try{ADMIN_KEY=sessionStorage.getItem('upadminkey')||'';}catch(e){}
-
-function post(body){
-  return fetch(BACKEND_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}).then(function(r){return r.json();});
-}
-function syncNote(){
-  var n=$('#syncnote');if(!n)return;
-  n.textContent=SYNC.pending>0?'Saving your answers...':
-    SYNC.fail>0?'Some answers could not be saved to the shared results. They are saved in this browser.':
-    'Your answers were saved to the shared results.';
-}
-function taskRow(rec,t){
-  var o={session_id:rec.id,participant:rec.participant,started:rec.started};
-  for(var k in t){if(k!=='views'&&k!=='events')o[k]=t[k];}
-  o.views_json=JSON.stringify(t.views||[]);
-  o.events_json=JSON.stringify(t.events||[]);
-  return o;
-}
-function sendRow(row,tries){
-  return post({action:'save',row:row}).then(function(r){if(!r||!r.ok)throw new Error('save failed');}).catch(function(err){
-    if(tries>0)return new Promise(function(res){setTimeout(res,1500);}).then(function(){return sendRow(row,tries-1);});
-    throw err;
-  });
-}
-function cloudSave(rec){
-  var t=rec.tasks[rec.tasks.length-1];if(!t)return;
-  var row=taskRow(rec,t),tt=T;
-  SYNC.pending++;
-  tt.chain=(tt.chain||Promise.resolve()).then(function(){return sendRow(row,2);}).then(function(){SYNC.pending--;syncNote();},function(){SYNC.pending--;SYNC.fail++;syncNote();});
-}
-function loadCloud(){
-  CLOUDERR='';
-  return post({action:'list',key:ADMIN_KEY}).then(function(r){
-    if(!r||!r.ok)throw new Error(r&&r.error?r.error:'no response');
-    var by={};
-    r.rows.forEach(function(row){
-      var s=by[row.session_id]||(by[row.session_id]={id:row.session_id,participant:row.participant,started:row.started,complete:false,tasks:[]});
-      var t={};for(var k in row){if(k!=='views_json'&&k!=='events_json'&&k!=='saved_at'&&k!=='session_id'&&k!=='participant'&&k!=='started')t[k]=row[k];}
-      try{t.views=JSON.parse(row.views_json||'[]');}catch(e){t.views=[];}
-      try{t.events=JSON.parse(row.events_json||'[]');}catch(e){t.events=[];}
-      s.tasks.push(t);
-    });
-    CLOUD=Object.keys(by).map(function(k){var s=by[k];s.tasks.sort(function(a,b){return a.order-b.order;});s.complete=s.tasks.length>=TASKS.length;return s;});
-  });
-}
-function allResults(){
-  var by={};
-  CLOUD.concat(RESULTS).forEach(function(s){var c=by[s.id];if(!c||s.tasks.length>c.tasks.length)by[s.id]=s;});
-  return Object.keys(by).map(function(k){return by[k];}).sort(function(a,b){return String(a.started).localeCompare(String(b.started));});
-}
-function refreshAdmin(){
-  if(T)return;
-  var k=routeParts(S.route)[0];
-  if(k!=='results'&&k!=='report')return;
-  var o=$('#out');if(o&&o.value)return;
-  render();
-}
-function unlockAdmin(){
-  var key=window.prompt('Admin key');
-  if(!key)return;
-  ADMIN_KEY=key.trim();
-  loadCloud().then(function(){
-    ADMIN=true;try{sessionStorage.setItem('upadminkey',ADMIN_KEY);}catch(e){}
-    render();
-  },function(err){
-    ADMIN=false;ADMIN_KEY='';try{sessionStorage.removeItem('upadminkey');}catch(e){}
-    window.alert('Could not unlock. The key was not accepted or the results sheet could not be reached ('+(err&&err.message?err.message:'error')+').');
-  });
-}
-function lockAdmin(){
-  ADMIN=false;ADMIN_KEY='';CLOUD=[];S.confirm='';try{sessionStorage.removeItem('upadminkey');}catch(e){}
-  S.route='home';render();window.scrollTo(0,0);
-}
-/* Reopen the admin view after a page reload in the same tab. */
-if(ADMIN_KEY){
-  loadCloud().then(function(){ADMIN=true;if(!T)render();},function(){ADMIN_KEY='';try{sessionStorage.removeItem('upadminkey');}catch(e){}});
-}
-
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 function fmt(ms){var s=Math.floor(ms/1000);var m=Math.floor(s/60);s=s%60;return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;}
-function count(fn){return PLANTS.filter(fn).length;}
+function byName(a,b){return a.name.localeCompare(b.name);}
 
 /* ---------- click logging ---------- */
 function logEvent(kind,target){
@@ -524,15 +609,15 @@ function toCSV(rows,cols){return [cols.join(',')].concat(rows.map(function(r){re
 var LOGCOLS=['n','time','elapsed_ms','mode','participant','task_id','task_ms','page','kind','target'];
 var RESCOLS=['session_id','participant','started','order','task_id','scenario','expected','endpoint','endpoint_name','correct','skipped','time_ms','clicks','backtracks','wrong_turns','searches','filters_used','first_choice','first_choice_on_path','page_trail','struggle_events','path'];
 var REPCOLS=['page','visits','avg_seconds','clicks','backtracks','wrong_turns','wrong_answers','gave_up','struggle'];
-function resultRows(){var out=[];allResults().forEach(function(s){s.tasks.forEach(function(t){var r={session_id:s.id,participant:s.participant,started:s.started};for(var k in t)r[k]=t[k];out.push(r);});});return out;}
+function resultRows(){var out=[];RESULTS.forEach(function(s){s.tasks.forEach(function(t){var r={session_id:s.id,participant:s.participant,started:s.started};for(var k in t)r[k]=t[k];out.push(r);});});return out;}
 function getData(src,f){
   if(src==='report'){
-    var R=computeReport(allResults());
+    var R=computeReport(RESULTS);
     var prow=R.pages.map(function(p){var o={};for(var k in p)o[k]=p[k];o.avg_seconds=Math.round(p.avg_seconds*10)/10;return o;});
     return f==='csv'?toCSV(prow,REPCOLS):JSON.stringify({pages:prow,tasks:R.tasks,backtrack_paths:R.pairs},null,2);
   }
   if(src==='log')return f==='csv'?toCSV(LOG,LOGCOLS):JSON.stringify(LOG,null,2);
-  return f==='csv'?toCSV(resultRows(),RESCOLS):JSON.stringify(allResults(),null,2);
+  return f==='csv'?toCSV(resultRows(),RESCOLS):JSON.stringify(RESULTS,null,2);
 }
 function setStatus(m){var s=$('#status');if(s)s.textContent=m;}
 function copyText(text,ta){
@@ -545,7 +630,7 @@ function copyText(text,ta){
 }
 
 /* ---------- search ---------- */
-function hay(b){return [b.name,b.latin,b.types.map(function(t){return TL[t];}).join(' '),b.colors.join(' '),b.leaf,b.regions.join(' '),b.seasons.join(' '),KW[b.id]||''].join(' ').toLowerCase();}
+function hay(b){return [b.name,b.latin,b.types.map(function(t){return TL[t];}).join(' '),b.colors.join(' '),b.leaf,b.regions.join(' '),b.seasons.join(' '),b.features.join(' '),b.growth,b.height,b.moisture,KW[b.id]||''].join(' ').toLowerCase();}
 function doSearch(q){
   var toks=q.toLowerCase().split(/\s+/).filter(Boolean);
   var res=PLANTS.concat(TOOLS).filter(function(b){var h=hay(b);return toks.every(function(t){return h.indexOf(t)>=0;});});
@@ -556,12 +641,11 @@ function doSearch(q){
 /* ---------- routing ---------- */
 function crumbsFor(route){
   var i=route.indexOf(':');var k=i<0?route:route.slice(0,i);var arg=i<0?'':route.slice(i+1);
-  var H=['home','Home'],PL=['places','Places and seasons'];
+  var H=['home','Home'],PL=['places','Where you saw it'];
   if(k==='home')return [H];
   if(k==='type')return [H,[route,TL[arg]]];
   if(k==='places')return [H,PL];
   if(k==='place')return [H,PL,[route,arg]];
-  if(k==='season'){var p=arg.split('|');return [H,PL,['place:'+p[0],p[0]],[route,p[1]]];}
   if(k==='search')return [H,[route,'Search: '+arg]];
   if(k==='leaf')return crumbsFor(S.leafFrom).concat([[route,BYID[arg].name]]);
   if(k==='log')return [H,[route,'Click log']];
@@ -581,20 +665,18 @@ function go(route){
     }
   }else if(isLeaf&&S.route.indexOf('leaf:')!==0){S.leafFrom=S.route;}
   S.route=route;S.confirm='';render();window.scrollTo(0,0);
-  if(ADMIN&&/^(results|report)$/.test(routeParts(route)[0]))loadCloud().then(refreshAdmin,function(err){CLOUDERR=err&&err.message?err.message:'error';refreshAdmin();});
 }
 
 /* ---------- struggle analysis ---------- */
-var PAGE_ORDER=['Home page','Flowers page','Trees page','Bushes page','Aquatics page','Places index','Place page','Season list','Search results'];
+var PAGE_ORDER=['Home page','Flowers page','Non-Flower page','Trees page','Bushes page','Aquatics page','Where you saw it','Place page','Search results'];
 function routeParts(r){var i=r.indexOf(':');return [i<0?r:r.slice(0,i),i<0?'':r.slice(i+1)];}
-function depthOf(r){var k=routeParts(r)[0];return k==='home'?0:k==='place'?2:k==='season'?3:1;}
+function depthOf(r){var k=routeParts(r)[0];return k==='home'?0:k==='place'?2:1;}
 function pageLabel(r){
   var p=routeParts(r),k=p[0];
   if(k==='home')return 'Home page';
   if(k==='type')return TL[p[1]]+' page';
-  if(k==='places')return 'Places index';
+  if(k==='places')return 'Where you saw it';
   if(k==='place')return 'Place page';
-  if(k==='season')return 'Season list';
   if(k==='search')return 'Search results';
   return k;
 }
@@ -604,7 +686,6 @@ function onPath(r,task){
   if(k==='type')return targets.some(function(b){return b.types.indexOf(a)>=0;});
   if(k==='places')return targets.some(function(b){return !b.tool;});
   if(k==='place')return targets.some(function(b){return b.regions.indexOf(a)>=0;});
-  if(k==='season'){var q=a.split('|');return targets.some(function(b){return b.regions.indexOf(q[0])>=0&&b.seasons.indexOf(q[1])>=0;});}
   return true;
 }
 /* Backtrack: leaving a page without going deeper (up, sideways, or back to a page already seen).
@@ -675,7 +756,6 @@ function persistSession(){
   var idx=-1;RESULTS.forEach(function(s,i){if(s.id===T.id)idx=i;});
   if(idx<0)RESULTS.push(rec);else RESULTS[idx]=rec;
   save('upresults',RESULTS);
-  cloudSave(rec);
 }
 function completeTask(id,skipped){
   var task=T.order[T.i];
@@ -696,25 +776,23 @@ function completeTask(id,skipped){
   T.i++;
   persistSession();
   T.state=T.i>=T.order.length?'done':'scenario';
-  S.route='home';S.query='';render();window.scrollTo(0,0);
-  syncNote();
+  S.route='home';S.filters=blankFilters();render();window.scrollTo(0,0);
 }
 function startTest(){
   var el=$('#pid');var pid=(el&&el.value.trim())||('anon-'+Math.random().toString(36).slice(2,6));
-  T={id:'s'+Date.now()+'-'+Math.random().toString(36).slice(2,6),pid:pid,order:shuffle(TASKS),i:0,state:'scenario',startedAt:new Date().toISOString(),tasks:[],clicks:0,path:[],taskStart:0,timer:null};
+  T={id:'s'+Date.now(),pid:pid,order:shuffle(TASKS),i:0,state:'scenario',startedAt:new Date().toISOString(),tasks:[],clicks:0,path:[],taskStart:0,timer:null};
   render();window.scrollTo(0,0);
 }
 function beginTask(){
   T.state='running';T.taskStart=performance.now();T.clicks=0;T.path=[];T.filters=0;T.searches=0;
   T.views=[{route:'home',page:'Home page',enter:performance.now(),clicks:0,dwell:0}];
-  S.route='home';S.query='';
+  S.route='home';S.filters=blankFilters();
   render();window.scrollTo(0,0);
   clearInterval(T.timer);
   T.timer=setInterval(function(){var el=$('#timer');if(el)el.textContent=fmt(performance.now()-T.taskStart);},250);
 }
 
 /* ---------- view builders ---------- */
-function screen(name){return '<p class="screen">Screen: '+esc(name)+'</p>';}
 function crumbs(route){
   var c=crumbsFor(route);
   return '<nav class="crumbs" aria-label="Breadcrumb">'+c.map(function(x,i){
@@ -724,73 +802,96 @@ function crumbs(route){
 }
 function header(){
   var r=S.route;
-  var inPlaces=/^(places|place:|season:)/.test(r);
-  function nb(route,label,on){return '<button data-go="'+route+'" data-log="nav:'+label+'"'+(on?' aria-pressed="true"':'')+'>'+label+'</button>';}
   var q=r.indexOf('search:')===0?r.slice(7):'';
-  var homeBtn='<button type="button" data-go="home" data-log="nav:Utah plants (home)"'+(r==='home'?' aria-pressed="true"':'')+'>Utah plants</button>';
-  var quick=TYPES.map(function(t){return nb('type:'+t[0],t[1],r==='type:'+t[0]);}).join('')+nb('places','Places and seasons',inPlaces);
-  if(!SHOW_SEARCH)return '<nav class="bar" aria-label="Quick access">'+homeBtn+'<span class="grow"></span>'+quick+'</nav>';
-  return '<form class="bar" role="search" id="sform">'+homeBtn+
-    '<input type="text" id="q" aria-label="Search plants" autocomplete="off" placeholder="Search by name, color, or place" value="'+esc(q)+'"><button type="submit">Search</button></form>'+
-    '<nav class="bar" aria-label="Quick access">'+quick+'</nav>';
+  var inPlaces=/^(places|place:)/.test(r);
+  function tab(route,label,on){return '<button data-go="'+route+'" data-log="nav:'+esc(label)+'"'+(on?' aria-pressed="true"':'')+'>'+esc(label)+'</button>';}
+  var tabs=TYPES.map(function(t){return tab('type:'+t[0],t[1],r==='type:'+t[0]);}).join('')+tab('places','Where you saw it',inPlaces);
+  var search=SHOW_SEARCH?'<form class="search" role="search" id="sform"'+(q?' data-typed="1"':'')+'><label class="sr" for="q">Search plants</label><input type="text" id="q" autocomplete="off" placeholder="Search by name, color, leaf, or place" value="'+esc(q)+'"><button type="submit" class="primary">Search</button><div class="suggest">'+tryChips()+'</div></form>':'';
+  return '<header class="top"><div class="topbar"><button class="brand" data-go="home" data-log="nav:Utah Plants (home)">Utah Plants</button>'+search+'</div><nav class="tabs" aria-label="Browse plants">'+tabs+'</nav></header>';
 }
 function footer(){
   var run=T&&T.state==='running';
-  var admin=ADMIN?'<button data-go="results" data-log="control:Test results">Test results</button><button data-go="report" data-log="control:Struggle report">Struggle report</button><button data-go="log" data-log="control:Click log">Click log: <span id="logcount">'+LOG.length+'</span> clicks recorded</button>':'';
-  return '<footer class="ph col"><p>Wireframe: black and white, one font. Dashed boxes are placeholders. Plant data is sample data. Pictures are generic line drawings, not photos.</p>'+
-    (run?'':'<div class="bar"><button data-go="test" data-log="control:Test mode">Test mode</button>'+admin+(ADMIN?'<button data-act="lock">Lock admin</button>':'<button data-act="unlock">Admin</button>')+'</div>')+'</footer>';
+  return '<footer class="foot"><p>First-level prototype. Plant data is sample data. Pictures are generic line drawings, not photos.</p>'+
+    (run?'':'<details class="tester"><summary data-log="group:Research tools">Research tools ('+'<span id="logcount">'+LOG.length+'</span> clicks recorded)</summary><div class="bar" style="margin-top:10px"><button data-go="test" data-log="control:Test mode">Test mode</button><button data-go="results" data-log="control:Test results">Test results</button><button data-go="report" data-log="control:Struggle report">Struggle report</button><button data-go="log" data-log="control:Click log">Click log</button></div></details>')+'</footer>';
 }
-function planTags(p){return '<span class="tags">'+p.types.map(function(t){return '<span class="tag">'+esc(TL[t])+'</span>';}).join('')+'</span>';}
+function tagsHtml(p,skip){
+  var ts=p.types.filter(function(t){return t!==skip;});
+  return ts.length?'<span class="tags">'+ts.map(function(t){return '<span class="tag">'+esc(TL[t])+'</span>';}).join('')+'</span>':'';
+}
+var TRY=['white flower','berries','evergreen','desert'];
+function tryChips(){
+  if(!SHOW_SEARCH)return '';
+  return '<div class="try"><span class="muted">Try searching for</span>'+TRY.map(function(q){return '<button type="button" data-act="trysearch" data-q="'+esc(q)+'" data-log="search:'+esc(q)+'">'+esc(q)+'</button>';}).join('')+'</div>';
+}
+function isBM(id){return BM.indexOf(id)>=0;}
+function toggleBM(id){
+  var i=BM.indexOf(id);
+  if(i>=0)BM.splice(i,1);else BM.push(id);
+  save('upbm',BM);
+}
+function bmIcon(on){return '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 3h12v18l-6-4.5L6 21Z" fill="'+(on?'currentColor':'none')+'" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';}
+function bmBtn(b){
+  var on=isBM(b.id);
+  return '<button class="bm" data-act="bookmark" data-id="'+b.id+'" data-log="bookmark:'+(on?'Remove ':'Add ')+esc(b.name)+'"'+(on?' aria-pressed="true"':' aria-pressed="false"')+' title="'+(on?'Remove bookmark':'Bookmark this plant')+'" aria-label="'+(on?'Remove bookmark: ':'Bookmark ')+esc(b.name)+'">'+bmIcon(on)+'</button>';
+}
 function rowFor(b){
-  return '<button class="rowbtn box" data-go="leaf:'+b.id+'" data-log="leaf:'+esc(b.name)+'">'+(b.tool?'':'<span class="thumb">'+pic(b.id)+'</span>')+'<span>'+esc(b.name)+'</span>'+(b.latin?'<span>'+esc(b.latin)+'</span>':'')+planTags(b)+'</button>';
+  var main='<button class="rowbtn" data-go="leaf:'+b.id+'" data-log="leaf:'+esc(b.name)+'">'+(b.tool?'':'<span class="thumb">'+pic(b.id)+'</span>')+'<span class="nm">'+esc(b.name)+'</span>'+(b.latin?'<span class="latin">'+esc(b.latin)+'</span>':'<span class="muted">'+esc(b.desc)+'</span>')+tagsHtml(b)+'</button>';
+  return b.tool?main:'<div class="rowwrap">'+main+bmBtn(b)+'</div>';
 }
+function cardFor(p,skip){
+  return '<div class="cardwrap"><button class="card" data-go="leaf:'+p.id+'" data-log="leaf:'+esc(p.name)+'">'+pic(p.id)+'<span class="nm">'+esc(p.name)+'</span><span class="latin">'+esc(p.latin)+'</span>'+tagsHtml(p,skip)+'</button>'+bmBtn(p)+'</div>';
+}
+function mtnPic(){return '<span class="pic" role="img" aria-label="Mountain drawing"><svg viewBox="0 0 120 120" focusable="false"><path class="s" d="M6 100L44 38L62 66L80 44L114 100Z"/><path class="n" d="M44 38L52 52L44 48L37 53Z"/><path class="n" d="M6 100H114"/></svg></span>';}
+function heroArt(){
+  var s='<svg viewBox="0 0 900 340" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><rect class="hs" width="900" height="340"/>';
+  s+='<polygon class="hf" points="0,210 60,150 110,180 190,90 250,150 310,120 380,185 460,125 530,70 600,140 660,115 730,170 810,95 870,150 900,130 900,340 0,340"/>';
+  s+='<path class="hm" d="M0 250 Q130 200 260 238 T520 232 T780 226 T900 240 L900 340 L0 340Z"/>';
+  for(var x=14;x<900;x+=26){var y=236+Math.round(8*Math.sin(x/70));s+='<polygon class="hm" points="'+x+','+(y-34)+' '+(x-11)+','+y+' '+(x+11)+','+y+'"/>';}
+  s+='<path class="hg" d="M0 290 Q200 262 430 284 T900 276 L900 340 L0 340Z"/><path class="hn" d="M0 322 Q260 300 520 318 T900 312 L900 340 L0 340Z"/></svg>';
+  return s;
+}
+function stat(v,l){return '<div class="stat"><b>'+v+'</b><span class="muted">'+l+'</span></div>';}
 
 function home(){
-  var n=function(t){return count(function(p){return p.types.indexOf(t)>=0;});};
-  var rep={Flower:'sego-lily',Tree:'blue-spruce',Bush:'sagebrush',Aquatic:'cattail'};
-  var quick=TYPES.map(function(t){return '<button class="card" data-go="type:'+t[0]+'" data-log="nav:quick link '+t[1]+'">'+pic(rep[t[0]])+'<span>'+t[1]+'</span><span>'+n(t[0])+' plants</span></button>';}).join('')+
-    '<button class="card" data-go="places" data-log="nav:quick link Places and seasons"><span class="img" style="aspect-ratio:1/1;width:100%" role="img" aria-label="Image placeholder"></span><span>Places and seasons</span><span>'+REGIONS.length+' regions</span></button>';
-  var tools=TOOLS.map(function(t){return '<button class="box" data-go="leaf:'+t.id+'" data-log="leaf:'+esc(t.name)+'">'+esc(t.name)+'</button>';}).join('');
-  function stat(v,l){return '<div class="box stat"><span>'+v+'</span><span>'+l+'</span></div>';}
+  var rep={Flower:'sego-lily',NonFlower:'cattail',Tree:'blue-spruce',Bush:'sagebrush',Aquatic:'yellow-pond-lily'};
+  var tiles=TYPES.map(function(t){
+    var n=PLANTS.filter(function(p){return p.types.indexOf(t[0])>=0;}).length;
+    return '<button class="card" data-go="type:'+t[0]+'" data-log="nav:quick link '+t[1]+'">'+pic(rep[t[0]])+'<span class="nm">'+t[1]+'</span><span class="muted">'+n+' plants</span></button>';
+  }).join('')+'<button class="card" data-go="places" data-log="nav:quick link Where you saw it">'+mtnPic()+'<span class="nm">Where you saw it</span><span class="muted">'+REGIONS.length+' kinds of places</span></button>';
+  var tools=TOOLS.map(function(t){return '<button class="tool" data-go="leaf:'+t.id+'" data-log="leaf:'+esc(t.name)+'"><span class="nm">'+esc(t.name)+'</span><span>'+(t.id==='tool-saved'?(BM.length+' saved. '):'')+esc(t.desc)+'</span></button>';}).join('');
   var gcn=[['Plants',146],['Mollusks',27],['Birds',23],['Fish',22],['Insects',16],['Mammals',14],['Amphibians',4],['Reptiles',4]];
-  return screen('Home page')+
-  '<section class="box hero" aria-label="Welcome"><div class="img" role="img" aria-label="Photo placeholder"></div><p>Photo or photo rotator goes here</p><p>This site is made by the average person for the average person. I am sorry, biologists, if this hurts your feelings.</p></section>'+
-  '<section><h2>Quick access</h2><div class="grid">'+quick+'</div></section>'+
-  '<section><h2>Safety and tools</h2><div class="grid wide">'+tools+'</div></section>'+
-  '<section><h2>Utah at a glance</h2><div class="grid">'+
-    stat('84,916','square miles of land and water')+
-    stat('65%','owned by the federal government')+
-    stat('13,528 ft','highest point, Kings Peak (Uinta Mountains)')+
-    stat('2,350 ft','lowest point, Beaver Dam Wash')+
-    stat('256','species of greatest conservation need')+
-  '</div></section>'+
-  '<section><h2>Species of greatest conservation need, by group</h2><div class="grid">'+gcn.map(function(g){return stat(g[1],g[0]);}).join('')+'</div></section>'+
-  '<section><h2>State symbols</h2><div class="grid">'+stat('Sego lily','state flower')+stat('Blue spruce','state tree')+stat('Rocky Mountain elk','state animal')+'</div></section>'+
-  '<p class="ph">Data sources: Utah Division of State History state facts page; Utah Wildlife Action Plan figures as reported by TownLift, January 2026. Sample content for the wireframe.</p>';
+  return '<section class="hero" aria-label="Welcome">'+heroArt()+'<div class="heroCard"><h1>This site is made by the average person for the average person.</h1><p class="muted">I am sorry, biologists, if this hurts your feelings.</p></div></section>'+
+  '<section class="sec"><h2>Browse plants</h2><div class="grid">'+tiles+'</div></section>'+
+  '<section class="sec"><h2>Tools</h2><div class="tools">'+tools+'</div></section>'+
+  '<section class="sec"><h2>Utah at a glance</h2><div class="stats">'+stat('84,916','square miles of land and water')+stat('65%','owned by the federal government')+stat('13,528 ft','Kings Peak, the highest point')+stat('2,350 ft','Beaver Dam Wash, the lowest point')+'</div>'+
+  '<details class="more" data-key="more"'+(S.open.more?' open':'')+'><summary data-log="group:More Utah facts">More Utah wildlife facts</summary><div class="col"><p><b>256</b> species of greatest conservation need, by group:</p><div class="stats">'+gcn.map(function(g){return stat(g[1],g[0]);}).join('')+'</div><div class="stats">'+stat('Sego lily','state flower')+stat('Blue spruce','state tree')+stat('Rocky Mountain elk','state animal')+'</div><p class="muted small">Sources: Utah Division of State History state facts page; Utah Wildlife Action Plan figures as reported by TownLift, January 2026.</p></div></details></section>';
 }
 
-function anyFilter(){var f=S.filters;return !!(f.type.length||f.color.length||f.leaf.length||f.region.length||f.season.length);}
-function matches(p,type,useTypeFilter){
-  var f=S.filters;
-  if(type&&p.types.indexOf(type)<0)return false;
-  if(useTypeFilter&&f.type.length&&!p.types.some(function(t){return f.type.indexOf(t)>=0;}))return false;
-  if(f.color.length&&!p.colors.some(function(c){return f.color.indexOf(c)>=0;}))return false;
-  if(f.leaf.length&&f.leaf.indexOf(p.leaf)<0)return false;
-  if(f.region.length&&!p.regions.some(function(r){return f.region.indexOf(r)>=0;}))return false;
-  if(f.season.length&&!p.seasons.some(function(s){return f.season.indexOf(s)>=0;}))return false;
-  return true;
-}
-function fgroup(key,title,opts){
-  return '<fieldset class="fs"><legend>'+esc(title)+'</legend>'+opts.map(function(o){
-    var v=Array.isArray(o)?o[0]:o,l=Array.isArray(o)?o[1]:o;
-    return '<label class="chk"><input type="checkbox" data-fgroup="'+key+'" data-fval="'+esc(v)+'" data-log="filter:'+esc(title)+' = '+esc(l)+'"'+(S.filters[key].indexOf(v)>=0?' checked':'')+'> <span>'+esc(l)+'</span></label>';
+function fset(k,pool,o){
+  var opts=k==='type'?TYPES:FOPTS[k];
+  return '<fieldset class="fs"><legend>'+esc(FTITLE[k])+'</legend>'+opts.map(function(x){
+    var v=Array.isArray(x)?x[0]:x,l=Array.isArray(x)?x[1]:x;
+    var f2={};FKEYS.forEach(function(q){f2[q]=S.filters[q];});f2[k]=[v];
+    var c=pool.filter(function(p){return passes(p,f2,o);}).length;
+    var on=S.filters[k].indexOf(v)>=0;
+    return '<label class="chk'+(c?'':' zero')+'"><input type="checkbox" data-fgroup="'+k+'" data-fval="'+esc(v)+'" data-log="filter:'+esc(FTITLE[k])+' = '+esc(l)+'"'+(on?' checked':'')+'><span>'+esc(l)+'</span><span class="ct" aria-label="'+c+' plants">'+c+'</span></label>';
   }).join('')+'</fieldset>';
 }
-var FTITLE={type:'Plant type',color:'Color (flower or fall leaf)',leaf:'Leaf shape',region:'Location',season:'Season seen'};
-function filterAside(showType){
-  return '<aside class="box col" aria-label="Filters"><div class="row"><span>Filters</span><button data-act="clearfilters" data-log="filter:Clear all filters">Clear all</button></div>'+
-    (showType?fgroup('type',FTITLE.type,TYPES):'')+
-    fgroup('color',FTITLE.color,COLORS)+fgroup('leaf',FTITLE.leaf,LEAVES)+fgroup('region',FTITLE.region,REGIONS)+fgroup('season',FTITLE.season,SEASONS)+'</aside>';
+function filterAside(pool,o,showType){
+  var keys=visibleKeys(o,showType);
+  var active=keys.reduce(function(a,k){return a+S.filters[k].length;},0);
+  var open=S.open.panel;if(open===undefined)open=wide();
+  var groups=[];
+  if(showType)groups.push({id:'type',title:'Plant type',open:true,items:['type']});
+  FGROUPS.forEach(function(g){groups.push(g);});
+  var html=groups.map(function(g){
+    var items=g.items.filter(function(k){return keys.indexOf(k)>=0;});
+    if(!items.length)return '';
+    var n=items.reduce(function(a,k){return a+S.filters[k].length;},0);
+    var go=S.open['g:'+g.id];if(go===undefined)go=g.open;
+    return '<details class="fgroup" data-key="g:'+g.id+'"'+(go?' open':'')+'><summary data-log="group:'+esc(g.title)+'">'+esc(g.title)+(n?' ('+n+' selected)':'')+'</summary>'+items.map(function(k){return fset(k,pool,o);}).join('')+'</details>';
+  }).join('');
+  return '<details class="fpanel" data-key="panel"'+(open?' open':'')+'><summary data-log="group:Filters panel">Filters'+(active?' ('+active+' active)':'')+'</summary><div class="fbody">'+(active?'<div><button data-act="clearfilters" data-log="filter:Clear all filters">Clear all filters</button></div>':'')+html+'</div></details>';
 }
 function chipsHtml(keys){
   var c='';
@@ -800,59 +901,182 @@ function chipsHtml(keys){
   });});
   return c;
 }
-var PAGENAME={Flower:'Flower page',Tree:'Tree page',Bush:'Bush page',Aquatic:'Aquatic page'};
-function typePage(type){
-  var label=TL[type];
-  var list=PLANTS.filter(function(p){return matches(p,type);}).sort(function(a,b){return a.name.localeCompare(b.name);});
-  var total=count(function(p){return p.types.indexOf(type)>=0;});
-  var chips=chipsHtml(['color','leaf','region','season']);
-  var grid=list.length?'<div class="grid">'+list.map(function(p){
-    return '<button class="card" data-go="leaf:'+p.id+'" data-log="leaf:'+esc(p.name)+'">'+pic(p.id)+'<span>'+esc(p.name)+'</span><span>'+esc(p.latin)+'</span>'+planTags(p)+'</button>';
-  }).join('')+'</div>':'<div class="ph col"><p>No '+esc(label.toLowerCase())+' match these filters.</p><div><button data-act="clearfilters" data-log="filter:Clear all filters">Clear all filters</button></div></div>';
-  return screen(PAGENAME[type]+' (type page template, view A)')+crumbs('type:'+type)+
-  '<div class="split">'+filterAside(false)+'<div class="col"><div class="row"><span>'+list.length+' of '+total+' '+esc(label.toLowerCase())+' shown</span><span class="ph">Sort: name A to Z (not built)</span></div>'+
-  (chips?'<div class="chips" aria-label="Active filters">'+chips+'</div>':'')+grid+'</div></div>';
+function emptyBox(on,pool,o,keys){
+  if(!on)return '<div class="ph col"><p>No plants here yet.</p></div>';
+  var opts=[];
+  keys.forEach(function(k){S.filters[k].forEach(function(v){
+    var f2={};FKEYS.forEach(function(q){f2[q]=S.filters[q].slice();});
+    f2[k]=f2[k].filter(function(x){return x!==v;});
+    var n=pool.filter(function(p){return passes(p,f2,o);}).length;
+    if(n>0)opts.push({k:k,v:v,n:n});
+  });});
+  opts.sort(function(a,b){return b.n-a.n;});
+  var btns=opts.slice(0,4).map(function(x){
+    var lab=x.k==='type'?TL[x.v]:x.v;
+    return '<button data-act="unfilter" data-fgroup="'+x.k+'" data-fval="'+esc(x.v)+'" data-log="filter:remove '+esc(FTITLE[x.k])+' = '+esc(lab)+'">Remove "'+esc(lab)+'" to see '+x.n+(x.n===1?' plant':' plants')+'</button>';
+  }).join('');
+  return '<div class="ph col"><p>No plants match all of these filters.</p>'+(btns?'<div class="relax">'+btns+'</div>':'')+'<div><button data-act="clearfilters" data-log="filter:Clear all filters">Clear all filters</button></div></div>';
 }
-
+function browse(cfg){
+  var o=cfg.opts;
+  var list=cfg.pool.filter(function(p){return passes(p,S.filters,o);}).sort(byName);
+  var keys=visibleKeys(o,false);
+  var chips=chipsHtml(keys);
+  var grid=list.length?'<div class="grid">'+list.map(function(p){return cardFor(p,o.type);}).join('')+'</div>':emptyBox(anyFilter(keys),cfg.pool,o,keys);
+  return crumbs(cfg.route)+'<section class="col"><h1>'+esc(cfg.title)+'</h1><p class="muted">'+esc(cfg.blurb)+'</p></section>'+
+    '<div class="split">'+filterAside(cfg.pool,o,false)+'<div class="col"><p role="status">'+list.length+' of '+cfg.pool.length+' plants shown</p>'+(chips?'<div class="chips" aria-label="Active filters">'+chips+'</div>':'')+grid+'</div></div>';
+}
+function typePage(t){
+  return browse({route:'type:'+t,title:TL[t],blurb:TBLURB[t],pool:PLANTS.filter(function(p){return p.types.indexOf(t)>=0;}),opts:{type:t}});
+}
 function placesIndex(){
-  var cards=REGIONS.map(function(r){var c=count(function(p){return p.regions.indexOf(r)>=0;});return '<button class="card" data-go="place:'+esc(r)+'" data-log="nav:'+esc(r)+'"><span>'+esc(r)+'</span><span>'+c+' plants</span></button>';}).join('');
-  return screen('Places index (view B, first level)')+crumbs('places')+
-    '<section><h2>Browse by where you are</h2><div class="grid wide">'+cards+'</div></section>'+
-    '<p class="ph">Every plant is reachable in this view. Safety and tools pages are only on the home page.</p>';
+  var cards=PLACES.map(function(p){var c=PLANTS.filter(function(x){return x.regions.indexOf(p[0])>=0;}).length;return '<button class="card" data-go="place:'+esc(p[0])+'" data-log="nav:'+esc(p[0])+'"><span class="nm">'+esc(p[0])+'</span><span class="muted">'+esc(p[1])+'</span><span>'+c+' plants</span></button>';}).join('');
+  return crumbs('places')+'<section class="col"><h1>Where did you see it?</h1><p class="muted">Pick the kind of place. Then narrow the plants by season, color, and more.</p></section><div class="grid wide">'+cards+'</div>';
 }
 function placePage(r){
-  var cards=SEASONS.map(function(s){var c=count(function(p){return p.regions.indexOf(r)>=0&&p.seasons.indexOf(s)>=0;});if(!c)return '';return '<button class="card" data-go="season:'+esc(r)+'|'+esc(s)+'" data-log="nav:'+esc(r)+' / '+esc(s)+'"><span>'+esc(s)+'</span><span>'+c+' plants</span></button>';}).join('');
-  return screen('Place page (view B, second level)')+crumbs('place:'+r)+
-    '<section><h2>'+esc(r)+': when are you visiting?</h2><div class="grid wide">'+cards+'</div></section>';
-}
-function seasonPage(arg){
-  var p=arg.split('|');var r=p[0],s=p[1];
-  var list=PLANTS.filter(function(x){return x.regions.indexOf(r)>=0&&x.seasons.indexOf(s)>=0;}).sort(function(a,b){return a.name.localeCompare(b.name);});
-  return screen('Season list (view B, third level)')+crumbs('season:'+arg)+
-    '<section><h2>'+esc(r)+', '+esc(s.toLowerCase())+': '+list.length+' plants</h2><div class="col">'+list.map(rowFor).join('')+'</div></section>';
+  return browse({route:'place:'+r,title:r,blurb:PHINT[r]+'.',pool:PLANTS.filter(function(p){return p.regions.indexOf(r)>=0;}),opts:{region:r,skip:['region']}});
 }
 function searchPage(q){
   var base=doSearch(q);
-  var on=anyFilter();
-  var res=base.filter(function(b){return b.tool?!on:matches(b,null,true);});
-  var chips=chipsHtml(['type','color','leaf','region','season']);
-  var body=res.length?'<div class="col">'+res.map(rowFor).join('')+'</div>':
-    '<div class="ph col"><p>No matches'+(on?' with these filters.':'. Try a plant name, a color, or a place.')+'</p>'+(on?'<div><button data-act="clearfilters" data-log="filter:Clear all filters">Clear all filters</button></div>':'')+'</div>';
-  return screen('Search results with filters')+crumbs('search:'+q)+
-    '<div class="split">'+filterAside(true)+'<div class="col"><div class="row"><span>'+res.length+' of '+base.length+' results for "'+esc(q)+'"</span><span class="ph">Sort: name A to Z (not built)</span></div>'+
-    (chips?'<div class="chips" aria-label="Active filters">'+chips+'</div>':'')+
-    (on?'<p class="ph">Safety and tools pages are hidden while filters are on.</p>':'')+body+'</div></div>';
+  var plants=base.filter(function(b){return !b.tool;}),tools=base.filter(function(b){return b.tool;});
+  var o={useType:true};
+  var keys=visibleKeys(o,true);
+  var on=anyFilter(keys);
+  var list=plants.filter(function(p){return passes(p,S.filters,o);});
+  var shown=list.concat(on?[]:tools);
+  var chips=chipsHtml(keys);
+  var body=shown.length?'<div class="col">'+shown.map(rowFor).join('')+'</div>':(base.length?emptyBox(on,plants,o,keys):'<div class="ph col"><p>No matches for "'+esc(q)+'". Try a plant name, a color, or a place.</p>'+tryChips()+'</div>');
+  return crumbs('search:'+q)+'<section class="col"><h1>Results for "'+esc(q)+'"</h1></section>'+
+    '<div class="split">'+filterAside(plants,o,true)+'<div class="col"><p role="status">'+shown.length+' of '+base.length+' results shown</p>'+(chips?'<div class="chips" aria-label="Active filters">'+chips+'</div>':'')+(on&&tools.length?'<p class="muted small">Tool pages are hidden while filters are on.</p>':'')+body+'</div></div>';
+}
+
+/* ---------- GBIF live data ---------- */
+var GBIF_API='https://api.gbif.org/v1';
+var UTAH_Q='country=US&stateProvince=Utah';
+var GB_CACHE=load('upgbif1',{});
+var GB_STATE={};
+var MONTH_LETTERS=['J','F','M','A','M','J','J','A','S','O','N','D'];
+var MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
+var NOTE_TYPES=['habit','habitat','ecology','biology','uses','use','morphology','description','lifeform'];
+function gbJSON(url){return fetch(url).then(function(r){if(!r.ok)throw new Error('GBIF '+r.status);return r.json();});}
+function soft(url){return gbJSON(url).catch(function(){return null;});}
+function licShort(u){
+  if(!u)return '';
+  var m=/creativecommons\.org\/licenses\/([a-z-]+)\/([\d.]+)/i.exec(u);
+  if(m)return 'CC '+m[1].toUpperCase()+' '+m[2];
+  if(/publicdomain\/zero/i.test(u))return 'CC0';
+  return '';
+}
+function httpsOnly(u){u=String(u||'').replace(/^http:\/\//i,'https://');return /^https:\/\//i.test(u)?u:'';}
+function sizedPhoto(u){return u.replace(/(inaturalist-open-data\.s3\.amazonaws\.com\/photos\/\d+\/)original\./i,'$1medium.');}
+function plain(str){var d=document.createElement('div');d.innerHTML=str;return (d.textContent||'').replace(/\s+/g,' ').trim();}
+function shapeGbif(key,r){
+  var sp=r[0]||{},vn=(r[1]&&r[1].results)||[],ds=(r[2]&&r[2].results)||[],ph=(r[3]&&r[3].results)||[],co=(r[4]&&r[4].results)||[],fc=r[5]||{};
+  var names=[];
+  vn.forEach(function(v){if((v.language||'').toLowerCase()==='eng'&&v.vernacularName&&names.indexOf(v.vernacularName)<0)names.push(v.vernacularName);});
+  var photos=[],seen={};
+  ph.forEach(function(o){
+    var m=(o.media||[]).filter(function(x){return x.type==='StillImage'&&x.identifier;})[0];
+    if(!m)return;
+    var lic=licShort(m.license||o.license);if(!lic)return;
+    var orig=httpsOnly(m.identifier);if(!orig||seen[orig])return;seen[orig]=1;
+    photos.push({url:sizedPhoto(orig),orig:orig,credit:m.creator||m.rightsHolder||o.recordedBy||'Unknown photographer',lic:lic,link:httpsOnly(m.references)||('https://www.gbif.org/occurrence/'+o.key)});
+  });
+  var points=[];
+  co.forEach(function(o){
+    if(typeof o.decimalLatitude==='number'&&typeof o.decimalLongitude==='number'&&o.decimalLatitude>=37&&o.decimalLatitude<=42&&o.decimalLongitude>=-114.06&&o.decimalLongitude<=-109.04)
+      points.push([Math.round(o.decimalLatitude*1000)/1000,Math.round(o.decimalLongitude*1000)/1000]);
+  });
+  var months=[0,0,0,0,0,0,0,0,0,0,0,0];
+  var mf=(fc.facets||[]).filter(function(x){return x.field==='MONTH';})[0];
+  if(mf)(mf.counts||[]).forEach(function(c){var i=parseInt(c.name,10)-1;if(i>=0&&i<12)months[i]=c.count;});
+  var notes=[];
+  ds.forEach(function(d){
+    var lang=(d.language||'').toLowerCase();
+    if(NOTE_TYPES.indexOf(String(d.type||'').toLowerCase())<0||(lang&&lang!=='eng'&&lang!=='en')||!d.description)return;
+    var t=plain(d.description).slice(0,300);
+    if(t&&notes.length<3)notes.push({type:d.type,text:t,source:d.source||'GBIF dataset'});
+  });
+  return {key:key,sci:sp.canonicalName||sp.scientificName||'',authorship:sp.authorship||'',family:sp.family||'',threat:sp.threatStatuses||[],names:names.slice(0,6),photos:photos.slice(0,7),points:points,months:months,total:typeof fc.count==='number'?fc.count:null,notes:notes};
+}
+function loadGbif(p){
+  if(!GBIF_LIVE||GB_CACHE[p.id]||GB_STATE[p.id])return;
+  GB_STATE[p.id]='loading';
+  gbJSON(GBIF_API+'/species/match?name='+encodeURIComponent(p.latin)+'&kingdom=Plantae')
+  .then(function(m){
+    if(!m||!m.usageKey||m.matchType==='NONE')throw new Error('No match');
+    var key=m.acceptedUsageKey||m.usageKey,occ=GBIF_API+'/occurrence/search?taxonKey='+key+'&'+UTAH_Q;
+    return Promise.all([
+      soft(GBIF_API+'/species/'+key),
+      soft(GBIF_API+'/species/'+key+'/vernacularNames?limit=100'),
+      soft(GBIF_API+'/species/'+key+'/descriptions?limit=20'),
+      soft(occ+'&mediaType=StillImage&limit=40'),
+      soft(occ+'&hasCoordinate=true&limit=300'),
+      soft(occ+'&facet=month&limit=0')
+    ]).then(function(r){
+      if(!r[0]&&!r[3]&&!r[5])throw new Error('GBIF unreachable');
+      GB_CACHE[p.id]=shapeGbif(key,r);
+      save('upgbif1',GB_CACHE);
+      GB_STATE[p.id]='ok';
+    });
+  })
+  .catch(function(){GB_STATE[p.id]='error';})
+  .then(function(){if(S.route==='leaf:'+p.id&&!T)render();});
+}
+function photoFig(p,b,main){
+  var alt='Photo of '+b.name+' recorded in Utah';
+  return '<figure class="photo"><img class="gb'+(main?' main':'')+'" data-id="'+esc(b.id)+'" data-orig="'+esc(p.orig)+'" src="'+esc(p.url)+'" alt="'+esc(alt)+'" loading="lazy" referrerpolicy="no-referrer"><figcaption>Photo: '+esc(p.credit)+', '+esc(p.lic)+'. <a href="'+esc(p.link)+'" target="_blank" rel="noopener">View record</a></figcaption></figure>';
+}
+function utahMapSvg(points){
+  var W=230,H=300;
+  function X(lon){return ((lon+114.05)/5*W).toFixed(1);}
+  function Y(lat){return ((42-lat)/5*H).toFixed(1);}
+  var poly=[[-114.05,42],[-111.047,42],[-111.047,41],[-109.05,41],[-109.05,37],[-114.05,37]].map(function(p){return X(p[0])+','+Y(p[1]);}).join(' ');
+  var dots=points.map(function(p){return '<circle class="dot" cx="'+X(p[1])+'" cy="'+Y(p[0])+'" r="3"/>';}).join('');
+  return '<svg class="utahmap" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Map of Utah with dots where this plant has been recorded"><polygon class="border" points="'+poly+'"/>'+dots+'</svg>';
+}
+function monthBars(months){
+  var max=Math.max.apply(null,months.concat([1])),sum=months.reduce(function(a,c){return a+c;},0);
+  if(!sum)return '';
+  var top=months.indexOf(Math.max.apply(null,months));
+  return '<div class="months" role="img" aria-label="Records by month. Most often recorded in '+MONTH_NAMES[top]+'.">'+months.map(function(c,i){return '<div class="mcol" title="'+MONTH_NAMES[i]+': '+c+' records"><div class="bar" style="height:'+Math.max(2,Math.round(c/max*100*0.78))+'%"></div><span aria-hidden="true">'+MONTH_LETTERS[i]+'</span></div>';}).join('')+'</div><p class="muted small">Most often recorded in '+MONTH_NAMES[top]+'.</p>';
+}
+function gbifBlock(b,d,st){
+  if(!GBIF_LIVE)return '';
+  if(!d)return st==='error'?'<p class="muted small">Live photos and facts could not be loaded right now. The drawing is a stand-in.</p>':'<p class="muted small" role="status">Loading photos and facts from GBIF…</p>';
+  var out='';
+  if(d.photos.length>1)out+='<section class="col"><h2>More photos</h2><div class="gallery">'+d.photos.slice(1,7).map(function(p){return photoFig(p,b,false);}).join('')+'</div></section>';
+  if(d.points.length||d.months.some(function(c){return c>0;}))out+='<section class="col"><h2>Where and when it has been recorded in Utah</h2><div class="twocol"><div>'+(d.points.length?utahMapSvg(d.points):'')+'</div><div class="col">'+monthBars(d.months)+'<p class="muted small">Dots and bars come from public records, so they show where people looked as well as where the plant grows.</p></div></div></section>';
+  if(d.notes.length)out+='<section class="col"><h2>Notes from plant databases</h2><ul class="notes">'+d.notes.map(function(n){return '<li>'+esc(n.text)+'<span class="src">'+esc(n.type)+'. Source: '+esc(n.source)+'</span></li>';}).join('')+'</ul></section>';
+  return out+'<p class="muted small">Photos and records from <a href="https://www.gbif.org" target="_blank" rel="noopener">GBIF</a> and the people and projects that publish to it, mostly iNaturalist observers. Each photo is credited and licensed as shown.</p>';
 }
 
 function leafPage(id){
   var b=BYID[id];
   var path=crumbsFor('leaf:'+id).map(function(c){return c[1];}).join(' > ');
-  var details=b.tool?'<div class="ph">Tool or safety content goes here</div>':
-    '<div class="grid wide"><div class="ph">Color: '+esc(b.colors.join(', '))+'</div><div class="ph">Leaf shape: '+esc(b.leaf)+'</div><div class="ph">Location: '+esc(b.regions.join(', '))+'</div><div class="ph">Season seen: '+esc(b.seasons.join(', '))+'</div></div>';
-  return screen('Placeholder page (end of the path)')+crumbs('leaf:'+id)+
-  '<section class="box col"><h2>You selected: '+esc(b.name)+'</h2><p>Block ID: '+esc(b.id)+'</p>'+(b.latin?'<p>Latin name: '+esc(b.latin)+'</p>':'')+'<p>Path taken: '+esc(path)+'</p>'+
-  (b.tool?'<div class="img" role="img" aria-label="Image placeholder"></div>':pic(b.id,'bigpic'))+'<div class="ph">Description goes here</div>'+details+
-  '<div class="bar"><button data-go="'+esc(S.leafFrom)+'" data-log="nav:Back">Back</button><button data-go="home" data-log="nav:Home">Home</button></div></section>';
+  var foot='<div class="bar"><button data-go="'+esc(S.leafFrom)+'" data-log="nav:Back">Back</button><button data-go="home" data-log="nav:Home">Home</button></div>';
+  var meta='<details class="tester"><summary>Test details</summary><p>Block ID: '+esc(b.id)+'. Path taken: '+esc(path)+'</p></details>';
+  if(b.tool){
+    var inner='<div class="ph">Tool page. Content goes here.</div>';
+    if(id==='tool-saved'){
+      var list=BM.map(function(x){return BYID[x];}).filter(Boolean);
+      inner=list.length?'<div class="col">'+list.map(rowFor).join('')+'</div>':'<div class="ph">No bookmarks yet. Select the bookmark on any plant to save it here.</div>';
+    }
+    return crumbs('leaf:'+id)+'<section class="box col"><p class="eyebrow">You selected</p><h1>'+esc(b.name)+'</h1><p>'+esc(b.desc)+'</p>'+inner+meta+foot+'</section>';
+  }
+  var d=GB_CACHE[b.id],st=GB_STATE[b.id];
+  if(GBIF_LIVE&&!d&&!st)loadGbif(b);
+  var on=isBM(b.id);
+  var mark='<button class="bmtext" data-act="bookmark" data-id="'+b.id+'" data-log="bookmark:'+(on?'Remove ':'Add ')+esc(b.name)+'"'+(on?' aria-pressed="true"':' aria-pressed="false"')+'>'+bmIcon(on)+'<span>'+(on?'Bookmarked. Select to remove':'Bookmark this plant')+'</span></button>';
+  var facts=[['Latin name',b.latin],['Plant types',b.types.map(function(t){return TL[t];}).join(', ')],['Color',b.colors.join(', ')],['Notable feature',b.features.join(', ')],['Leaf shape',b.leaf],['Evergreen or not',b.growth],['Height',b.height],['Ground',b.moisture],['Where you saw it',b.regions.join(', ')],['Season seen',b.seasons.join(', ')]];
+  if(d){
+    if(d.names.length)facts.splice(1,0,['Also called',d.names.slice(0,5).join(', ')]);
+    if(d.family)facts.push(['Family',d.family]);
+    if(d.threat&&d.threat.length)facts.push(['Conservation status',d.threat.join(', ')]);
+    if(typeof d.total==='number')facts.push(['Recorded in Utah',d.total.toLocaleString('en-US')+' records on GBIF']);
+  }
+  var lead=(d&&d.photos.length)?photoFig(d.photos[0],b,true):pic(b.id);
+  return crumbs('leaf:'+id)+'<section class="box col"><p class="eyebrow">You selected</p><h1>'+esc(b.name)+'</h1><div class="plantgrid"><div class="col">'+lead+mark+'</div><div class="col"><dl class="facts">'+facts.map(function(f){return '<dt>'+esc(f[0])+'</dt><dd>'+esc(f[1])+'</dd>';}).join('')+'</dl></div></div>'+gbifBlock(b,d,st)+foot+'</section>';
 }
 
 function exportBox(src,title){
@@ -861,37 +1085,33 @@ function exportBox(src,title){
   '<p id="status" role="status" aria-live="polite"></p>'+
   '<label for="out">Export text (select all and copy if the buttons are blocked)</label><textarea id="out" rows="8" readonly></textarea></section>';
 }
-/* Delete buttons live inside a closed "Admin" box, and still need a second click to confirm. */
 function clearBtn(key,label){
   var on=S.confirm===key;
   return '<button data-act="clear" data-key="'+key+'">'+(on?'Confirm: delete '+label+' (cannot be undone)':'Clear '+label)+'</button>';
 }
-function adminBox(key,label,note){
-  return '<details class="admin"'+(S.confirm===key?' open':'')+'><summary>Admin: delete data</summary><div class="col"><p>'+note+'</p><div>'+clearBtn(key,label)+'</div></div></details>';
-}
 function logPage(){
   var rows=LOG.slice(-60).reverse().map(function(r){return '<tr><td>'+r.n+'</td><td>'+esc(r.time)+'</td><td>'+esc(r.mode)+'</td><td>'+esc(r.task_id)+'</td><td>'+esc(r.page)+'</td><td>'+esc(r.kind)+'</td><td>'+esc(r.target)+'</td></tr>';}).join('');
-  return screen('Click log')+crumbs('log')+
-  '<section class="col"><h2>Click log: '+LOG.length+' clicks recorded</h2><p>Every click on a link, button, or filter, and every search, is recorded with time, page, and target. This log is kept in this browser only. Test answers from all participants are in Test results.</p>'+
+  return crumbs('log')+
+  '<section class="col"><h1>Click log: '+LOG.length+' clicks recorded</h1><p>Every click on a link, button, or filter, and every search, is recorded with time, page, and target. Data is kept in this browser.</p>'+
   '<div class="scroll"><table><thead><tr><th>#</th><th>Time</th><th>Mode</th><th>Task</th><th>Page</th><th>Kind</th><th>Target</th></tr></thead><tbody>'+(rows||'<tr><td colspan="7">No clicks yet.</td></tr>')+'</tbody></table></div>'+
-  '<p>Showing the latest 60. Exports contain everything.</p>'+adminBox('log','click log','Deletes the click log stored in this browser.')+'</section>'+exportBox('log','Export click log');
+  '<p>Showing the latest 60. Exports contain everything.</p><div>'+clearBtn('log','click log')+'</div></section>'+exportBox('log','Export click log');
 }
 
 function testIntro(){
-  return screen('Test mode start')+crumbs('test')+
-  '<section class="box col"><h2>Test mode</h2><p>You will see 10 scenarios in random order. Most show a picture of a plant. For each one, read the scenario, click OK, then use the site to find the page you think matches. The timer starts when you click OK. When you reach a placeholder page, your answer is recorded and the next scenario starts.</p>'+
+  return crumbs('test')+
+  '<section class="box col"><h1>Test mode</h1><p>You will see 10 scenarios in random order. Most show a picture of a plant. For each one, read the scenario, click OK, then use the site to find the page you think matches. The timer starts when you click OK. When you reach a plant or tool page, your answer is recorded and the next scenario starts.</p>'+
   '<label for="pid">Participant name or ID</label><input type="text" id="pid" autocomplete="off" placeholder="P01">'+
-  '<div class="bar"><button data-act="starttest" data-log="control:Start test">Start test</button>'+(ADMIN?'<button data-go="results" data-log="control:View test results">View test results</button>':'')+'<button data-go="home" data-log="nav:Back to site">Back to site</button></div></section>';
+  '<div class="bar"><button class="primary" data-act="starttest" data-log="control:Start test">Start test</button><button data-go="results" data-log="control:View test results">View test results</button><button data-go="home" data-log="nav:Back to site">Back to site</button></div></section>';
 }
 function scenarioScreen(){
   var t=T.order[T.i];
-  return screen('Test scenario')+'<section class="box col"><h2>Task '+(T.i+1)+' of '+T.order.length+'</h2>'+(t.img?pic(t.img,'bigpic'):'')+'<p>'+esc(t.text)+'</p><p>The timer starts when you click OK.</p><div><button data-act="begin" data-log="control:OK (start task '+t.id+')">OK</button></div></section>';
+  return '<section class="box col"><h1>Task '+(T.i+1)+' of '+T.order.length+'</h1>'+(t.img?pic(t.img,'bigpic'):'')+'<p>'+esc(t.text)+'</p><p class="muted">The timer starts when you click OK.</p><div><button class="primary" data-act="begin" data-log="control:OK (start task '+t.id+')">OK</button></div></section>';
 }
 function testBar(){
   var t=T.order[T.i];
-  return '<div class="box col sticky"><div class="row"><span>Task '+(T.i+1)+' of '+T.order.length+'</span><span>Time <span id="timer">'+fmt(performance.now()-T.taskStart)+'</span></span></div>'+
-    '<div class="rowbtn" style="flex-wrap:nowrap;align-items:flex-start">'+(t.img?'<span class="thumb">'+pic(t.img)+'</span>':'')+'<p>Scenario: '+esc(t.text)+'</p></div>'+
-    '<div class="bar"><button data-act="skip" data-log="control:Cannot find it (skip task)">I cannot find it</button><button data-act="quit" data-log="control:Quit test">Quit test</button></div></div>';
+  return '<div class="sticky"><div class="row"><span>Task '+(T.i+1)+' of '+T.order.length+'</span><span>Time <span id="timer">'+fmt(performance.now()-T.taskStart)+'</span></span></div>'+
+    '<div class="bar" style="flex-wrap:nowrap;align-items:flex-start">'+(t.img?'<span class="thumb">'+pic(t.img)+'</span>':'')+'<p>Scenario: '+esc(t.text)+'</p></div>'+
+    '<div class="bar"><button data-act="skip" data-log="control:Cannot find it (skip task)">I cannot find it</button><button data-act="quit" data-log="control:Quit test">'+(S.confirm==='quit'?'Confirm: end the test and lose this session':'Quit test')+'</button></div></div>';
 }
 function resultsTable(rows){
   return '<div class="scroll"><table><thead><tr><th>Participant</th><th>Order</th><th>Task</th><th>Endpoint</th><th>Correct</th><th>Seconds</th><th>Clicks</th></tr></thead><tbody>'+(rows.length?rows.map(function(r){return '<tr><td>'+esc(r.participant)+'</td><td>'+r.order+'</td><td>'+esc(r.task_id)+'</td><td>'+esc(r.skipped?'(skipped)':r.endpoint_name)+'</td><td>'+(r.correct?'yes':'no')+'</td><td>'+(r.time_ms/1000).toFixed(1)+'</td><td>'+r.clicks+'</td></tr>';}).join(''):'<tr><td colspan="7">No results yet.</td></tr>')+'</tbody></table></div>';
@@ -900,21 +1120,17 @@ function doneScreen(){
   var rows=T.tasks.map(function(t){var r={participant:T.pid};for(var k in t)r[k]=t[k];return r;});
   var ok=T.tasks.filter(function(t){return t.correct;}).length;
   var R=computeReport([{tasks:T.tasks}]);
-  return screen('Test complete')+'<section class="box col"><h2>Test complete: '+ok+' of '+T.tasks.length+' correct</h2>'+resultsTable(rows)+
-  '<p class="ph" id="syncnote"></p>'+
-  (ADMIN?R.summary.slice(0,2).map(function(s){return '<p class="ph">'+esc(s)+'</p>';}).join(''):'')+
-  '<div class="bar">'+(ADMIN?'<button data-go="results" data-act="finishtest" data-log="control:View all results">View all results</button>':'')+'<button data-act="finishtest" data-log="control:Back to site after test">Back to site</button></div></section>';
+  return '<section class="box col"><h1>Test complete: '+ok+' of '+T.tasks.length+' correct</h1>'+resultsTable(rows)+
+  R.summary.slice(0,2).map(function(s){return '<p class="ph">'+esc(s)+'</p>';}).join('')+
+  '<div class="bar"><button data-go="results" data-act="finishtest" data-log="control:View all results">View all results</button><button data-act="finishtest" data-log="control:Back to site after test">Back to site</button></div></section>';
 }
 function resultsPage(){
-  var list=allResults(),rows=resultRows();
-  var where='Results from all participants are loaded from the shared Google Sheet. Press Refresh to load new sessions.'+(CLOUDERR?' Last load failed: '+esc(CLOUDERR):'');
-  return screen('Test results')+crumbs('results')+
-  '<section class="col"><h2>Test results: '+list.length+' sessions, '+rows.length+' tasks</h2><p>'+where+'</p>'+resultsTable(rows)+'<div class="bar"><button data-act="refresh">Refresh</button><button data-go="report" data-log="control:Struggle report">Open struggle report</button></div>'+
-  adminBox('results','all test results','Deletes every saved session for all participants, in the shared Google Sheet and in this browser. This cannot be undone. Copy the export first.')+'</section>'+exportBox('results','Export test results');
+  var rows=resultRows();
+  return crumbs('results')+
+  '<section class="col"><h1>Test results: '+RESULTS.length+' sessions, '+rows.length+' tasks</h1><p>Results are kept in this browser. Copy the export to keep them elsewhere.</p>'+resultsTable(rows)+'<div class="bar"><button data-go="report" data-log="control:Struggle report">Open struggle report</button>'+clearBtn('results','test results')+'</div></section>'+exportBox('results','Export test results');
 }
 function reportPage(){
-  var list=allResults();
-  var R=computeReport(list);
+  var R=computeReport(RESULTS);
   var rows=R.pages.slice().sort(function(a,b){return b.struggle-a.struggle||b.avg_seconds-a.avg_seconds;});
   var max=Math.max.apply(null,rows.map(function(r){return r.struggle;}).concat([1]));
   function th(a){return '<tr>'+a.map(function(h){return '<th>'+h+'</th>';}).join('')+'</tr>';}
@@ -925,8 +1141,8 @@ function reportPage(){
     return '<tr><td>'+esc(t.task_id)+'</td><td>'+t.attempts+'</td><td>'+t.correct_pct+'</td><td>'+t.avg_seconds+'</td><td>'+t.avg_backtracks+'</td><td>'+t.avg_wrong_turns+'</td><td>'+esc(t.top_struggle_page)+'</td></tr>';
   }).join(''):'<tr><td colspan="7">No data yet.</td></tr>')+'</tbody></table></div>';
   var pairTable='<div class="scroll"><table><thead>'+th(['Backtrack (from page back to page)','Times'])+'</thead><tbody>'+(R.pairs.length?R.pairs.map(function(p){return '<tr><td>'+esc(p.path.replace(' -> ',' back to '))+'</td><td>'+p.count+'</td></tr>';}).join(''):'<tr><td colspan="2">No backtracks recorded.</td></tr>')+'</tbody></table></div>';
-  return screen('Struggle report')+crumbs('report')+
-  '<section class="col"><div class="bar"><button data-act="refresh">Refresh</button></div><h2>Where people struggle: '+R.n+' task attempts from '+list.length+' sessions</h2>'+
+  return crumbs('report')+
+  '<section class="col"><h1>Where people struggle: '+R.n+' task attempts from '+RESULTS.length+' sessions</h1>'+
   R.summary.map(function(s){return '<p class="box">'+esc(s)+'</p>';}).join('')+
   '<h2>By page, most struggle first</h2>'+pageTable+
   '<h2>By task</h2>'+taskTable+
@@ -941,12 +1157,10 @@ function render(){
   else if(T&&T.state==='done'){html='<div class="col">'+doneScreen()+'</div>';}
   else{
     var r=S.route,i=r.indexOf(':'),k=i<0?r:r.slice(0,i),arg=i<0?'':r.slice(i+1),body;
-    if(ADMIN_ROUTES.test(k)&&!ADMIN){S.route='home';k='home';arg='';}
     if(k==='home')body=home();
     else if(k==='type')body=typePage(arg);
     else if(k==='places')body=placesIndex();
     else if(k==='place')body=placePage(arg);
-    else if(k==='season')body=seasonPage(arg);
     else if(k==='search')body=searchPage(arg);
     else if(k==='leaf')body=leafPage(arg);
     else if(k==='log')body=logPage();
@@ -954,35 +1168,41 @@ function render(){
     else if(k==='results')body=resultsPage();
     else if(k==='report')body=reportPage();
     else body=home();
-    html='<div class="col">'+((T&&T.state==='running')?testBar():'')+header()+body+footer()+'</div>';
+    html='<div class="col'+((T&&T.state==='running')?' testing':'')+'" style="gap:22px">'+((T&&T.state==='running')?testBar():'')+header()+body+footer()+'</div>';
   }
   a.innerHTML=html;
 }
 
 /* ---------- events ---------- */
 function act(name,el){
-  if(name==='clearfilters'){S.filters={type:[],color:[],leaf:[],region:[],season:[]};render();return;}
+  if(name==='clearfilters'){
+    var prev=S.filters;S.filters=blankFilters();render();
+    if(FKEYS.some(function(k){return prev[k].length>0;}))showToast('Filters cleared',function(){S.filters=prev;render();});
+    return;
+  }
+  if(name==='trysearch'){go('search:'+el.getAttribute('data-q'));return;}
   if(name==='unfilter'){var g=el.getAttribute('data-fgroup'),v=el.getAttribute('data-fval');S.filters[g]=S.filters[g].filter(function(x){return x!==v;});render();return;}
+  if(name==='bookmark'){
+    var bid=el.getAttribute('data-id');var was=isBM(bid);toggleBM(bid);render();
+    showToast(was?'Removed from your bookmarks':'Saved to your bookmarks',function(){toggleBM(bid);logEvent('bookmark','Undo '+(was?'remove ':'add ')+BYID[bid].name);render();});
+    var again=document.querySelector('[data-act="bookmark"][data-id="'+bid+'"]');if(again&&again.focus)again.focus();
+    return;
+  }
   if(name==='copy'){copyText(getData(el.getAttribute('data-src'),el.getAttribute('data-fmt')),$('#out'));return;}
   if(name==='show'){var ta=$('#out');ta.value=getData(el.getAttribute('data-src'),el.getAttribute('data-fmt'));ta.focus();ta.select();setStatus('Text shown below and selected.');return;}
   if(name==='clear'){
-    if(!ADMIN)return;
     var key=el.getAttribute('data-key');
     if(S.confirm!==key){S.confirm=key;render();return;}
-    if(key==='log'){LOG=[];save('uplog',LOG);S.confirm='';render();return;}
-    post({action:'clear',key:ADMIN_KEY}).then(function(r){
-      if(!r||!r.ok)throw new Error(r&&r.error?r.error:'no response');
-      CLOUD=[];RESULTS=[];save('upresults',RESULTS);S.confirm='';render();
-    },function(err){S.confirm='';CLOUDERR='delete failed ('+(err&&err.message?err.message:'error')+')';render();});
-    return;
+    if(key==='log'){LOG=[];save('uplog',LOG);}else{RESULTS=[];save('upresults',RESULTS);}
+    S.confirm='';render();return;
   }
-  if(name==='refresh'){loadCloud().then(function(){render();},function(err){CLOUDERR=err&&err.message?err.message:'error';render();});return;}
-  if(name==='unlock'){unlockAdmin();return;}
-  if(name==='lock'){lockAdmin();return;}
   if(name==='starttest'){startTest();return;}
   if(name==='begin'){beginTask();return;}
   if(name==='skip'){completeTask('',true);return;}
-  if(name==='quit'){clearInterval(T.timer);T=null;S.route='home';render();window.scrollTo(0,0);return;}
+  if(name==='quit'){
+    if(S.confirm!=='quit'){S.confirm='quit';render();return;}
+    clearInterval(T.timer);T=null;S.confirm='';S.route='home';render();window.scrollTo(0,0);return;
+  }
   if(name==='finishtest'){T=null;S.route=el.getAttribute('data-go')||'home';render();window.scrollTo(0,0);return;}
 }
 var app=$('#app');
@@ -1008,9 +1228,30 @@ app.addEventListener('change',function(e){
   var again=document.querySelector('input[data-fgroup="'+g+'"][data-fval="'+v.replace(/"/g,'\\"')+'"]');
   if(again)again.focus();
 });
+app.addEventListener('input',function(e){
+  if(e.target&&e.target.id==='q'){
+    var form=e.target.closest('form');
+    if(form){if(e.target.value)form.setAttribute('data-typed','1');else form.removeAttribute('data-typed');}
+  }
+});
+app.addEventListener('toggle',function(e){
+  var d=e.target;var k=d&&d.getAttribute&&d.getAttribute('data-key');
+  if(k)S.open[k]=d.open;
+},true);
+app.addEventListener('error',function(e){
+  var im=e.target;
+  if(!im||im.tagName!=='IMG'||!im.classList.contains('gb'))return;
+  var orig=im.getAttribute('data-orig');
+  if(orig&&im.getAttribute('src')!==orig&&!im.getAttribute('data-tried')){im.setAttribute('data-tried','1');im.src=orig;return;}
+  var fig=im.closest('figure');if(!fig)return;
+  if(im.classList.contains('main')){var pl=BYID[im.getAttribute('data-id')];if(pl)fig.outerHTML=pic(pl.id);}
+  else fig.hidden=true;
+},true);
+var toastEl=$('#toast');
+if(toastEl)toastEl.addEventListener('click',function(e){
+  if(e.target&&e.target.id==='undo'&&toastUndo){var f=toastUndo;toastUndo=null;toastEl.hidden=true;f();}
+});
 render();
 })();
 </script>
-
-</body>
-</html>
+</body></html>
