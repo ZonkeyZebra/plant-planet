@@ -3,41 +3,44 @@
 <style>
 /* Layout concept: alpine meadow field guide. Pale blue sky page, olive and khaki surfaces, dusty blue reserved for tools. One column, tabs and search on top. */
 :root{
-  --bg:#EEF5F9;--surface:#FFFFFF;--surface-2:#DDEBF3;--brand:#585331;
-  --ink:#2B2917;--ink-2:#585331;
-  --line:#CDD6C3;--line-strong:#8D8849;
-  --primary:#C0B47F;--on-primary:#2B2917;
-  --olive:#8D8849;--on-olive:#1F1E0E;
-  --tan:#DDD5AA;--on-tan:#2B2917;--tag:#E8E4C6;
-  --blue:#BCCFE0;--on-blue:#14212D;
-  --sky:#DDEBF3;--pic-fill:#F7F3DC;--pic-ink:#3E3B1F;
-  --hero-sky:#DDEBF3;--hero-far:#A6BDD3;--hero-forest:#8D8849;--hero-meadow:#C0B47F;--hero-front:#E3DBB3;
+  --bg:#F8F4EF;--surface:#FFFFFF;--surface-2:#F1EAE1;--brand:#52482E;
+  --ink:#241F14;--ink-2:#5C5237;
+  --line:#E0D6C8;--line-strong:#857A63;
+  --primary:#E69963;--on-primary:#1F1A0F;
+  --olive:#52482E;--on-olive:#FFFFFF;--accent:#CA6424;
+  --tan:#F6E0CC;--on-tan:#2A1B0E;--tag:#F3E7DA;
+  --blue:#64B3DA;--on-blue:#0F2330;
+  --sky:#E3F0F7;--pic-fill:#FBEBDD;--pic-ink:#52482E;
+  --hero-sky:#CFE6F3;--hero-far:#64B3DA;--hero-forest:#52482E;--hero-meadow:#CA6424;--hero-front:#E69963;
+  --nav-bg:#52482E;--nav-ink:#FBF4EA;--nav-hover:rgba(255,255,255,.13);--nav-on:#E69963;--nav-btn-bg:#E69963;--nav-btn-ink:#1F1A0F;
   --focus:#1F4E79;
   --serif:'Literata',Georgia,'Times New Roman',serif;
   --sans:'Source Sans 3',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#171810;--surface:#22231A;--surface-2:#2B2C20;
-  --ink:#EEF0E0;--ink-2:#C9C8A4;
-  --line:#3D3E2C;--line-strong:#8D8849;
-  --primary:#C0B47F;--on-primary:#23220F;
-  --olive:#6E6A38;--on-olive:#F3F1DA;
-  --tan:#4B472A;--on-tan:#F0EBCB;--tag:#3A3A24;
-  --blue:#34506B;--on-blue:#E4EEF6;
-  --sky:#2A3A47;--pic-fill:#4A4A2E;--pic-ink:#E8E4BE;
-  --hero-sky:#20303C;--hero-far:#34506B;--hero-forest:#3A3822;--hero-meadow:#55522B;--hero-front:#6A6338;
-  --brand:#C0B47F;--focus:#8DB9E6;color-scheme:dark}}
+  --bg:#171510;--surface:#221F17;--surface-2:#2D2A20;
+  --ink:#F4EEE4;--ink-2:#D3C9B4;
+  --line:#403A2B;--line-strong:#9A8F78;
+  --primary:#E69963;--on-primary:#1F1A0F;
+  --olive:#7A6F4C;--on-olive:#FFFFFF;--accent:#E69963;
+  --tan:#4A3A2A;--on-tan:#F6E3D0;--tag:#352E22;
+  --blue:#2F5468;--on-blue:#E1F1F9;
+  --sky:#1F2E37;--pic-fill:#4A3A2B;--pic-ink:#F6E3CC;
+  --hero-sky:#1F2E37;--hero-far:#2F5468;--hero-forest:#3B3523;--hero-meadow:#8A4519;--hero-front:#B26F43;
+  --nav-bg:#2E2819;--nav-ink:#F6EEDF;--nav-hover:rgba(255,255,255,.1);--nav-on:#E69963;--nav-btn-bg:#E69963;--nav-btn-ink:#1F1A0F;
+  --brand:#E69963;--focus:#8DB9E6;color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#171810;--surface:#22231A;--surface-2:#2B2C20;
-  --ink:#EEF0E0;--ink-2:#C9C8A4;
-  --line:#3D3E2C;--line-strong:#8D8849;
-  --primary:#C0B47F;--on-primary:#23220F;
-  --olive:#6E6A38;--on-olive:#F3F1DA;
-  --tan:#4B472A;--on-tan:#F0EBCB;--tag:#3A3A24;
-  --blue:#34506B;--on-blue:#E4EEF6;
-  --sky:#2A3A47;--pic-fill:#4A4A2E;--pic-ink:#E8E4BE;
-  --hero-sky:#20303C;--hero-far:#34506B;--hero-forest:#3A3822;--hero-meadow:#55522B;--hero-front:#6A6338;
-  --brand:#C0B47F;--focus:#8DB9E6;color-scheme:dark}
+  --bg:#171510;--surface:#221F17;--surface-2:#2D2A20;
+  --ink:#F4EEE4;--ink-2:#D3C9B4;
+  --line:#403A2B;--line-strong:#9A8F78;
+  --primary:#E69963;--on-primary:#1F1A0F;
+  --olive:#7A6F4C;--on-olive:#FFFFFF;--accent:#E69963;
+  --tan:#4A3A2A;--on-tan:#F6E3D0;--tag:#352E22;
+  --blue:#2F5468;--on-blue:#E1F1F9;
+  --sky:#1F2E37;--pic-fill:#4A3A2B;--pic-ink:#F6E3CC;
+  --hero-sky:#1F2E37;--hero-far:#2F5468;--hero-forest:#3B3523;--hero-meadow:#8A4519;--hero-front:#B26F43;
+  --nav-bg:#2E2819;--nav-ink:#F6EEDF;--nav-hover:rgba(255,255,255,.1);--nav-on:#E69963;--nav-btn-bg:#E69963;--nav-btn-ink:#1F1A0F;
+  --brand:#E69963;--focus:#8DB9E6;color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans);margin:0;padding-inline:16px;padding-block:14px 48px}
 .wrap{max-width:1040px;margin-inline:auto;display:flex;flex-direction:column;gap:18px}
@@ -59,17 +62,22 @@ input[type=checkbox]{width:16px;height:16px;margin:0;flex:none;accent-color:var(
 .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0}
 .ph{border:1px dashed var(--line-strong);border-radius:10px;padding:12px;color:var(--ink-2);min-width:0}
-.top{display:flex;flex-direction:column;gap:10px}
+.top{display:flex;flex-direction:column;background:var(--nav-bg);border-radius:12px;padding:12px 14px 0;gap:8px;color:var(--nav-ink)}
 .topbar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
-.brand{font-family:var(--serif);font-weight:600;font-size:22px;background:none;border:0;padding:4px 0;min-height:0;color:var(--brand)}
+.brand{font-family:var(--serif);font-weight:600;font-size:22px;background:none;border:0;padding:4px 0;min-height:0;color:var(--nav-ink)}
 .brand:hover{background:none;text-decoration:underline}
 .search{display:flex;gap:8px;flex:1 1 300px;min-width:0;position:relative}
-.suggest{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:10;background:var(--surface);border:1px solid var(--line-strong);border-radius:10px;padding:10px 12px}
+.suggest{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:10;background:var(--surface);color:var(--ink);border:1px solid var(--line-strong);border-radius:10px;padding:10px 12px}
 .search:focus-within .suggest{display:block}
 .search[data-typed="1"] .suggest{display:none}
 .search input{flex:1 1 auto}
-.tabs{display:flex;flex-wrap:wrap;gap:6px}
-.tabs button{border-radius:99px;padding:6px 14px;min-height:40px}
+.tabs{display:flex;flex-wrap:wrap;gap:0;border-top:1px solid rgba(255,255,255,.2);margin-inline:-14px;padding-inline:8px}
+.tabs button{background:transparent;color:var(--nav-ink);border:0;border-bottom:4px solid transparent;border-radius:0;padding:10px 14px 6px;min-height:44px;font-weight:600;letter-spacing:.01em}
+.tabs button:hover{background:var(--nav-hover);border-bottom-color:rgba(255,255,255,.4)}
+.tabs button[aria-pressed="true"]{background:var(--nav-hover);color:var(--nav-ink);border-color:transparent;border-bottom-color:var(--nav-on);filter:none}
+.tabs button:focus-visible,.brand:focus-visible,.top input:focus-visible{outline:3px solid var(--nav-on);outline-offset:-3px}
+.top .search .primary{background:var(--nav-btn-bg);color:var(--nav-btn-ink);border-color:var(--nav-btn-bg)}
+@media (max-width:560px){.tabs{flex-wrap:nowrap;overflow-x:auto}.tabs button{flex:none}}
 .crumbs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;color:var(--ink-2)}
 .crumbs button{border:0;background:none;padding:0;min-height:0;text-decoration:underline;color:var(--ink-2)}
 .hero{position:relative;display:grid;align-items:end;min-height:300px;overflow:hidden;border-radius:14px;border:1px solid var(--line)}
@@ -150,10 +158,10 @@ th{background:var(--surface-2);font-weight:600}
 @media (min-width:720px){.twocol{grid-template-columns:minmax(0,260px) minmax(0,1fr);align-items:start}}
 .utahmap{width:100%;height:auto;display:block;background:var(--sky);border-radius:8px}
 .utahmap .border{fill:var(--surface);stroke:var(--ink-2);stroke-width:1.5}
-.utahmap .dot{fill:var(--brand);fill-opacity:.55}
+.utahmap .dot{fill:var(--accent);fill-opacity:.55}
 .months{display:flex;gap:4px;align-items:flex-end;height:110px}
 .mcol{flex:1 1 0;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;font-size:12px;color:var(--ink-2)}
-.mcol .bar{width:100%;background:var(--olive);border-radius:3px 3px 0 0;min-height:2px}
+.mcol .bar{width:100%;background:var(--accent);border-radius:3px 3px 0 0;min-height:2px}
 .notes{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
 .notes .src{display:block;font-size:12px;color:var(--ink-2)}
 .tester{font-size:13px;color:var(--ink-2)}
@@ -187,6 +195,42 @@ form.rep{display:flex;flex-direction:column;gap:14px;max-width:560px}
 .err:empty{display:none}
 .idphoto{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start}
 .idphoto img{display:block;width:100%;max-width:240px;border-radius:8px;border:1px solid var(--line)}
+
+.backbar{margin:-8px 0 -6px}
+.backbtn{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line-strong);border-radius:99px;padding:6px 14px 6px 10px;font-weight:600;min-height:40px;max-width:100%}
+.backbtn svg{width:18px;height:18px;flex:none}
+.backbtn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Plant profile */
+.chips2{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--tag);color:var(--ink);border-radius:99px;padding:3px 12px;font-size:14px;font-weight:600}
+.pill i{width:12px;height:12px;border-radius:50%;border:1px solid var(--line-strong);display:inline-block}
+.aka{color:var(--ink-2);margin-top:-4px}
+.tiles{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.tile{background:var(--surface-2);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.tile.wide{grid-column:1/-1}
+.tile .k{font-size:12px;text-transform:uppercase;letter-spacing:.07em;font-weight:600;color:var(--ink-2);display:flex;align-items:center;gap:8px}
+.tile .k svg{width:22px;height:22px;flex:none}
+.tile .v{font-family:var(--serif);font-size:19px;font-weight:600;line-height:1.25}
+.tile p{color:var(--ink-2);font-size:14px}
+.ico{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sizeviz{display:flex;gap:12px;align-items:flex-end}
+.sizeviz svg{width:104px;height:auto;flex:none}
+.sizeviz .col{gap:2px}
+.seasons{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:4px}
+.seasons span{text-align:center;font-size:12px;font-weight:600;padding:5px 2px;border-radius:6px;background:var(--surface);color:var(--ink-2);border:1px solid var(--line)}
+.seasons span.on{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.safety{border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;border:2px solid var(--line-strong);background:var(--surface)}
+.safety.warn{background:var(--tan);color:var(--on-tan);border-color:var(--accent)}
+.safety .sfhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.safety svg{width:26px;height:26px;flex:none}
+.safety h2{font-size:19px}
+.safety .verdict{margin-left:auto;font-weight:600;font-size:14px;border-radius:99px;padding:2px 12px;background:var(--surface);color:var(--ink);border:1px solid var(--line-strong)}
+.safety.warn .verdict{background:var(--accent);color:#fff;border-color:var(--accent)}
+.sfgrid{display:grid;grid-template-columns:minmax(0,max-content) minmax(0,1fr);gap:4px 16px;margin:0}
+.sfgrid dd{margin:0}.sfgrid dt{font-weight:600}
+.fine{border-top:1px solid var(--line);padding-top:10px;color:var(--ink-2);font-size:14px;display:grid;grid-template-columns:minmax(0,max-content) minmax(0,1fr);gap:4px 16px}
+.fine dd{margin:0}.fine em{font-style:italic}
+@media (max-width:560px){.sfgrid,.fine{grid-template-columns:minmax(0,1fr)}.safety .verdict{margin-left:0}}
 </style></head><body>
 
 <div class="wrap"><div id="app"></div></div>
@@ -272,7 +316,51 @@ var RAW=[
 'arrowhead|Broadleaf arrowhead|Sagittaria latifolia|Aquatic,Flower|White|Heart-shaped|Lakes and wetlands|Summer,Fall|1 to 3 ft|Showy flowers|Dies back each year|In or on water',
 'mares-tail|Common mare\'s tail|Hippuris vulgaris|Aquatic|Green or gray|Narrow or grass-like|Lakes and wetlands,Mountains|Summer|Under 1 ft|None|Evergreen|In or on water',
 'phragmites|Common reed|Phragmites australis|Aquatic|Green or gray|Narrow or grass-like|Lakes and wetlands|Summer,Fall|Over 10 ft|Fluffy or feathery seeds|Dies back each year|In or on water',
-'milfoil|Northern watermilfoil|Myriophyllum sibiricum|Aquatic|Green or gray|Compound (leaflets)|Lakes and wetlands|Summer|Under 1 ft|None|Evergreen|In or on water'
+'milfoil|Northern watermilfoil|Myriophyllum sibiricum|Aquatic|Green or gray|Compound (leaflets)|Lakes and wetlands|Summer|Under 1 ft|None|Evergreen|In or on water',
+'balsamroot|Arrowleaf balsamroot|Balsamorhiza sagittata|Flower|Yellow|Heart-shaped|Foothills and neighborhoods,Mountains,Sagebrush flats|Spring|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'blue-flax|Blue flax|Linum lewisii|Flower|Blue|Narrow or grass-like|Foothills and neighborhoods,Mountains,Sagebrush flats|Spring,Summer|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'wasatch-penstemon|Wasatch beardtongue|Penstemon cyananthus|Flower|Blue,Purple|Lance-shaped|Foothills and neighborhoods,Mountains,Sagebrush flats|Summer|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'sweetvetch|Utah sweetvetch|Hedysarum boreale|Flower|Pink,Purple|Compound (leaflets)|Foothills and neighborhoods,Mountains,Sagebrush flats|Spring,Summer|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'heartleaf-arnica|Heartleaf arnica|Arnica cordifolia|Flower|Yellow|Heart-shaped|Mountains|Summer|1 to 3 ft|Showy flowers|Dies back each year|Moist ground',
+'bluebells|Tall fringed bluebells|Mertensia ciliata|Flower|Blue|Lance-shaped|Mountains|Summer|1 to 3 ft|Showy flowers|Dies back each year|Moist ground',
+'sticky-geranium|Sticky purple geranium|Geranium viscosissimum|Flower|Pink,Purple|Lobed|Mountains,Foothills and neighborhoods|Spring,Summer|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'harebell|Common harebell|Campanula rotundifolia|Flower|Blue|Narrow or grass-like|Mountains,Foothills and neighborhoods|Summer,Fall|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'showy-milkweed|Showy milkweed|Asclepias speciosa|Flower|Pink|Round or oval|Foothills and neighborhoods,Lakes and wetlands,Sagebrush flats|Summer|3 to 10 ft|Showy flowers,Fluffy or feathery seeds|Dies back each year|Moist ground',
+'cow-parsnip|Common cow parsnip|Heracleum maximum|Flower|White|Lobed|Mountains,Foothills and neighborhoods,Lakes and wetlands|Spring,Summer|3 to 10 ft|Showy flowers|Dies back each year|Moist ground',
+'sulphur-buckwheat|Sulphur-flower buckwheat|Eriogonum umbellatum|Flower|Yellow|Round or oval|Mountains,Foothills and neighborhoods,Sagebrush flats|Summer|Under 1 ft|Showy flowers|Evergreen|Dry ground',
+'scarlet-monkeyflower|Scarlet monkeyflower|Erythranthe cardinalis|Flower|Red|Round or oval|Desert and red rock,Lakes and wetlands|Summer,Fall|1 to 3 ft|Showy flowers|Dies back each year|Moist ground',
+'sacred-datura|Sacred datura|Datura wrightii|Flower|White|Heart-shaped|Desert and red rock,Sagebrush flats|Spring,Summer,Fall|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'rocky-mountain-iris|Rocky Mountain iris|Iris missouriensis|Flower|Blue,Purple|Narrow or grass-like|Mountains,Foothills and neighborhoods,Lakes and wetlands|Spring,Summer|1 to 3 ft|Showy flowers|Dies back each year|Moist ground',
+'banana-yucca|Banana yucca|Yucca baccata|Flower|White|Narrow or grass-like|Desert and red rock|Spring,Summer|1 to 3 ft|Showy flowers,Berries or fruit|Evergreen|Dry ground',
+'larkspur|Tall larkspur|Delphinium occidentale|Flower|Blue,Purple|Lobed|Mountains,Foothills and neighborhoods|Summer|3 to 10 ft|Showy flowers|Dies back each year|Moist ground',
+'nettle|Stinging nettle|Urtica dioica|Flower|Green or gray|Heart-shaped|Foothills and neighborhoods,Mountains,Lakes and wetlands|Spring,Summer|3 to 10 ft|None|Dies back each year|Moist ground',
+'poison-ivy|Western poison ivy|Toxicodendron rydbergii|Bush|Green or gray,Red|Compound (leaflets)|Foothills and neighborhoods,Mountains,Lakes and wetlands|Summer,Fall|1 to 3 ft|Berries or fruit|Drops leaves in fall|Moist ground',
+'oregon-grape|Creeping Oregon grape|Mahonia repens|Bush|Yellow|Compound (leaflets)|Foothills and neighborhoods,Mountains|Spring|Under 1 ft|Showy flowers,Berries or fruit|Evergreen|Dry ground',
+'snowberry|Mountain snowberry|Symphoricarpos oreophilus|Bush|White|Round or oval|Foothills and neighborhoods,Mountains|Summer,Fall|1 to 3 ft|Berries or fruit|Drops leaves in fall|Dry ground',
+'skunkbush|Skunkbush sumac|Rhus trilobata|Bush|Green or gray,Red|Compound (leaflets)|Foothills and neighborhoods,Desert and red rock,Sagebrush flats|Summer,Fall|3 to 10 ft|Berries or fruit|Drops leaves in fall|Dry ground',
+'wax-currant|Wax currant|Ribes cereum|Bush|Pink|Lobed|Mountains,Foothills and neighborhoods,Sagebrush flats|Spring,Summer|3 to 10 ft|Showy flowers,Berries or fruit|Drops leaves in fall|Dry ground',
+'rm-maple|Rocky Mountain maple|Acer glabrum|Bush,Tree|Red,Green or gray|Lobed|Mountains,Foothills and neighborhoods|Fall|Over 10 ft|None|Drops leaves in fall|Moist ground',
+'red-osier|Red-osier dogwood|Cornus sericea|Bush|White|Round or oval|Lakes and wetlands,Mountains,Foothills and neighborhoods|Spring,Summer|3 to 10 ft|Berries or fruit|Drops leaves in fall|Moist ground',
+'coyote-willow|Coyote willow|Salix exigua|Bush|Green or gray|Narrow or grass-like|Lakes and wetlands,Foothills and neighborhoods,Desert and red rock|Spring,Summer|3 to 10 ft|Fluffy or feathery seeds|Drops leaves in fall|Moist ground',
+'water-birch|Water birch|Betula occidentalis|Tree,Bush|Green or gray|Round or oval|Lakes and wetlands,Mountains,Foothills and neighborhoods|Summer,Fall|Over 10 ft|None|Drops leaves in fall|Moist ground',
+'greasewood|Black greasewood|Sarcobatus vermiculatus|Bush|Green or gray|Narrow or grass-like|Sagebrush flats,Lakes and wetlands|Summer|3 to 10 ft|None|Drops leaves in fall|Dry ground',
+'blackbrush|Blackbrush|Coleogyne ramosissima|Bush|Green or gray|Narrow or grass-like|Desert and red rock|Spring|1 to 3 ft|None|Evergreen|Dry ground',
+'arrowweed|Arrow-weed|Pluchea sericea|Bush|Pink|Lance-shaped|Desert and red rock,Lakes and wetlands|Summer,Fall|3 to 10 ft|None|Evergreen|Moist ground',
+'tamarisk|Tamarisk (saltcedar)|Tamarix ramosissima|Bush,Tree|Pink|Needle or scale-like|Desert and red rock,Lakes and wetlands,Sagebrush flats|Spring,Summer|Over 10 ft|Showy flowers|Drops leaves in fall|Moist ground',
+'russian-olive|Russian olive|Elaeagnus angustifolia|Tree,Bush|Yellow,Green or gray|Lance-shaped|Foothills and neighborhoods,Lakes and wetlands,Sagebrush flats,Desert and red rock|Spring,Summer|Over 10 ft|Berries or fruit|Drops leaves in fall|Moist ground',
+'rm-juniper|Rocky Mountain juniper|Juniperus scopulorum|Tree|Green or gray|Needle or scale-like|Foothills and neighborhoods,Mountains|Year-round|Over 10 ft|Berries or fruit|Evergreen|Dry ground',
+'douglas-fir|Douglas-fir|Pseudotsuga menziesii|Tree|Green or gray|Needle or scale-like|Mountains,Foothills and neighborhoods|Year-round|Over 10 ft|Cones|Evergreen|Moist ground',
+'engelmann-spruce|Engelmann spruce|Picea engelmannii|Tree|Green or gray|Needle or scale-like|Mountains|Year-round|Over 10 ft|Cones|Evergreen|Moist ground',
+'white-fir|White fir|Abies concolor|Tree|Green or gray|Needle or scale-like|Mountains,Foothills and neighborhoods|Year-round|Over 10 ft|Cones|Evergreen|Moist ground',
+'limber-pine|Limber pine|Pinus flexilis|Tree|Green or gray|Needle or scale-like|Mountains|Year-round|Over 10 ft|Cones|Evergreen|Dry ground',
+'narrowleaf-cottonwood|Narrowleaf cottonwood|Populus angustifolia|Tree|Green or gray,Yellow|Lance-shaped|Foothills and neighborhoods,Mountains,Lakes and wetlands|Summer,Fall|Over 10 ft|Fluffy or feathery seeds|Drops leaves in fall|Moist ground',
+'boxelder|Boxelder|Acer negundo|Tree|Green or gray|Compound (leaflets)|Foothills and neighborhoods,Lakes and wetlands|Summer,Fall|Over 10 ft|None|Drops leaves in fall|Moist ground',
+'joshua-tree|Joshua tree|Yucca brevifolia|Tree|White,Green or gray|Narrow or grass-like|Desert and red rock|Spring|Over 10 ft|Showy flowers,Berries or fruit|Evergreen|Dry ground',
+'floating-pondweed|Floating-leaf pondweed|Potamogeton natans|Aquatic|Green or gray|Round or oval|Lakes and wetlands,Mountains|Summer|Under 1 ft|None|Dies back each year|In or on water',
+'bladderwort|Common bladderwort|Utricularia macrorhiza|Aquatic,Flower|Yellow|Needle or scale-like|Lakes and wetlands,Mountains|Summer|Under 1 ft|Showy flowers|Dies back each year|In or on water',
+'muskgrass|Muskgrass|Chara vulgaris|Aquatic|Green or gray|Narrow or grass-like|Lakes and wetlands|Summer|Under 1 ft|None|Evergreen|In or on water',
+'baltic-rush|Baltic rush|Juncus balticus|Aquatic|Green or gray|Narrow or grass-like|Lakes and wetlands,Foothills and neighborhoods,Sagebrush flats,Desert and red rock|Summer|1 to 3 ft|None|Evergreen|Moist ground',
+'american-speedwell|American speedwell|Veronica americana|Aquatic,Flower|Blue|Round or oval|Lakes and wetlands,Mountains,Foothills and neighborhoods|Spring,Summer|Under 1 ft|Showy flowers|Dies back each year|In or on water'
 ];
 
 /* ---------- line drawings (black on white, generic) ---------- */
@@ -351,6 +439,12 @@ function aTree(p){
     s+=pth('M56 108L56 96L64 96L64 108Z');
     for(i=T-1;i>=0;i--){var ya=14+i*sp,yb=ya+sp*2.2,w=8+(i+1)*(p.narrow?3.6:5.8);s+=pth('M60 '+ya+'L'+(60-w)+' '+yb+'L'+(60+w)+' '+yb+'Z');}
     if(p.cones)s+=ell(40,70,3,6,0)+ell(80,56,3,6,0);
+    return s;
+  }
+  if(k==='joshua'){
+    s+=pth('M57 108L58 70L62 70L63 108Z')+lin(60,76,38,60)+lin(60,72,84,54)+lin(60,70,60,46);
+    [[38,60],[84,54],[60,46],[30,52],[92,46]].forEach(function(t){for(i=0;i<7;i++){var a2=(-160+i*45)*Math.PI/180;s+=lin(t[0],t[1],(t[0]+Math.cos(a2)*11).toFixed(1),(t[1]+Math.sin(a2)*11).toFixed(1));}});
+    s+=lin(38,60,30,52)+lin(84,54,92,46);
     return s;
   }
   if(k==='aspen'){
@@ -504,7 +598,51 @@ var ART={
  'arrowhead':['emerge',{kind:'arrow'}],
  'mares-tail':['reed',{head:'whorls'}],
  'phragmites':['reed',{head:'plume'}],
- 'milfoil':['sub',{kind:'feather'}]
+ 'milfoil':['sub',{kind:'feather'}],
+ 'balsamroot':['flower',{bloom:'daisy',h:62,leaf:'heart',nl:3,disc:'s',lsc:1.25}],
+ 'blue-flax':['flower',{bloom:'cup5',h:62,leaf:'narrow',nl:4}],
+ 'wasatch-penstemon':['flower',{bloom:'spike',h:70,leaf:'lance',nl:2,shape:'tube',n:8,r:4}],
+ 'sweetvetch':['flower',{bloom:'spike',h:64,leaf:'compound',nl:3,shape:'pea',n:10,r:3.4}],
+ 'heartleaf-arnica':['flower',{bloom:'daisy',h:54,leaf:'heart',nl:2,disc:'k'}],
+ 'bluebells':['flower',{bloom:'spike',h:68,leaf:'lance',nl:3,shape:'tube',n:7,r:3.4}],
+ 'sticky-geranium':['flower',{bloom:'cup5',h:52,leaf:'lobed',nl:3}],
+ 'harebell':['flower',{bloom:'cup5',h:54,leaf:'narrow',nl:2}],
+ 'showy-milkweed':['flower',{bloom:'umbel',h:66,leaf:'round',nl:3,lsc:1.1}],
+ 'cow-parsnip':['flower',{bloom:'umbel',h:84,leaf:'lobed',nl:3,lsc:1.2}],
+ 'sulphur-buckwheat':['flower',{bloom:'umbel',h:40,leaf:'round',nl:2}],
+ 'scarlet-monkeyflower':['flower',{bloom:'cup5',h:58,leaf:'round',nl:3}],
+ 'sacred-datura':['flower',{bloom:'lily',h:54,leaf:'heart',nl:3,lsc:1.1}],
+ 'rocky-mountain-iris':['flower',{bloom:'spur',h:64,leaf:'narrow',nl:3}],
+ 'banana-yucca':['flower',{bloom:'spike',h:84,leaf:'narrow',nl:4,lsc:1.4,shape:'dot',n:9,r:3.6}],
+ 'larkspur':['flower',{bloom:'spike',h:84,leaf:'lobed',nl:3,shape:'pea',n:12,r:3.4}],
+ 'nettle':['bush',{kind:'mound',leaf:'heart',tall:1}],
+ 'poison-ivy':['bush',{kind:'mound',leaf:'compound'}],
+ 'oregon-grape':['bush',{kind:'mound',leaf:'compound',flowers:6}],
+ 'snowberry':['bush',{kind:'mound',leaf:'round'}],
+ 'skunkbush':['bush',{kind:'mound',leaf:'compound',tall:1}],
+ 'wax-currant':['bush',{kind:'mound',leaf:'lobed',flowers:5}],
+ 'rm-maple':['tree',{kind:'round',leaf:'lobed',small:1}],
+ 'red-osier':['bush',{kind:'mound',leaf:'round',tall:1}],
+ 'coyote-willow':['bush',{kind:'arch',leaf:'narrow'}],
+ 'water-birch':['tree',{kind:'round',leaf:'round',small:1}],
+ 'greasewood':['bush',{kind:'arch',leaf:'narrow'}],
+ 'blackbrush':['bush',{kind:'mound',leaf:'narrow'}],
+ 'arrowweed':['bush',{kind:'wands'}],
+ 'tamarisk':['bush',{kind:'arch',leaf:'narrow'}],
+ 'russian-olive':['tree',{kind:'round',leaf:'narrow',tall:1}],
+ 'rm-juniper':['tree',{kind:'juniper'}],
+ 'douglas-fir':['tree',{kind:'conifer',tiers:5,cones:true}],
+ 'engelmann-spruce':['tree',{kind:'conifer',tiers:7,narrow:true,cones:true}],
+ 'white-fir':['tree',{kind:'conifer',tiers:5}],
+ 'limber-pine':['tree',{kind:'pine'}],
+ 'narrowleaf-cottonwood':['tree',{kind:'round',leaf:'narrow',tall:1}],
+ 'boxelder':['tree',{kind:'round',leaf:'compound'}],
+ 'joshua-tree':['tree',{kind:'joshua'}],
+ 'floating-pondweed':['lily',{}],
+ 'bladderwort':['sub',{kind:'strand'}],
+ 'muskgrass':['sub',{kind:'whorl'}],
+ 'baltic-rush':['reed',{head:'tuft'}],
+ 'american-speedwell':['emerge',{kind:'cress'}]
 };
 function art(id){var a=ART[id];return '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" focusable="false">'+AF[a[0]](a[1]||{})+'</svg>';}
 function pic(id,cls){
@@ -677,6 +815,47 @@ function crumbsFor(route){
   if(k==='report')return [H,[route,'Struggle report']];
   return [H];
 }
+var H=[];
+function snap(){
+  var fp=document.querySelector('.fpanel');
+  return {route:S.route,y:window.pageYOffset||0,fy:fp?fp.scrollTop:0,filters:JSON.parse(JSON.stringify(S.filters)),open:JSON.parse(JSON.stringify(S.open)),leafFrom:S.leafFrom,via:S.via};
+}
+function routeLabel(r){
+  var p=routeParts(r),k=p[0],a=p[1];
+  if(k==='home')return 'Home';
+  if(k==='type')return TL[a]||'previous page';
+  if(k==='places')return 'Where you saw it';
+  if(k==='place')return a;
+  if(k==='search')return 'Search results';
+  if(k==='leaf')return BYID[a]?BYID[a].name:'previous page';
+  if(k==='log')return 'Click log';
+  if(k==='test')return 'Test mode';
+  if(k==='results')return 'Test results';
+  if(k==='report')return 'Struggle report';
+  return 'previous page';
+}
+function goBack(){
+  var e=H.pop();
+  if(!e){go('home');return;}
+  if(T&&T.state==='running'){
+    if(e.route.indexOf('leaf:')===0){return;}
+    var cur=T.views[T.views.length-1];
+    if(e.route!==cur.route){
+      cur.dwell=performance.now()-cur.enter;
+      T.views.push({route:e.route,page:pageLabel(e.route),enter:performance.now(),clicks:0,dwell:0});
+    }
+  }
+  S.route=e.route;S.filters=e.filters;S.open=e.open;S.leafFrom=e.leafFrom;S.via=e.via;S.confirm='';
+  render();
+  var fp=document.querySelector('.fpanel');if(fp)fp.scrollTop=e.fy||0;
+  window.scrollTo(0,e.y);
+  requestAnimationFrame(function(){window.scrollTo(0,e.y);});
+}
+function backBar(){
+  if(S.route==='home')return '';
+  var e=H[H.length-1],label=e?routeLabel(e.route):'Home';
+  return '<div class="backbar"><button class="backbtn" data-act="back" data-log="nav:Back (previous place)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Back to '+esc(label)+'</span></button></div>';
+}
 function go(route){
   var isLeaf=route.indexOf('leaf:')===0;
   if(T&&T.state==='running'){
@@ -690,6 +869,7 @@ function go(route){
     if(S.route.indexOf('leaf:')!==0){S.leafFrom=S.route;S.via='';}
     else{var cb=BYID[S.route.slice(5)],nb=BYID[route.slice(5)];S.via=(cb&&cb.tool&&nb&&!nb.tool)?S.route:((nb&&nb.tool)?'':S.via);}
   }
+  if(route!==S.route){H.push(snap());if(H.length>100)H.shift();}
   S.route=route;S.confirm='';render();window.scrollTo(0,0);
 }
 
@@ -802,14 +982,16 @@ function completeTask(id,skipped){
   T.i++;
   persistSession();
   T.state=T.i>=T.order.length?'done':'scenario';
-  S.route='home';S.filters=blankFilters();render();window.scrollTo(0,0);
+  H=[];S.route='home';S.filters=blankFilters();render();window.scrollTo(0,0);
 }
 function startTest(){
+  H=[];
   var el=$('#pid');var pid=(el&&el.value.trim())||('anon-'+Math.random().toString(36).slice(2,6));
   T={id:'s'+Date.now(),pid:pid,order:shuffle(TASKS),i:0,state:'scenario',startedAt:new Date().toISOString(),tasks:[],clicks:0,path:[],taskStart:0,timer:null};
   render();window.scrollTo(0,0);
 }
 function beginTask(){
+  H=[];
   T.state='running';T.taskStart=performance.now();T.clicks=0;T.path=[];T.filters=0;T.searches=0;
   T.views=[{route:'home',page:'Home page',enter:performance.now(),clicks:0,dwell:0}];
   S.route='home';S.filters=blankFilters();
@@ -831,9 +1013,9 @@ function header(){
   var q=r.indexOf('search:')===0?r.slice(7):'';
   var inPlaces=/^(places|place:)/.test(r);
   function tab(route,label,on){return '<button data-go="'+route+'" data-log="nav:'+esc(label)+'"'+(on?' aria-pressed="true"':'')+'>'+esc(label)+'</button>';}
-  var tabs=TYPES.map(function(t){return tab('type:'+t[0],t[1],r==='type:'+t[0]);}).join('')+tab('places','Where you saw it',inPlaces);
+  var tabs=tab('home','Home',r==='home')+TYPES.map(function(t){return tab('type:'+t[0],t[1],r==='type:'+t[0]);}).join('')+tab('places','Where you saw it',inPlaces);
   var search=SHOW_SEARCH?'<form class="search" role="search" id="sform"'+(q?' data-typed="1"':'')+'><label class="sr" for="q">Search plants</label><input type="text" id="q" autocomplete="off" placeholder="Search by name, color, leaf, or place" value="'+esc(q)+'"><button type="submit" class="primary">Search</button><div class="suggest">'+tryChips()+'</div></form>':'';
-  return '<header class="top"><div class="topbar"><button class="brand" data-go="home" data-log="nav:Utah Plants (home)">Utah Plants</button>'+search+'</div><nav class="tabs" aria-label="Browse plants">'+tabs+'</nav></header>';
+  return '<header class="top"><div class="topbar"><button class="brand" data-go="home" data-log="nav:Utah Plants (home)">Utah Plants</button>'+search+'</div><nav class="tabs" aria-label="Main">'+tabs+'</nav></header>';
 }
 function footer(){
   var run=T&&T.state==='running';
@@ -888,9 +1070,7 @@ function home(){
   var gcn=[['Plants',146],['Mollusks',27],['Birds',23],['Fish',22],['Insects',16],['Mammals',14],['Amphibians',4],['Reptiles',4]];
   return '<section class="hero" aria-label="Welcome">'+heroArt()+'<div class="heroCard"><h1>This site is made by the average person for the average person.</h1><p class="muted">I am sorry, biologists, if this hurts your feelings.</p></div></section>'+
   '<section class="sec"><h2>Browse plants</h2><div class="grid">'+tiles+'</div></section>'+
-  '<section class="sec"><h2>Tools</h2><div class="tools">'+tools+'</div></section>'+
-  '<section class="sec"><h2>Utah at a glance</h2><div class="stats">'+stat('84,916','square miles of land and water')+stat('65%','owned by the federal government')+stat('13,528 ft','Kings Peak, the highest point')+stat('2,350 ft','Beaver Dam Wash, the lowest point')+'</div>'+
-  '<details class="more" data-key="more"'+(S.open.more?' open':'')+'><summary data-log="group:More Utah facts">More Utah wildlife facts</summary><div class="col"><p><b>256</b> species of greatest conservation need, by group:</p><div class="stats">'+gcn.map(function(g){return stat(g[1],g[0]);}).join('')+'</div><div class="stats">'+stat('Sego lily','state flower')+stat('Blue spruce','state tree')+stat('Rocky Mountain elk','state animal')+'</div><p class="muted small">Sources: Utah Division of State History state facts page; Utah Wildlife Action Plan figures as reported by TownLift, January 2026.</p></div></details></section>';
+  '<section class="sec"><h2>Tools</h2><div class="tools">'+tools+'</div></section>';
 }
 
 function fset(k,pool,o){
@@ -1183,8 +1363,17 @@ function entryHtml(id,badge,rows){
 }
 
 /* Poisonous plants. Sources: Utah Poison Control Center, ASPCA, USDA Poisonous Plant Research Lab (Logan, Utah), USU Extension, Oregon State Extension. */
-var TOX_ORDER=['chokecherry','lupine','elderberry','gambel-oak','yarrow','marsh-marigold','water-buttercup','columbine'];
+var TOX_ORDER=['chokecherry','lupine','elderberry','gambel-oak','yarrow','marsh-marigold','water-buttercup','columbine','larkspur','sacred-datura','poison-ivy','cow-parsnip','showy-milkweed','rocky-mountain-iris','nettle','banana-yucca','greasewood'];
 var TOX={
+ 'showy-milkweed':{who:'People, pets, and livestock',part:'The whole plant, especially the milky sap',note:'Contains compounds that affect the heart. Livestock poisonings are documented, and the sap can irritate eyes and skin. Wash your hands after touching it.',short:'The whole plant, including the milky sap, is poisonous. Do not eat.'},
+ 'cow-parsnip':{who:'People, mostly through the skin',part:'Sap on the stems and leaves',note:'Sap on skin plus sunlight can cause painful burns and blisters that last for weeks. It looks like poison hemlock and giant hogweed, so do not touch large white umbels unless you know which plant it is.',short:'Sap plus sunlight can cause painful burns and blisters on skin.'},
+ 'nettle':{who:'People and pets',part:'Tiny hairs on the leaves and stems',note:'The hairs cause burning, itching, and a rash on contact. Cooked young leaves are eaten by some people, but wear gloves to pick them.',short:'Stinging hairs cause burning, itching, and a rash on contact.'},
+ 'poison-ivy':{who:'People and pets',part:'All parts, even dead stems in winter',note:'An oil on the plant causes an itchy, blistering rash. It can also reach you on pet fur, tools, and clothes. Look for three leaflets on each leaf. Wash skin and clothes soon after contact.',short:'Touching any part can cause an itchy, blistering rash. Leaves come in threes.'},
+ 'sacred-datura':{who:'People, pets, and livestock',part:'The whole plant, especially seeds and flowers',note:'Contains compounds that can cause confusion, a racing heart, and serious illness. Even a small amount can be dangerous. Wash your hands after touching it and keep them away from your eyes.',short:'Every part is highly poisonous. Do not eat or play with it.'},
+ 'rocky-mountain-iris':{who:'People, pets, and livestock',part:'Roots and underground stems most, leaves too',note:'Irises contain irritants that cause drooling, vomiting, and diarrhea. The sap can also irritate skin.',short:'Roots and leaves can cause vomiting and stomach upset. Do not eat.'},
+ 'larkspur':{who:'Cattle most of all. Horses, sheep, and people can be harmed too.',part:'The whole plant, young plants and seeds most',note:'Contains alkaloids that cause weakness, trembling, and trouble breathing. Larkspur is one of the main plant poisons for cattle on Utah mountain ranges.',short:'The whole plant is poisonous, especially to cattle.'},
+ 'banana-yucca':{who:'Dogs, cats, and horses',part:'Leaves and roots',note:'Contains soapy compounds called saponins that can cause vomiting, drooling, and diarrhea in pets. The ripe fruit of banana yucca has long been eaten, but do not eat a wild plant unless an expert has identified it.',short:'Toxic to dogs, cats, and horses.'},
+ 'greasewood':{who:'Sheep and cattle',part:'Leaves and young shoots',note:'Contains oxalates. Hungry animals that eat a lot at once can be poisoned.',short:'Leaves contain oxalates that can poison grazing animals.'},
  'chokecherry':{who:'Cattle, sheep, and other grazers. People and pets can be harmed too.',part:'Leaves (fresh or wilted), stems, and pits',note:'Releases cyanide when eaten. In livestock, signs can start within minutes. The ripe fruit is used for jelly, but never chew or swallow the pits.',short:'Leaves, stems, and pits are poisonous. Do not chew or swallow pits.'},
  'lupine':{who:'Sheep, cattle, and other grazers. Keep pets and children from eating any part.',part:'The whole plant, especially seeds and pods',note:'Many lupines contain alkaloids that poison livestock. Treat every lupine as unsafe to eat.',short:'Poisonous if eaten, especially the seeds and pods.'},
  'elderberry':{who:'People, pets, and livestock',part:'Raw berries, leaves, stems, bark, and roots',note:'Contains compounds that release cyanide. Raw berries can cause nausea and vomiting. Ripe berries are only safe after cooking, with every stem and leaf removed first.',short:'Raw berries, leaves, stems, bark, and roots are poisonous. Cooked ripe berries are edible.'},
@@ -1220,6 +1409,8 @@ function poisonBody(){
 
 /* Invasive plants. Sources: Utah Department of Agriculture and Food noxious weed list, Utah county weed programs, USU Extension. */
 var INV=[
+ {id:'tamarisk',guide:true,badge:'Utah noxious weed (Class 3)',rows:[['Where','Rivers, streams, reservoirs, and wet washes, mostly in southern and eastern Utah.'],['Why it matters','Forms thick stands that crowd out native cottonwoods and willows and use a lot of water. Salt left in its leaf litter makes the ground harder for other plants.'],['Good to know','It is also called saltcedar. Report new patches to your county weed program.']]},
+ {id:'russian-olive',guide:true,badge:'Utah noxious weed (Class 4, prohibited for sale)',rows:[['Where','Stream banks, river corridors, ditches, and open fields, including along the Wasatch Front.'],['Why it matters','Birds spread the seeds, and the thorny thickets shade out native cottonwoods and willows.'],['Good to know','You may still see it in old windbreaks and yards. Class 4 means it cannot be sold or planted.']]},
  {id:'phragmites',guide:true,badge:'Utah noxious weed (Class 3)',rows:[['Where','Marshes, ditches, and the edges of ponds and lakes. Thick stands line parts of the Utah Lake shore.'],['Why it matters','Grows in dense stands taller than a person that crowd out native wetland plants and the animals that use them.'],['Good to know','Only the non-native form is on the state list. A native form of common reed also grows in North America, and the two can look alike. Report stands instead of removing them yourself.']]},
  {id:'milfoil',guide:true,badge:'Native, not invasive',rows:[['Look-alike alert','The northern watermilfoil in this guide is a native plant. Eurasian watermilfoil, listed below, looks very similar and is not.'],['What to do','If you see milfoil in a lake or pond, do not pull it. Take photos and report it. Telling the two apart takes a close look at the leaves.']]},
  {id:'x-eurasian-milfoil',badge:'Utah noxious weed (Class 1A, watch list)',rows:[['Where','Lakes, ponds, and slow streams'],['Why it matters','Forms thick mats that tangle swimmers and boat propellers and crowd out native water plants. Pieces break off and spread on boats and trailers.'],['What to do','Clean, drain, and dry boats and gear. Report suspected plants right away.']],rel:['milfoil']},
@@ -1355,29 +1546,83 @@ function toolAct(name,el){
   return false;
 }
 
+
+/* Plant profile helpers */
+var SWATCH={'White':'#FFFFFF','Yellow':'#F2C94C','Pink':'#F2A7C3','Purple':'#8E5BB5','Red':'#C0392B','Orange':'#E67E22','Blue':'#4A90D9','Green or gray':'#8A9A82'};
+var HAB={'Mountains':'Mountains','Foothills and neighborhoods':'Foothills and towns','Desert and red rock':'Red rock desert','Sagebrush flats':'Sagebrush flats','Lakes and wetlands':'Lakes and wetlands'};
+var LIFE={
+ 'Evergreen':{v:'Green all year',p:'Keeps its leaves or needles through winter.',i:'<path d="M12 3c-4 4-6 8-6 11a6 6 0 0012 0c0-3-2-7-6-11z"/><path d="M12 9v12"/>'},
+ 'Drops leaves in fall':{v:'Bare in winter',p:'Loses its leaves in fall and grows new ones in spring.',i:'<path d="M12 21V9M12 13l-5-4M12 16l5-5M12 9l-3-4M12 9l3-4"/>'},
+ 'Dies back each year':{v:'Returns every spring',p:'The plant above ground dies in fall. New growth comes back the next spring.',i:'<path d="M4 20h16"/><path d="M12 20v-6"/><path d="M12 14c-3 0-4-2-4-4 3 0 4 2 4 4zM12 14c3 0 4-2 4-4-3 0-4 2-4 4z"/>'}
+};
+var GROUNDINFO={
+ 'Dry ground':{v:'Dry, well-drained soil',p:'Handles dry spells. Water needs: low.',i:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>'},
+ 'Moist ground':{v:'Damp soil',p:'Likes streamsides, seeps and wet meadows. Water needs: high.',i:'<path d="M12 3c4 5 6 8 6 11a6 6 0 01-12 0c0-3 2-6 6-11z"/>'},
+ 'In or on water':{v:'In or on water',p:'Roots or floats in lakes, ponds and slow streams.',i:'<path d="M2 9c3-3 5 3 8 0s5 3 8 0 3 0 4 0M2 15c3-3 5 3 8 0s5 3 8 0 3 0 4 0"/>'}
+};
+var SIZE={'Under 1 ft':{lo:0.3,hi:1,say:'Ankle to knee high'},'1 to 3 ft':{lo:1,hi:3,say:'Knee to hip high'},'3 to 10 ft':{lo:3,hi:10,say:'Hip high up to taller than you'},'Over 10 ft':{lo:10,hi:14,say:'Taller than a basketball hoop'}};
+function icon(p){return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">'+p+'</svg>';}
+function sizeSvg(h){
+  var z=SIZE[h];if(!z)return '';
+  var top=(h==='Over 10 ft')?14:11,H=100,base=108,y=function(ft){return base-ft/top*H;};
+  var bar='<rect x="62" y="'+y(z.hi).toFixed(1)+'" width="16" height="'+(y(z.lo)-y(z.hi)+0.01).toFixed(1)+'" rx="3" fill="var(--accent)" fill-opacity=".35"/>'+
+          '<rect x="62" y="'+y(z.lo).toFixed(1)+'" width="16" height="'+(base-y(z.lo)).toFixed(1)+'" rx="3" fill="var(--accent)"/>';
+  var ph=5.5,py=y(ph);
+  var person='<g fill="var(--ink-2)"><circle cx="20" cy="'+(py+4).toFixed(1)+'" r="4.5"/><rect x="14" y="'+(py+10).toFixed(1)+'" width="12" height="'+(base-py-10-14).toFixed(1)+'" rx="4"/><rect x="15" y="'+(base-14)+'" width="4" height="14"/><rect x="21" y="'+(base-14)+'" width="4" height="14"/></g>';
+  var hoop=h==='Over 10 ft'?'<line x1="48" x2="86" y1="'+y(10).toFixed(1)+'" y2="'+y(10).toFixed(1)+'" stroke="var(--ink-2)" stroke-dasharray="3 3"/><text x="90" y="'+(y(10)+3).toFixed(1)+'" font-size="9" fill="var(--ink-2)">10 ft</text>':'';
+  return '<svg viewBox="0 0 110 112" role="img" aria-label="Height compared with a 5 and a half foot person. '+esc(z.say)+'"><line x1="4" x2="106" y1="'+base+'" y2="'+base+'" stroke="var(--line-strong)"/>'+person+bar+hoop+'</svg>';
+}
+function seasonStrip(arr){
+  var all=['Spring','Summer','Fall','Winter'],yr=arr.indexOf('Year-round')>=0;
+  return '<div class="seasons" role="img" aria-label="'+(yr?'All year':esc(arr.join(', ')))+'">'+all.map(function(x){return '<span'+((yr||arr.indexOf(x)>=0)?' class="on"':'')+'>'+x+'</span>';}).join('')+'</div>';
+}
+function safetyPanel(b){
+  var t=TOX[b.id],inv=INV.filter(function(x){return x.id===b.id&&x.guide&&/noxious/i.test(x.badge||'');})[0];
+  var tri='<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.5"/></svg>';
+  var out;
+  if(t){
+    out='<section class="safety warn" aria-labelledby="sf"><div class="sfhead">'+tri+'<h2 id="sf">Poison warning</h2><span class="verdict">Dangerous? Yes, if eaten</span></div><p><b>'+esc(t.short)+'</b></p><dl class="sfgrid"><dt>Who it can harm</dt><dd>'+esc(t.who)+'</dd><dt>Harmful parts</dt><dd>'+esc(t.part)+'</dd><dt>What it does</dt><dd>'+esc(t.note)+'</dd></dl><p class="small">If a person ate it, call Poison Help at <a href="tel:18002221222">1-800-222-1222</a> (free, 24 hours). For a pet, call your vet.</p><div class="bar"><button data-go="leaf:tool-poison" data-log="leaf:Poisonous plants">See all poisonous plants</button></div></section>';
+  }else{
+    out='<section class="safety" aria-labelledby="sf"><div class="sfhead">'+tri+'<h2 id="sf">Safety</h2><span class="verdict">Dangerous? No warning found</span></div><p>This plant is not on our poisonous plants list. The list is a short starter list, so a missing plant does not mean a safe one. Never eat a wild plant unless an expert has identified it.</p><div class="bar"><button data-go="leaf:tool-poison" data-log="leaf:Poisonous plants">See poisonous plants</button></div></section>';
+  }
+  if(inv)out+='<p class="alert"><b>Invasive alert:</b> '+esc(inv.badge)+'. <button class="linkbtn inl" data-go="leaf:tool-invasive" data-log="leaf:Invasive species">See Invasive species</button></p>';
+  return out;
+}
+function profile(b,d){
+  var life=LIFE[b.growth]||{v:b.growth,p:'',i:''},gr=GROUNDINFO[b.moisture]||{v:b.moisture,p:'',i:''},sz=SIZE[b.height]||{say:b.height};
+  var types='<div class="chips2" aria-label="Plant type">'+b.types.map(function(t){return '<span class="pill">'+esc(TL[t])+'</span>';}).join('')+'</div>';
+  var aka=(d&&d.names&&d.names.length)?'<p class="aka">Also called '+esc(d.names.slice(0,4).join(', '))+'</p>':'';
+  var cols=b.colors.map(function(c){return '<span class="pill"><i style="background:'+(SWATCH[c]||'#ccc')+'"></i>'+esc(c)+'</span>';}).join('');
+  var habs=b.regions.map(function(r){return '<span class="pill">'+esc(HAB[r]||r)+'</span>';}).join('');
+  var tiles='<div class="tiles">'+
+    '<div class="tile"><span class="k">'+icon(life.i)+'Life cycle</span><span class="v">'+esc(life.v)+'</span><p>'+esc(life.p)+'</p></div>'+
+    '<div class="tile"><span class="k">Size</span><div class="sizeviz">'+sizeSvg(b.height)+'<div class="col"><span class="v">'+esc(b.height)+'</span><p>'+esc(sz.say)+'</p></div></div></div>'+
+    '<div class="tile"><span class="k">'+icon(gr.i)+'Ground and water</span><span class="v">'+esc(gr.v)+'</span><p>'+esc(gr.p)+'</p></div>'+
+    '<div class="tile"><span class="k">Look for it in</span>'+seasonStrip(b.seasons)+'</div>'+
+    '<div class="tile wide"><span class="k">Where it grows</span><div class="chips2">'+habs+'</div></div>'+
+    '<div class="tile wide"><span class="k">Colors you will see</span><div class="chips2">'+cols+'</div></div>'+
+  '</div>';
+  var fine='<dl class="fine"><dt>Latin name</dt><dd><em>'+esc(b.latin)+'</em></dd>'+
+    (d&&d.family?'<dt>Family</dt><dd>'+esc(d.family)+'</dd>':'')+
+    (d&&d.threat&&d.threat.length?'<dt>Conservation status</dt><dd>'+esc(d.threat.join(', '))+'</dd>':'')+
+    (d&&typeof d.total==='number'?'<dt>Recorded in Utah</dt><dd>'+d.total.toLocaleString('en-US')+' records on GBIF</dd>':'')+'</dl>';
+  return types+aka+tiles+safetyPanel(b)+fine;
+}
 function leafPage(id){
   var b=BYID[id];
   var path=crumbsFor('leaf:'+id).map(function(c){return c[1];}).join(' > ');
-  var foot='<div class="bar"><button data-go="'+esc((S.via&&!b.tool)?S.via:S.leafFrom)+'" data-log="nav:Back">Back</button><button data-go="home" data-log="nav:Home">Home</button></div>';
+  var foot='<div class="bar"><button data-act="back" data-log="nav:Back">Back</button><button data-go="home" data-log="nav:Home">Home</button></div>';
   var meta='<details class="tester"><summary>Test details</summary><p>Block ID: '+esc(b.id)+'. Path taken: '+esc(path)+'</p></details>';
   if(b.tool){
     var inner=toolBody(id);
-    return crumbs('leaf:'+id)+'<section class="box col"><p class="eyebrow">You selected</p><h1>'+esc(b.name)+'</h1><p>'+esc(b.desc)+'</p>'+inner+meta+foot+'</section>';
+    return crumbs('leaf:'+id)+'<section class="box col"><p class="eyebrow">You selected</p><h1>'+esc(b.name)+'</h1><p>'+esc(b.desc)+'</p>'+inner+foot+'</section>';
   }
   var d=GB_CACHE[b.id],st=GB_STATE[b.id];
   if(GBIF_LIVE&&!d&&!st)loadGbif(b);
   var on=isBM(b.id);
   var mark='<button class="bmtext" data-act="bookmark" data-id="'+b.id+'" data-log="bookmark:'+(on?'Remove ':'Add ')+esc(b.name)+'"'+(on?' aria-pressed="true"':' aria-pressed="false"')+'>'+bmIcon(on)+'<span>'+(on?'Bookmarked. Select to remove':'Bookmark this plant')+'</span></button>';
-  var facts=[['Latin name',b.latin],['Plant types',b.types.map(function(t){return TL[t];}).join(', ')],['Color',b.colors.join(', ')],['Notable feature',b.features.join(', ')],['Leaf shape',b.leaf],['Evergreen or not',b.growth],['Height',b.height],['Ground',b.moisture],['Where you saw it',b.regions.join(', ')],['Season seen',b.seasons.join(', ')]];
-  if(TOX[b.id])facts.push(['Safety',TOX[b.id].short]);
-  if(d){
-    if(d.names.length)facts.splice(1,0,['Also called',d.names.slice(0,5).join(', ')]);
-    if(d.family)facts.push(['Family',d.family]);
-    if(d.threat&&d.threat.length)facts.push(['Conservation status',d.threat.join(', ')]);
-    if(typeof d.total==='number')facts.push(['Recorded in Utah',d.total.toLocaleString('en-US')+' records on GBIF']);
-  }
   var tp=thumbPhoto(b.id),lead=(d&&d.photos.length)?photoFig(d.photos[0],b,true):((!d&&tp&&thumbsOn())?photoFig(tp,b,true):pic(b.id));
-  return crumbs('leaf:'+id)+'<section class="box col"><p class="eyebrow">You selected</p><h1>'+esc(b.name)+'</h1><div class="plantgrid"><div class="col">'+lead+mark+'</div><div class="col"><dl class="facts">'+facts.map(function(f){return '<dt>'+esc(f[0])+'</dt><dd>'+esc(f[1])+'</dd>';}).join('')+'</dl></div></div>'+gbifBlock(b,d,st)+foot+'</section>';
+  return crumbs('leaf:'+id)+'<section class="box col"><p class="eyebrow">You selected</p><h1>'+esc(b.name)+'</h1><div class="plantgrid"><div class="col">'+lead+mark+'</div><div class="col">'+profile(b,d)+'</div></div>'+gbifBlock(b,d,st)+foot+'</section>';
 }
 
 function exportBox(src,title){
@@ -1469,7 +1714,7 @@ function render(){
     else if(k==='results')body=resultsPage();
     else if(k==='report')body=reportPage();
     else body=home();
-    html='<div class="col'+((T&&T.state==='running')?' testing':'')+'" style="gap:22px">'+((T&&T.state==='running')?testBar():'')+header()+body+footer()+'</div>';
+    html='<div class="col'+((T&&T.state==='running')?' testing':'')+'" style="gap:22px">'+((T&&T.state==='running')?testBar():'')+header()+backBar()+body+footer()+'</div>';
   }
   a.innerHTML=html;
   observeThumbs();
@@ -1477,6 +1722,7 @@ function render(){
 
 /* ---------- events ---------- */
 function act(name,el){
+  if(name==='back'){goBack();return;}
   if(toolAct(name,el))return;
   if(name==='clearfilters'){
     var prev=S.filters;S.filters=blankFilters();render();
@@ -1504,9 +1750,9 @@ function act(name,el){
   if(name==='skip'){completeTask('',true);return;}
   if(name==='quit'){
     if(S.confirm!=='quit'){S.confirm='quit';render();return;}
-    clearInterval(T.timer);T=null;S.confirm='';S.route='home';render();window.scrollTo(0,0);return;
+    H=[];clearInterval(T.timer);T=null;S.confirm='';S.route='home';render();window.scrollTo(0,0);return;
   }
-  if(name==='finishtest'){T=null;S.route=el.getAttribute('data-go')||'home';render();window.scrollTo(0,0);return;}
+  if(name==='finishtest'){H=[];T=null;S.route=el.getAttribute('data-go')||'home';render();window.scrollTo(0,0);return;}
 }
 var app=$('#app');
 app.addEventListener('click',function(e){
