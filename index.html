@@ -305,7 +305,11 @@ form.rep{display:flex;flex-direction:column;gap:14px;max-width:560px}
 .safety.ok a{color:inherit}
 .srow{display:flex;flex-direction:column;gap:4px}
 .srow .why{padding-left:4px}
-.hvp{position:fixed;z-index:40;pointer-events:none;background:var(--surface);color:var(--ink);border:1px solid var(--line-strong);border-radius:12px;padding:10px;box-shadow:0 8px 24px rgba(0,0,0,.28);animation:hvin .14s ease-out}
+.hvb{position:fixed;inset:0;z-index:39;pointer-events:none;opacity:0;transition:opacity .15s ease;background:rgba(0,0,0,.06);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.hvb.on{opacity:1}
+.cardwrap.hvlift,.rowwrap.hvlift{position:relative;z-index:41}
+@media (prefers-reduced-motion:reduce){.hvb{transition:none}}
+.hvp{position:fixed;z-index:42;pointer-events:none;background:var(--surface);color:var(--ink);border:1px solid var(--line-strong);border-radius:12px;padding:10px;box-shadow:0 8px 24px rgba(0,0,0,.28);animation:hvin .14s ease-out}
 .hvt{font-size:13px;font-weight:600;margin-bottom:6px}
 .hvg{display:grid;grid-template-columns:repeat(var(--n,3),112px);gap:8px}
 .hvf{margin:0;width:112px}
@@ -313,6 +317,62 @@ form.rep{display:flex;flex-direction:column;gap:14px;max-width:560px}
 .hvf figcaption{font-size:11px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
 @keyframes hvin{from{opacity:0;transform:translateY(4px)}}
 @media (prefers-reduced-motion:reduce){.hvp{animation:none}}
+
+/* ---------- Roomier spacing (v8). Change these numbers to loosen or tighten the whole site. ---------- */
+:root{--pg:36px}
+.wrap{gap:30px}
+.col{gap:14px}
+.sec{gap:16px}
+.row{gap:10px 20px}
+.bar{gap:10px}
+.chips{gap:8px}
+.chips2{gap:10px 12px}
+.try{gap:10px}
+.grid,.tools,.stats,.tiles,.gallery{gap:20px}
+.split{gap:28px}
+.plantgrid,.twocol{gap:32px}
+.card{padding:14px;gap:8px}
+.box{padding:20px}
+.ph{padding:16px}
+.alert{padding:16px 20px}
+.entry{padding:16px;gap:16px}
+.stat{padding:16px}
+.more{padding:14px 18px}
+.tile{padding:16px 20px;gap:6px}
+.tool{padding:18px 20px;gap:6px}
+.safety{padding:18px 22px;gap:12px}
+.sfgrid,.fine{gap:6px 20px}
+.fpanel>summary{padding:14px 18px}
+.fbody{padding:0 18px 18px;gap:8px}
+.fgroup>summary{padding:8px 0}
+.fs{margin:8px 0 14px}
+.chk{padding:7px 0}
+.rowbtn{padding:12px 16px;gap:6px 16px}
+.rowwrap{gap:12px}
+.srow{gap:8px}
+.pent>summary{padding:14px 16px;gap:16px}
+.pbody{padding:16px 16px 18px;gap:14px}
+.facts{gap:10px 24px}
+.notes{gap:12px}
+.heroCard{padding:22px 26px}
+.heroCard h1{margin-bottom:10px}
+.top{padding:16px 18px 0;gap:12px}
+.tabs{margin-inline:-18px;padding-inline:12px}
+.topbar{gap:12px 20px}
+.crumbs{gap:8px}
+.backbar{margin:-16px 0 -12px}
+.foot{padding-top:18px;gap:14px}
+form.rep{gap:20px}
+.fld{gap:6px}
+@media (max-width:560px){
+  :root{--pg:26px}
+  .wrap{gap:22px}
+  .grid,.tools,.stats,.tiles,.gallery{gap:14px}
+  .split,.plantgrid,.twocol{gap:22px}
+  .box{padding:16px}
+  .safety{padding:16px 18px}
+  .tile{padding:14px 16px}
+}
 </style></head><body>
 
 <div class="wrap"><div id="app"></div></div>
@@ -442,7 +502,37 @@ var RAW=[
 'bladderwort|Common bladderwort|Utricularia macrorhiza|Aquatic,Flower|Yellow|Needle or scale-like|Lakes and wetlands,Mountains|Summer|Under 1 ft|Showy flowers|Dies back each year|In or on water',
 'muskgrass|Muskgrass|Chara vulgaris|Aquatic|Green or gray|Narrow or grass-like|Lakes and wetlands|Summer|Under 1 ft|None|Evergreen|In or on water',
 'baltic-rush|Baltic rush|Juncus balticus|Aquatic|Green or gray|Narrow or grass-like|Lakes and wetlands,Foothills and neighborhoods,Sagebrush flats,Desert and red rock|Summer|1 to 3 ft|None|Evergreen|Moist ground',
-'american-speedwell|American speedwell|Veronica americana|Aquatic,Flower|Blue|Round or oval|Lakes and wetlands,Mountains,Foothills and neighborhoods|Spring,Summer|Under 1 ft|Showy flowers|Dies back each year|In or on water'
+'american-speedwell|American speedwell|Veronica americana|Aquatic,Flower|Blue|Round or oval|Lakes and wetlands,Mountains,Foothills and neighborhoods|Spring,Summer|Under 1 ft|Showy flowers|Dies back each year|In or on water',
+'houndstongue|Houndstongue|Cynoglossum officinale|Flower|Red,Purple|Lance-shaped|Foothills and neighborhoods,Mountains,Sagebrush flats|Spring,Summer|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'russian-knapweed|Russian knapweed|Rhaponticum repens|Flower|Pink,Purple|Lobed|Foothills and neighborhoods,Sagebrush flats,Desert and red rock|Summer|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'common-tansy|Common tansy|Tanacetum vulgare|Flower|Yellow|Compound (leaflets)|Foothills and neighborhoods,Mountains,Lakes and wetlands|Summer,Fall|3 to 10 ft|Showy flowers|Dies back each year|Moist ground',
+'cocklebur|Common cocklebur|Xanthium strumarium|NonFlower|Green or gray|Lobed|Lakes and wetlands,Foothills and neighborhoods,Desert and red rock|Summer,Fall|3 to 10 ft|Seed head or bulb|Dies back each year|Moist ground',
+'leafy-spurge|Leafy spurge|Euphorbia esula|Flower|Yellow,Green or gray|Lance-shaped|Foothills and neighborhoods,Mountains,Lakes and wetlands|Spring,Summer|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'thicket-creeper|Thicket creeper|Parthenocissus vitacea|Bush|Green or gray,Red|Compound (leaflets)|Foothills and neighborhoods,Lakes and wetlands,Mountains|Summer,Fall|3 to 10 ft|Berries or fruit|Drops leaves in fall|Moist ground',
+'western-virgins-bower|Western virgin\'s bower|Clematis ligusticifolia|Flower,Bush|White|Compound (leaflets)|Foothills and neighborhoods,Lakes and wetlands,Mountains|Summer,Fall|3 to 10 ft|Showy flowers,Fluffy or feathery seeds|Drops leaves in fall|Moist ground',
+'tree-of-heaven|Tree of heaven|Ailanthus altissima|Tree|Green or gray|Compound (leaflets)|Foothills and neighborhoods,Lakes and wetlands,Sagebrush flats|Summer,Fall|Over 10 ft|None|Drops leaves in fall|Dry ground',
+'dandelion|Common dandelion|Taraxacum officinale|Flower|Yellow|Lobed|Foothills and neighborhoods,Mountains,Lakes and wetlands|Spring,Summer,Fall|Under 1 ft|Showy flowers,Fluffy or feathery seeds|Dies back each year|Moist ground',
+'yellow-salsify|Yellow salsify|Tragopogon dubius|Flower|Yellow|Narrow or grass-like|Foothills and neighborhoods,Sagebrush flats,Mountains|Spring,Summer|1 to 3 ft|Showy flowers,Fluffy or feathery seeds|Dies back each year|Dry ground',
+'chicory|Chicory|Cichorium intybus|Flower|Blue|Lobed|Foothills and neighborhoods,Lakes and wetlands|Summer,Fall|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'tapertip-onion|Tapertip onion|Allium acuminatum|Flower|Pink,Purple|Narrow or grass-like|Foothills and neighborhoods,Sagebrush flats,Mountains|Spring,Summer|Under 1 ft|Showy flowers|Dies back each year|Dry ground',
+'rm-beeplant|Rocky Mountain beeplant|Cleome serrulata|Flower|Pink,Purple|Compound (leaflets)|Sagebrush flats,Desert and red rock,Foothills and neighborhoods|Summer|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'wild-bergamot|Wild bergamot|Monarda fistulosa|Flower|Purple,Pink|Lance-shaped|Foothills and neighborhoods,Mountains|Summer|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'canada-goldenrod|Canada goldenrod|Solidago canadensis|Flower|Yellow|Lance-shaped|Foothills and neighborhoods,Lakes and wetlands|Summer,Fall|3 to 10 ft|Showy flowers|Dies back each year|Moist ground',
+'pearly-everlasting|Pearly everlasting|Anaphalis margaritacea|Flower|White|Lance-shaped|Mountains|Summer,Fall|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'netleaf-hackberry|Netleaf hackberry|Celtis reticulata|Tree,Bush|Green or gray|Round or oval|Foothills and neighborhoods,Desert and red rock|Spring,Summer|Over 10 ft|Berries or fruit|Drops leaves in fall|Dry ground',
+'siberian-elm|Siberian elm|Ulmus pumila|Tree|Green or gray|Round or oval|Foothills and neighborhoods,Sagebrush flats|Spring,Summer|Over 10 ft|None|Drops leaves in fall|Dry ground',
+'smooth-sumac|Smooth sumac|Rhus glabra|Bush|Green or gray,Red|Compound (leaflets)|Foothills and neighborhoods,Mountains|Summer,Fall|3 to 10 ft|Berries or fruit|Drops leaves in fall|Dry ground',
+'helianthella|One-flowered helianthella|Helianthella uniflora|Flower|Yellow|Lance-shaped|Mountains,Foothills and neighborhoods|Spring,Summer|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'showy-fleabane|Showy fleabane|Erigeron speciosus|Flower|Purple|Lance-shaped|Mountains,Foothills and neighborhoods|Summer|1 to 3 ft|Showy flowers|Dies back each year|Moist ground',
+'wood-strawberry|Woodland strawberry|Fragaria vesca|Flower|White|Compound (leaflets)|Mountains,Foothills and neighborhoods|Spring,Summer|Under 1 ft|Showy flowers,Berries or fruit|Dies back each year|Moist ground',
+'golden-currant|Golden currant|Ribes aureum|Bush|Yellow|Lobed|Foothills and neighborhoods,Lakes and wetlands,Desert and red rock|Spring|3 to 10 ft|Showy flowers,Berries or fruit|Drops leaves in fall|Moist ground',
+'cheatgrass|Cheatgrass|Bromus tectorum|NonFlower|Green or gray|Narrow or grass-like|Foothills and neighborhoods,Sagebrush flats,Desert and red rock|Spring,Summer|1 to 3 ft|Seed head or bulb|Dies back each year|Dry ground',
+'canada-thistle|Canada thistle|Cirsium arvense|Flower|Purple,Pink|Lobed|Foothills and neighborhoods,Lakes and wetlands,Mountains|Summer|1 to 3 ft|Showy flowers,Fluffy or feathery seeds|Dies back each year|Moist ground',
+'pale-agoseris|Pale agoseris|Agoseris glauca|Flower|Yellow|Lance-shaped|Mountains,Foothills and neighborhoods|Spring,Summer|Under 1 ft|Showy flowers,Fluffy or feathery seeds|Dies back each year|Moist ground',
+'showy-goldeneye|Showy goldeneye|Heliomeris multiflora|Flower|Yellow|Lance-shaped|Mountains,Foothills and neighborhoods|Summer,Fall|1 to 3 ft|Showy flowers|Dies back each year|Dry ground',
+'common-mallow|Common mallow|Malva neglecta|Flower|White,Pink|Round or oval|Foothills and neighborhoods|Spring,Summer,Fall|Under 1 ft|Showy flowers|Dies back each year|Dry ground',
+'bluebunch-wheatgrass|Bluebunch wheatgrass|Pseudoroegneria spicata|NonFlower|Green or gray|Narrow or grass-like|Foothills and neighborhoods,Sagebrush flats,Mountains|Spring,Summer|1 to 3 ft|Seed head or bulb|Dies back each year|Dry ground',
+'saltgrass|Inland saltgrass|Distichlis spicata|NonFlower|Green or gray|Narrow or grass-like|Lakes and wetlands,Sagebrush flats|Summer|Under 1 ft|Seed head or bulb|Dies back each year|Moist ground'
 ];
 
 /* ---------- line drawings (black on white, generic) ---------- */
@@ -749,7 +839,7 @@ var TOOLS=[
  {id:'tool-report',name:'Report a sighting',desc:'Tell us where you spotted a plant.'}
 ].map(function(t){t.tool=true;t.latin='';t.types=[];t.colors=[];t.leaf='';t.regions=[];t.seasons=[];t.features=[];t.growth='';t.height='';t.moisture='';return t;});
 var BYID={};PLANTS.concat(TOOLS).forEach(function(b){BYID[b.id]=b;});
-var KW={'tool-saved':'saved favorites bookmarks bookmarked list','tool-poison':'poisonous toxic poison dog cat pet pets sick danger dangerous safety livestock horses kids children','tool-invasive':'invasive weeds weed noxious species','tool-report':'report sighting submit spotted found'};
+var KW={'thicket-creeper':'virginia creeper woodbine five leaf ivy vine poison ivy lookalike','western-virgins-bower':'clematis old mans beard travelers joy vine pepper vine','houndstongue':'hounds tongue gypsy flower dog burr burs weed noxious','common-tansy':'golden buttons bitter buttons weed noxious','tree-of-heaven':'ailanthus invasive weed sumac walnut lookalike','cocklebur':'burs burr weed','leafy-spurge':'wolfs milk weed noxious invasive','russian-knapweed':'knapweed weed noxious invasive','dandelion':'weed yard lawn greens','yellow-salsify':'goatsbeard goats beard western salsify weed','tapertip-onion':'wild onion hookers onion death camas lookalike','cheatgrass':'downy brome weed grass invasive','canada-thistle':'thistle weed noxious creeping','pale-agoseris':'mountain dandelion false dandelion','common-mallow':'cheeseweed weed yard','smooth-sumac':'sumac','wood-strawberry':'wild strawberry','helianthella':'dwarf sunflower aspen sunflower','rm-beeplant':'bee plant spiderflower stinking clover','saltgrass':'salt grass utah lake shore','pearly-everlasting':'everlasting','tool-saved':'saved favorites bookmarks bookmarked list','tool-poison':'poisonous toxic poison dog cat pet pets sick danger dangerous safety livestock horses kids children','tool-invasive':'invasive weeds weed noxious species','tool-report':'report sighting submit spotted found'};
 
 var TASKS=[
  {id:'T1',img:'columbine',text:'You are hiking in the Uinta Mountains in summer and take a picture of this flower. The petals were blue and white. Find its page.',ok:['columbine']},
@@ -1589,7 +1679,7 @@ function observeThumbs(){
 /* ---------- hover preview on browse cards ---------- */
 /* Mouse only. Shows three more photos of the plant while the pointer rests on its card, and hides them as soon as it leaves.
    The photos come from the same GBIF lookup that supplies the card photo, so there are no extra requests for new plants. */
-var HV={el:null,timer:null,cur:null,token:0},HV_PEND={};
+var HV={el:null,bg:null,lift:null,timer:null,cur:null,token:0},HV_PEND={};
 function variantPicks(ph){
   var main=ph[0],rest=ph.slice(1),out=[],seen={};
   if(main)seen[main.credit]=1;
@@ -1637,11 +1727,14 @@ function hvBuild(){
   var d=document.createElement('div');
   d.className='hvp';d.hidden=true;d.setAttribute('aria-hidden','true');
   d.addEventListener('error',function(e){var f=e.target&&e.target.closest&&e.target.closest('.hvf');if(f)f.hidden=true;},true);
-  document.body.appendChild(d);HV.el=d;return d;
+  var bg=document.createElement('div');bg.className='hvb';bg.setAttribute('aria-hidden','true');
+  document.body.appendChild(bg);document.body.appendChild(d);HV.bg=bg;HV.el=d;return d;
 }
 function hvHide(){
   clearTimeout(HV.timer);HV.timer=null;HV.cur=null;HV.token++;
   if(HV.el)HV.el.hidden=true;
+  if(HV.bg)HV.bg.classList.remove('on');
+  if(HV.lift){HV.lift.classList.remove('hvlift');HV.lift=null;}
 }
 function hvShow(w,b,list){
   var el=hvBuild();
@@ -1658,6 +1751,7 @@ function hvShow(w,b,list){
     y=r.bottom+8;if(y+ph>vh-8)y=r.top-ph-8;
   }else{y=Math.min(Math.max(8,r.top),vh-ph-8);}
   el.style.left=Math.max(8,x)+'px';el.style.top=Math.max(8,y)+'px';
+  w.classList.add('hvlift');HV.lift=w;HV.bg.classList.add('on');
 }
 function hvStart(w,tok){
   if(HV.cur!==w||HV.token!==tok||!document.body.contains(w))return;
@@ -1693,7 +1787,7 @@ function entryHtml(id,badge,rows){
 }
 
 /* Poisonous plants. Sources: Utah Poison Control Center, ASPCA, USDA Poisonous Plant Research Lab (Logan, Utah), USU Extension, Oregon State Extension. */
-var TOX_ORDER=['chokecherry','lupine','elderberry','gambel-oak','yarrow','marsh-marigold','water-buttercup','columbine','larkspur','sacred-datura','poison-ivy','cow-parsnip','showy-milkweed','rocky-mountain-iris','nettle','banana-yucca','greasewood'];
+var TOX_ORDER=['chokecherry','lupine','elderberry','gambel-oak','yarrow','marsh-marigold','water-buttercup','columbine','larkspur','sacred-datura','poison-ivy','cow-parsnip','showy-milkweed','rocky-mountain-iris','nettle','banana-yucca','greasewood','houndstongue','russian-knapweed','common-tansy','cocklebur','leafy-spurge','thicket-creeper','western-virgins-bower','tree-of-heaven'];
 var EDIBLE={
  'sego-lily':{parts:'Bulbs',note:'An important food for Native peoples and early settlers. It is the Utah state flower, so please do not dig it up.'},
  'wild-rose':{parts:'Rose hips (the red fruit) and petals',note:'Hips are rich in vitamin C. Remove the hairy seeds before eating.'},
@@ -1714,7 +1808,11 @@ var EDIBLE={
  'banana-yucca':{parts:'Ripe fruit and flower petals',note:'A traditional food in the Southwest. The leaves and roots can make pets sick.'},
  'nettle':{parts:'Young leaves, cooked',note:'Cooking or drying removes the sting. Wear gloves to pick it.'},
  'fireweed':{parts:'Young shoots and flowers',note:'Eaten as a spring green. Older leaves are tough.'},
- 'balsamroot':{parts:'Roots, seeds, and young shoots',note:'Native peoples ate these parts. The plant grows slowly, so please do not dig it up.'}
+ 'balsamroot':{parts:'Roots, seeds, and young shoots',note:'Native peoples ate these parts. The plant grows slowly, so please do not dig it up.'},
+ 'dandelion':{parts:'Young leaves, flowers, and roots',note:'Leaves taste best when young. Only pick plants from places that were not sprayed and that dogs do not use.'},
+ 'tapertip-onion':{parts:'Bulbs and leaves',note:'Only eat it if the crushed leaf and bulb smell strongly of onion. Death camas looks similar and has no onion smell. If you are not sure, leave it out.'},
+ 'wood-strawberry':{parts:'Ripe berries',note:'Small and very sweet. Pick only berries that are fully red.'},
+ 'golden-currant':{parts:'Ripe berries',note:'Sweet and a little spicy. Eaten fresh or made into jam.'}
 };
 /* Plants with a positive "non-toxic" listing. Only add a plant here when a source says so; a plant that is merely missing from the poison list stays neutral. */
 var SAFE={
@@ -1738,10 +1836,18 @@ var TOX={
  'yarrow':{who:'Dogs, cats, and horses',part:'All parts',note:'Causes vomiting, diarrhea, drooling, and skin irritation. Usually not severe, but call your vet if your pet ate it.',short:'Toxic to dogs, cats, and horses.'},
  'marsh-marigold':{who:'People and livestock',part:'The whole plant, older parts most',note:'Contains protoanemonin, which burns the mouth and stomach and can irritate skin. Cooking breaks it down, but do not eat it from the wild.',short:'The whole plant is poisonous. The sap can irritate skin.'},
  'water-buttercup':{who:'People, pets, and livestock',part:'The whole plant',note:'Like other plants in the buttercup family, the sap can blister skin and irritate the mouth and stomach.',short:'The sap can irritate skin and mouth. Do not eat.'},
- 'columbine':{who:'People, pets, and livestock',part:'Seeds and roots most of all',note:'A buttercup-family plant that reference books list as toxic. Serious cases are rare because it tastes bad, but children sometimes mistake the flowers for honeysuckle and bite the spurs. Do not eat any part.',short:'Seeds and roots are poisonous. Do not eat any part.'}
+ 'columbine':{who:'People, pets, and livestock',part:'Seeds and roots most of all',note:'A buttercup-family plant that reference books list as toxic. Serious cases are rare because it tastes bad, but children sometimes mistake the flowers for honeysuckle and bite the spurs. Do not eat any part.',short:'Seeds and roots are poisonous. Do not eat any part.'},
+ 'houndstongue':{who:'Horses and cattle most of all. Sheep and goats can be harmed too.',part:'The whole plant, especially young rosettes and dried hay',note:'Contains pyrrolizidine alkaloids that damage the liver. Animals rarely eat it fresh, but poisoning happens when it is cut into hay. The barbed burs also stick to fur, socks, and clothes, so check pets after a hike.',short:'Poisonous to horses and cattle, especially in hay. The burs stick to fur and clothes.'},
+ 'russian-knapweed':{who:'Horses',part:'The whole plant, fresh or dried',note:'Horses that eat it for weeks can develop "chewing disease," a permanent brain injury that keeps them from eating. Cattle and sheep do not seem to be affected. Horses usually eat it only when there is nothing else, or when it is mixed into hay.',short:'Poisonous to horses only. It causes permanent "chewing disease."'},
+ 'common-tansy':{who:'People, pets, and livestock',part:'Leaves and flowers',note:'The oil contains thujone, which can cause convulsions and liver damage when a lot is eaten. Touching it can irritate skin. Livestock rarely eat it because it tastes bad. Do not use wild tansy as a tea or herb.',short:'Leaves and flowers are poisonous if eaten. The oil can irritate skin.'},
+ 'cocklebur':{who:'Pigs, cattle, horses, and other livestock. Dogs can be harmed too.',part:'Seeds and young seedlings',note:'The seeds and seedlings contain a toxin that damages the liver and drops blood sugar. Animals that eat seedlings can die within a day or two. The spiny burs also stick to fur and clothes and can hurt a mouth or gut.',short:'Seeds and seedlings are poisonous. The burs stick to fur and clothes.'},
+ 'leafy-spurge':{who:'People (skin and eyes), cattle, and horses',part:'The milky white sap in every part',note:'The sap irritates skin and can cause blisters. In the eyes it can do serious damage, including blindness. Cattle and horses that eat it get sore mouths and stomach upset. Sheep and goats are less affected. Wear gloves, and wash up after touching it.',short:'The milky sap can blister skin and harm eyes. Do not touch it bare-handed.'},
+ 'thicket-creeper':{who:'People and dogs',part:'Berries most of all, and the sap',note:'The dark berries contain oxalic acid and are poisonous. The sap has needle-like crystals that can irritate the skin of sensitive people, but it does not cause the poison ivy rash. Most reports are about its close relative, Virginia creeper. It looks a lot like poison ivy, but each leaf has five leaflets, not three.',short:'Berries are poisonous and the sap can irritate skin. Leaves have five leaflets.'},
+ 'western-virgins-bower':{who:'People and horses. Other animals can be harmed too.',part:'The whole plant, especially fresh leaves and stems',note:'Like other buttercup-family plants, it contains an irritant (protoanemonin) that can blister skin and burn the mouth and stomach. Horses can get mouth ulcers from it. Do not use it as a wild pepper or as a medicine.',short:'The sap can irritate or blister skin and burn the mouth if eaten.'},
+ 'tree-of-heaven':{who:'People, through the skin',part:'Sap and leaves',note:'Touching the leaves or sap can cause a skin rash in some people, and its pollen can trigger allergies. It is often mistaken for sumac or walnut. Wear gloves and wash up after pulling it.',short:'Sap and leaves can cause a skin rash. Often mistaken for sumac or walnut.'}
 };
 var LOOK=[
- {id:'x-death-camas',rows:[['Where','Foothills and mountain meadows in early spring'],['Harmful parts','The whole plant, bulb included'],['Why it matters','Grows in the same places as sego lily. The bulb has been mistaken for edible wild bulbs, and people in Utah have been poisoned this way. Deadly to sheep and other livestock too.']],rel:['sego-lily']},
+ {id:'x-death-camas',rows:[['Where','Foothills and mountain meadows in early spring'],['Harmful parts','The whole plant, bulb included'],['Why it matters','Grows in the same places as sego lily. The bulb has been mistaken for edible wild bulbs, and people in Utah have been poisoned this way. Deadly to sheep and other livestock too.']],rel:['sego-lily','tapertip-onion']},
  {id:'x-poison-hemlock',rows:[['Where','Ditch banks, fields, and wet ground'],['Harmful parts','Every part of the plant'],['Why it matters','Tall, with smooth hollow stems blotched with purple and lacy leaves. Its white flower clusters can be mistaken for wild carrot or yarrow. Also a Utah noxious weed.']],rel:['yarrow']},
  {id:'x-water-hemlock',rows:[['Where','Wet ground: streams, ditches, and pond edges'],['Harmful parts','The whole plant, especially the roots'],['Why it matters','One of the most poisonous plants in North America. Do not eat or handle wild plants from wet ground unless an expert has identified them.']],rel:[]}
 ];
@@ -1930,7 +2036,7 @@ function safetyPanel(b){
   var edHtml=ed?'<div class="edible"><b>Edible parts: '+esc(ed.parts)+'.</b> '+esc(ed.note)+' Only eat a wild plant if an expert has identified it.</div>':'';
   var out;
   if(t){
-    out='<section class="safety warn" id="safety" aria-labelledby="sf"><div class="sfhead">'+tri+'<h2 id="sf">Poison warning</h2><span class="verdict">Dangerous? Yes, if eaten</span></div><p><b>'+esc(t.short)+'</b></p><dl class="sfgrid"><dt>Who it can harm</dt><dd>'+esc(t.who)+'</dd><dt>Harmful parts</dt><dd>'+esc(t.part)+'</dd><dt>What it does</dt><dd>'+esc(t.note)+'</dd></dl>'+edHtml+'<p class="small">If a person ate it, call Poison Help at <a href="tel:18002221222">1-800-222-1222</a> (free, 24 hours). For a pet, call your vet.</p><div class="bar"><button data-go="leaf:tool-poison" data-log="leaf:Poisonous plants">See all poisonous plants</button></div></section>';
+    out='<section class="safety warn" id="safety" aria-labelledby="sf"><div class="sfhead">'+tri+'<h2 id="sf">Poison warning</h2><span class="verdict">Dangerous? Yes, '+(toxSkin(t)?'if eaten or touched':'if eaten')+'</span></div><p><b>'+esc(t.short)+'</b></p><dl class="sfgrid"><dt>Who it can harm</dt><dd>'+esc(t.who)+'</dd><dt>Harmful parts</dt><dd>'+esc(t.part)+'</dd><dt>What it does</dt><dd>'+esc(t.note)+'</dd></dl>'+edHtml+'<p class="small">If a person ate it, call Poison Help at <a href="tel:18002221222">1-800-222-1222</a> (free, 24 hours). For a pet, call your vet.</p><div class="bar"><button data-go="leaf:tool-poison" data-log="leaf:Poisonous plants">See all poisonous plants</button></div></section>';
   }else if(SAFE[b.id]){
     var s=SAFE[b.id],chk='<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>';
     out='<section class="safety ok" id="safety" aria-labelledby="sf"><div class="sfhead">'+chk+'<h2 id="sf">Safety</h2><span class="verdict">Dangerous? No, non-toxic to pets</span></div><p><b>Generally safe if a pet nibbles it.</b> '+esc(s.note)+'</p><dl class="sfgrid"><dt>Listed as non-toxic to</dt><dd>'+esc(s.who)+'</dd><dt>Source</dt><dd>'+extLink(s.url,s.source)+'</dd></dl>'+edHtml+'<p class="small">Non-toxic to pets says nothing about whether people can eat it.'+(ed?'':' Never eat a wild plant unless an expert has identified it.')+' If a pet ate a lot of it and seems sick, call your vet or ASPCA Poison Control at <a href="tel:8884264435">(888) 426-4435</a>.</p><div class="bar"><button data-go="leaf:tool-poison" data-log="leaf:Poisonous plants">See poisonous plants</button></div></section>';
@@ -2116,7 +2222,7 @@ function render(){
     else if(k==='results')body=resultsPage();
     else if(k==='report')body=reportPage();
     else body=home();
-    html='<div class="col'+((T&&T.state==='running')?' testing':'')+'" style="gap:22px">'+((T&&T.state==='running')?testBar():'')+header()+backBar()+body+footer()+'</div>';
+    html='<div class="col'+((T&&T.state==='running')?' testing':'')+'" style="gap:var(--pg,36px)">'+((T&&T.state==='running')?testBar():'')+header()+backBar()+body+footer()+'</div>';
   }
   a.innerHTML=html;
   observeThumbs();
