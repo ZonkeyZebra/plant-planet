@@ -63,15 +63,6 @@ body.lbopen{overflow:hidden}
 .ptxt{display:flex;flex-direction:column;gap:2px;min-width:0}
 .pshort{color:var(--ink-2);font-size:14px}
 .pbody{padding:0 12px 12px;display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:10px}
-.drop{display:flex;align-items:center;justify-content:center;text-align:center;border:2px dashed var(--line-strong);border-radius:12px;padding:18px 12px;background:var(--surface-2);cursor:pointer;min-height:96px}
-.drop.over,.drop:hover{border-color:var(--accent);background:var(--tan)}
-.dropt{display:flex;flex-direction:column;gap:4px}
-.btnlike{display:inline-flex;align-items:center;border:1px solid var(--line-strong);border-radius:8px;padding:8px 14px;background:var(--surface);font-weight:600;cursor:pointer;min-height:40px}
-.btnlike:hover{background:var(--surface-2)}
-input.sr:focus-visible+*,.sr:focus-visible~.btnlike{outline:3px solid var(--focus)}
-.idprev{flex:0 1 240px}
-.idstick{position:sticky;top:0;z-index:4;display:flex;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line-strong);border-radius:10px;padding:6px 10px;font-size:14px}
-.idstick img{width:56px;height:56px;object-fit:cover;border-radius:6px}
 </style><title>Utah Plant Finder</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600&family=Source+Sans+3:wght@400;600&display=swap">
 <style>
@@ -88,6 +79,7 @@ input.sr:focus-visible+*,.sr:focus-visible~.btnlike{outline:3px solid var(--focu
   --hero-sky:#CFE6F3;--hero-far:#64B3DA;--hero-forest:#52482E;--hero-meadow:#CA6424;--hero-front:#E69963;
   --nav-bg:#52482E;--nav-ink:#FBF4EA;--nav-hover:rgba(255,255,255,.13);--nav-on:#E69963;--nav-btn-bg:#E69963;--nav-btn-ink:#1F1A0F;
   --warn:#A24B16;--on-warn:#FFFFFF;
+  --ok-bg:#E6F1DE;--ok-line:#3E7A2B;--on-ok:#16280F;--ok:#2F6B1F;--on-ok-strong:#FFFFFF;
   --focus:#1F4E79;
   --serif:'Literata',Georgia,'Times New Roman',serif;
   --sans:'Source Sans 3',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
@@ -103,7 +95,8 @@ input.sr:focus-visible+*,.sr:focus-visible~.btnlike{outline:3px solid var(--focu
   --sky:#1F2E37;--pic-fill:#4A3A2B;--pic-ink:#F6E3CC;
   --hero-sky:#1F2E37;--hero-far:#2F5468;--hero-forest:#3B3523;--hero-meadow:#8A4519;--hero-front:#B26F43;
   --nav-bg:#2E2819;--nav-ink:#F6EEDF;--nav-hover:rgba(255,255,255,.1);--nav-on:#E69963;--nav-btn-bg:#E69963;--nav-btn-ink:#1F1A0F;
-  --warn:#E69963;--on-warn:#1F1A0F;--brand:#E69963;--focus:#8DB9E6;color-scheme:dark}}
+  --warn:#E69963;--on-warn:#1F1A0F;--brand:#E69963;--focus:#8DB9E6;
+  --ok-bg:#1F3320;--ok-line:#86C472;--on-ok:#E4F2DD;--ok:#8CCB78;--on-ok-strong:#10200B;color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#171510;--surface:#221F17;--surface-2:#2D2A20;
   --ink:#F4EEE4;--ink-2:#D3C9B4;
@@ -115,7 +108,8 @@ input.sr:focus-visible+*,.sr:focus-visible~.btnlike{outline:3px solid var(--focu
   --sky:#1F2E37;--pic-fill:#4A3A2B;--pic-ink:#F6E3CC;
   --hero-sky:#1F2E37;--hero-far:#2F5468;--hero-forest:#3B3523;--hero-meadow:#8A4519;--hero-front:#B26F43;
   --nav-bg:#2E2819;--nav-ink:#F6EEDF;--nav-hover:rgba(255,255,255,.1);--nav-on:#E69963;--nav-btn-bg:#E69963;--nav-btn-ink:#1F1A0F;
-  --warn:#E69963;--on-warn:#1F1A0F;--brand:#E69963;--focus:#8DB9E6;color-scheme:dark}
+  --warn:#E69963;--on-warn:#1F1A0F;--brand:#E69963;--focus:#8DB9E6;
+  --ok-bg:#1F3320;--ok-line:#86C472;--on-ok:#E4F2DD;--ok:#8CCB78;--on-ok-strong:#10200B;color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans);margin:0;padding-inline:16px;padding-block:14px 48px}
 .wrap{max-width:1040px;margin-inline:auto;display:flex;flex-direction:column;gap:18px}
@@ -268,8 +262,6 @@ form.rep{display:flex;flex-direction:column;gap:14px;max-width:560px}
 .hint{font-size:13px;color:var(--ink-2)}
 .err{border-left:4px solid var(--line-strong);padding-left:10px;font-weight:600}
 .err:empty{display:none}
-.idphoto{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start}
-.idphoto img{display:block;width:100%;max-width:240px;border-radius:8px;border:1px solid var(--line)}
 
 .backbar{margin:-8px 0 -6px}
 .backbtn{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line-strong);border-radius:99px;padding:6px 14px 6px 10px;font-weight:600;min-height:40px;max-width:100%}
@@ -306,6 +298,21 @@ form.rep{display:flex;flex-direction:column;gap:14px;max-width:560px}
 .fine{border-top:1px solid var(--line);padding-top:10px;color:var(--ink-2);font-size:14px;display:grid;grid-template-columns:minmax(0,max-content) minmax(0,1fr);gap:4px 16px}
 .fine dd{margin:0}.fine em{font-style:italic}
 @media (max-width:560px){.sfgrid,.fine{grid-template-columns:minmax(0,1fr)}.safety .verdict{margin-left:0}}
+
+.safety.ok{background:var(--ok-bg);color:var(--on-ok);border-color:var(--ok-line)}
+.safety.ok .ico{stroke:var(--ok-line)}
+.safety.ok .verdict{background:var(--ok);color:var(--on-ok-strong);border-color:var(--ok)}
+.safety.ok a{color:inherit}
+.srow{display:flex;flex-direction:column;gap:4px}
+.srow .why{padding-left:4px}
+.hvp{position:fixed;z-index:40;pointer-events:none;background:var(--surface);color:var(--ink);border:1px solid var(--line-strong);border-radius:12px;padding:10px;box-shadow:0 8px 24px rgba(0,0,0,.28);animation:hvin .14s ease-out}
+.hvt{font-size:13px;font-weight:600;margin-bottom:6px}
+.hvg{display:grid;grid-template-columns:repeat(var(--n,3),112px);gap:8px}
+.hvf{margin:0;width:112px}
+.hvf img{display:block;width:112px;height:112px;object-fit:cover;border-radius:6px;background:var(--sky)}
+.hvf figcaption{font-size:11px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
+@keyframes hvin{from{opacity:0;transform:translateY(4px)}}
+@media (prefers-reduced-motion:reduce){.hvp{animation:none}}
 </style></head><body>
 
 <div class="wrap"><div id="app"></div></div>
@@ -736,14 +743,13 @@ var PLANTS=RAW.map(function(l){
   return p;
 });
 var TOOLS=[
- {id:'tool-identify',name:'Upload a photo to identify a plant',desc:'Compare a picture you took with likely matches.'},
  {id:'tool-saved',name:'Plants I bookmarked',desc:'Your saved list, in one place.'},
  {id:'tool-poison',name:'Poisonous plants',desc:'Plants that can make pets or people sick.'},
  {id:'tool-invasive',name:'Invasive species',desc:'Weeds that crowd out native Utah plants.'},
  {id:'tool-report',name:'Report a sighting',desc:'Tell us where you spotted a plant.'}
 ].map(function(t){t.tool=true;t.latin='';t.types=[];t.colors=[];t.leaf='';t.regions=[];t.seasons=[];t.features=[];t.growth='';t.height='';t.moisture='';return t;});
 var BYID={};PLANTS.concat(TOOLS).forEach(function(b){BYID[b.id]=b;});
-var KW={'tool-identify':'photo picture camera identify unknown upload what is this','tool-saved':'saved favorites bookmarks bookmarked list','tool-poison':'poisonous toxic dog cat pet pets sick danger safety','tool-invasive':'invasive weeds noxious species','tool-report':'report sighting submit'};
+var KW={'tool-saved':'saved favorites bookmarks bookmarked list','tool-poison':'poisonous toxic poison dog cat pet pets sick danger dangerous safety livestock horses kids children','tool-invasive':'invasive weeds weed noxious species','tool-report':'report sighting submit spotted found'};
 
 var TASKS=[
  {id:'T1',img:'columbine',text:'You are hiking in the Uinta Mountains in summer and take a picture of this flower. The petals were blue and white. Find its page.',ok:['columbine']},
@@ -754,13 +760,13 @@ var TASKS=[
  {id:'T6',img:'cattail',text:'At a wetland near the Great Salt Lake you photograph this tall plant. Find its page.',ok:['cattail']},
  {id:'T7',img:'yellow-pond-lily',text:'You photograph this plant floating on a lake in summer. The flower was yellow. Find its page.',ok:['yellow-pond-lily']},
  {id:'T8',img:'rabbitbrush',text:'In the Great Basin in the fall you photograph this shrub. The flowers were yellow. Find its page.',ok:['rabbitbrush']},
- {id:'T9',img:'',text:'You took a photo of a plant and want help figuring out what it is. Find the tool for that.',ok:['tool-identify']},
  {id:'T10',img:'',text:'You have a dog and want to know which plants could make it sick. Find that information.',ok:['tool-poison']}
 ];
 
 /* ---------- filters ---------- */
-var FKEYS=['type','color','safety','feature','leaf','growth','height','region','moisture','season'];
-var FTITLE={type:'Plant type',color:'Color',safety:'Safety',feature:'Notable feature',leaf:'Leaf shape',growth:'Evergreen or not',height:'Height',region:'Where you saw it',moisture:'Ground',season:'Season seen'};
+var FKEYS=['type','color','safety','harms','feature','leaf','growth','height','region','moisture','season'];
+var FTITLE={type:'Plant type',color:'Color',safety:'Safety',harms:'Who it can harm',feature:'Notable feature',leaf:'Leaf shape',growth:'Evergreen or not',height:'Height',region:'Where you saw it',moisture:'Ground',season:'Season seen'};
+var HLAB={People:'Harms people',Pets:'Harms pets',Livestock:'Harms livestock',Skin:'Skin contact'};
 var FOPTS={safety:[['Poisonous','Poisonous (has a warning)'],['Edible','Has edible parts']],color:COLORS,feature:FEATURES,leaf:LEAVES,growth:GROWTH,height:HEIGHTS,region:REGIONS,moisture:MOISTURE,season:SEASONS};
 var FGROUPS=[
  {id:'looks',title:'Look',open:true,items:['color','feature']},
@@ -772,6 +778,7 @@ var FGROUPS=[
 function blankFilters(){var f={};FKEYS.forEach(function(k){f[k]=[];});return f;}
 function attr(p,k){
   if(k==='safety'){var a=[];if(TOX[p.id])a.push('Poisonous');if(EDIBLE[p.id])a.push('Edible');return a;}
+  if(k==='harms'){var tx=TOX[p.id];if(!tx)return [];var hv=toxWho(tx).slice();if(toxSkin(tx))hv.push('Skin');return hv;}
   if(k==='type')return p.types;if(k==='color')return p.colors;if(k==='feature')return p.features;
   if(k==='leaf')return [p.leaf];if(k==='growth')return [p.growth];if(k==='height')return [p.height];
   if(k==='region')return p.regions;if(k==='moisture')return [p.moisture];return p.seasons;
@@ -783,6 +790,7 @@ function passes(p,f,o){
   for(var i=0;i<FKEYS.length;i++){
     var k=FKEYS[i];
     if(o.skip&&o.skip.indexOf(k)>=0)continue;
+    if(k==='harms'&&!o.harms)continue;
     if(k==='type'&&!o.useType)continue;
     var sel=f[k];if(!sel.length)continue;
     if(!attr(p,k).some(function(v){return sel.indexOf(v)>=0;}))return false;
@@ -793,7 +801,7 @@ function statusBar(txt,keys){
   var n=keys.reduce(function(a,k){return a+S.filters[k].length;},0);
   return '<div class="resultbar"><p role="status">'+txt+'</p>'+(n?'<button type="button" class="clearall" data-act="clearfilters" data-log="filter:Clear all filters"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Clear all filters ('+n+')</button>':'')+'</div>';
 }
-function visibleKeys(o,showType){return FKEYS.filter(function(k){return (o.skip||[]).indexOf(k)<0&&(k!=='type'||showType);});}
+function visibleKeys(o,showType){return FKEYS.filter(function(k){return (o.skip||[]).indexOf(k)<0&&(k!=='type'||showType)&&(k!=='harms'||o.harms);});}
 function anyFilter(keys){return keys.some(function(k){return S.filters[k].length>0;});}
 
 /* ---------- state, storage ---------- */
@@ -803,7 +811,7 @@ function load(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}c
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 function wide(){return typeof window.innerWidth==='number'&&window.innerWidth>=760;}
 
-var S={route:'home',leafFrom:'home',via:'',idPhoto:'',idColors:[],photoIdx:{},toxFilter:'all',repMsg:'',confirm:'',open:{},filters:blankFilters()};
+var S={route:'home',leafFrom:'home',via:'',photoIdx:{},repMsg:'',confirm:'',open:{},filters:blankFilters()};
 var LOG=load('uplog',[]);
 var RESULTS=load('upresults',[]);
 var BM=load('upbm',[]);
@@ -872,13 +880,133 @@ function copyText(text,ta){
 }
 
 /* ---------- search ---------- */
-function hay(b){return [b.name,b.latin,b.types.map(function(t){return TL[t];}).join(' '),b.colors.join(' '),b.leaf,b.regions.join(' '),b.seasons.join(' '),b.features.join(' '),b.growth,b.height,b.moisture,KW[b.id]||''].join(' ').toLowerCase();}
-function doSearch(q){
-  var toks=q.toLowerCase().split(/\s+/).filter(Boolean);
-  var res=PLANTS.concat(TOOLS).filter(function(b){var h=hay(b);return toks.every(function(t){return h.indexOf(t)>=0;});});
-  var ql=q.toLowerCase();
-  return res.sort(function(a,b){var an=a.name.toLowerCase().indexOf(ql)>=0?0:1,bn=b.name.toLowerCase().indexOf(ql)>=0?0:1;return an-bn||a.name.localeCompare(b.name);});
+/* Tier 0 search: no AI, no network. Drops filler words, treats plurals alike, understands everyday synonyms
+   (dog, pond, yard, tall), fixes small typos, ranks by how many of the typed ideas match, and says why. */
+var STOPW={};
+'a an the of for in on at near by my me i is are it its to with and or that this these those what which where how can do does find show some any plant there have has about around from like look looking want need im ive please'.split(' ').forEach(function(w){STOPW[w]=1;});
+var SYN={
+ dog:['dog','pet'],cat:['cat','pet'],puppy:['dog','pet'],kitten:['cat','pet'],pet:['pet','dog','cat'],
+ horse:['horse','livestock'],livestock:['livestock','cattle','sheep','horse'],cow:['cattle','livestock'],cattle:['cattle','livestock'],sheep:['sheep','livestock'],
+ kid:['child','people'],child:['child','people'],children:['child','people'],baby:['child','people'],toddler:['child','people'],
+ poison:['poisonous','toxic'],poisonous:['poisonous','toxic'],toxic:['poisonous','toxic'],deadly:['poisonous','toxic'],dangerous:['poisonous','toxic'],harmful:['poisonous','toxic'],sick:['poisonous','toxic'],danger:['poisonous','toxic'],
+ safe:['nontoxic'],nontoxic:['nontoxic'],
+ rash:['skin'],itch:['skin'],itchy:['skin'],sting:['skin'],stinging:['skin'],blister:['skin'],burn:['skin'],
+ edible:['edible'],eat:['edible'],eating:['edible'],food:['edible'],forage:['edible'],snack:['edible'],
+ violet:['purple'],lavender:['purple'],gold:['yellow'],golden:['yellow'],scarlet:['red'],crimson:['red'],magenta:['pink'],grey:['gray'],silver:['gray'],
+ water:['water','wetland','lake'],pond:['water','wetland','lake'],lake:['lake','wetland','water'],stream:['water','wetland'],river:['water','wetland'],marsh:['wetland','water'],swamp:['wetland','water'],shore:['wetland','lake'],wet:['wetland','water','moist'],damp:['moist','wetland'],boggy:['moist','wetland'],
+ mountain:['mountain'],alpine:['mountain'],high:['mountain'],
+ desert:['desert','red rock'],canyon:['desert','red rock'],arid:['desert','dry'],redrock:['red rock'],
+ basin:['sagebrush'],
+ yard:['neighborhood','foothill'],backyard:['neighborhood','foothill'],garden:['neighborhood','foothill'],neighborhood:['neighborhood','foothill'],town:['neighborhood','foothill'],city:['neighborhood','foothill'],suburb:['neighborhood','foothill'],park:['neighborhood','foothill'],
+ shrub:['bush'],bloom:['flower'],blossom:['flower'],petal:['flower'],
+ weed:['invasive','noxious'],
+ conifer:['needle','cone'],needle:['needle'],
+ heart:['heart'],lobe:['lobed'],oval:['round','oval'],compound:['compound'],leaflet:['compound'],skinny:['narrow'],thin:['narrow'],
+ autumn:['fall'],winter:['year round'],yearround:['year round'],
+ tall:['over 10 ft','3 to 10 ft'],big:['over 10 ft','3 to 10 ft'],large:['over 10 ft','3 to 10 ft'],huge:['over 10 ft'],small:['under 1 ft','1 to 3 ft'],tiny:['under 1 ft'],short:['under 1 ft','1 to 3 ft'],
+ weeds:['invasive','noxious']
+};
+var LABELFIX={nonflower:'non-flower',nontoxic:'non-toxic',yearround:'year-round',redrock:'red rock'};
+function stem(w){
+  if(w==='leaves')return 'leaf';
+  if(w.length>4&&/ies$/.test(w))return w.slice(0,-3)+'y';
+  if(w.length>4&&/(ches|shes|sses|xes)$/.test(w))return w.slice(0,-2);
+  if(w.length>3&&/s$/.test(w)&&!/(ss|us|is)$/.test(w))return w.slice(0,-1);
+  return w;
 }
+function wordsOf(s){return String(s).toLowerCase().replace(/['\u2019]/g,'').split(/[^a-z0-9]+/).filter(Boolean).map(stem);}
+function normQ(q){return String(q).toLowerCase().replace(/non[\s-]*flower(ing)?/g,' nonflower ').replace(/non[\s-]*toxic/g,' nontoxic ').replace(/year[\s-]*round/g,' yearround ').replace(/red[\s-]*rock/g,' redrock ').replace(/pet[\s-]*safe/g,' safe pet ');}
+function hay(b){
+  var x=[b.name,b.latin,b.types.map(function(t){return t==='NonFlower'?'nonflower':TL[t];}).join(' '),b.colors.join(' '),b.leaf,b.regions.join(' '),b.seasons.join(' '),b.features.join(' '),b.growth,b.height,b.moisture,KW[b.id]||''];
+  if(!b.tool){
+    var t=TOX[b.id];
+    if(t)x.push('poisonous toxic',t.who||'',toxWho(t).join(' '),toxSkin(t)?'skin rash itch sting blister':'');
+    if(EDIBLE[b.id])x.push('edible');
+    if(SAFE[b.id])x.push('nontoxic safe');
+  }
+  return x.join(' ');
+}
+function srchInfo(b){
+  if(b._h)return b._h;
+  var all=wordsOf(hay(b)),nm=wordsOf(b.name+' '+b.latin);
+  b._h={w:all,s:' '+all.join(' ')+' ',nw:nm,ns:' '+nm.join(' ')+' '};
+  if(!b.tool&&SAFE[b.id]){var sw=all.concat(['dog','cat','horse','pet']);b._h.sw=sw;b._h.ss=' '+sw.join(' ')+' ';}
+  return b._h;
+}
+function altHit(alt,w,s){
+  if(alt.indexOf(' ')>=0)return s.indexOf(' '+alt+' ')>=0;
+  for(var i=0;i<w.length;i++){if(w[i]===alt||(alt.length>=4&&w[i].indexOf(alt)===0))return true;}
+  return false;
+}
+function groupHit(g,h){
+  var nameHit=g.alts.some(function(a){return altHit(a,h.nw,h.ns);});
+  if(nameHit)return 3;
+  return g.alts.some(function(a){return altHit(a,h.w,h.s);})?1:0;
+}
+var VOCAB=null;
+function vocab(){
+  if(VOCAB)return VOCAB;
+  VOCAB={};
+  PLANTS.concat(TOOLS).forEach(function(b){srchInfo(b).w.forEach(function(w){if(w.length>=4)VOCAB[w]=(VOCAB[w]||0)+1;});});
+  return VOCAB;
+}
+function editDist(a,b,max){
+  if(Math.abs(a.length-b.length)>max)return max+1;
+  var prev=[],cur,i,j;
+  for(j=0;j<=b.length;j++)prev[j]=j;
+  for(i=1;i<=a.length;i++){
+    cur=[i];var rowMin=i;
+    for(j=1;j<=b.length;j++){
+      cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a.charAt(i-1)===b.charAt(j-1)?0:1));
+      if(cur[j]<rowMin)rowMin=cur[j];
+    }
+    if(rowMin>max)return max+1;
+    prev=cur;
+  }
+  return prev[b.length];
+}
+function closeWord(tok){
+  if(tok.length<4)return '';
+  var max=tok.length>=8?2:1,best='',bd=99,bf=0,v=vocab(),k;
+  for(k in v){var d=editDist(tok,k,max);if(d<=max&&(d<bd||(d===bd&&v[k]>bf))){best=k;bd=d;bf=v[k];}}
+  return best;
+}
+var SEARCH_INFO={groups:[],corr:[],partial:false,why:{}};
+function doSearch(q){
+  var items=PLANTS.concat(TOOLS),groups=[],seen={},corr=[];
+  normQ(q).replace(/['\u2019]/g,'').split(/[^a-z0-9]+/).filter(Boolean).forEach(function(raw){
+    var st=stem(raw);
+    if(STOPW[raw]||STOPW[st])return;
+    var label=LABELFIX[raw]||raw;
+    if(seen[label])return;seen[label]=1;
+    var alts=(SYN[st]||SYN[raw]||[st]).map(function(a){return wordsOf(a).join(' ');});
+    var g={label:label,key:st,alts:alts};
+    if(!SYN[st]&&!SYN[raw]){
+      var any=items.some(function(b){var h=srchInfo(b);return altHit(st,h.w,h.s);});
+      if(!any){var fix=closeWord(st);if(fix){g.alts=(SYN[fix]||[fix]).map(function(a){return wordsOf(a).join(' ');});corr.push({from:raw,to:fix});}}
+    }
+    groups.push(g);
+  });
+  SEARCH_INFO={groups:groups,corr:corr,partial:false,why:{}};
+  if(!groups.length)return [];
+  var wantSafe=groups.some(function(g){return g.alts.indexOf('nontoxic')>=0;});
+  var rows=[],best=0;
+  items.forEach(function(b){
+    if(wantSafe&&!b.tool&&TOX[b.id])return;
+    var h0=srchInfo(b),h=(wantSafe&&h0.sw)?{w:h0.sw,s:h0.ss,nw:h0.nw,ns:h0.ns}:h0,n=0,score=0,hit=[],miss=[];
+    groups.forEach(function(g){var s=groupHit(g,h);if(s){n++;score+=s;hit.push(g.label);}else miss.push(g.label);});
+    if(!n)return;
+    if(norm1(b.name)===norm1(q))score+=10;
+    rows.push({b:b,n:n,score:score,hit:hit,miss:miss});
+    if(n>best)best=n;
+  });
+  var keep=rows.filter(function(r){return r.n===best;});
+  SEARCH_INFO.partial=best<groups.length;
+  keep.forEach(function(r){SEARCH_INFO.why[r.b.id]={hit:r.hit,miss:r.miss};});
+  keep.sort(function(a,c){return c.score-a.score||a.b.name.localeCompare(c.b.name);});
+  return keep.map(function(r){return r.b;});
+}
+function norm1(s){return wordsOf(s).join(' ');}
 
 /* ---------- routing ---------- */
 function crumbsFor(route){
@@ -1174,7 +1302,7 @@ function fset(k,pool,o){
   }).join('')+'</fieldset>';
 }
 function filterAside(pool,o,showType){
-  var keys=visibleKeys(o,showType);
+  var keys=visibleKeys(o,showType).filter(function(k){return k!=='harms';});
   var active=keys.reduce(function(a,k){return a+S.filters[k].length;},0);
   var open=S.open.panel;if(open===undefined)open=wide();
   var groups=[];
@@ -1192,7 +1320,7 @@ function filterAside(pool,o,showType){
 function chipsHtml(keys){
   var c='';
   keys.forEach(function(k){S.filters[k].forEach(function(v){
-    var lab=k==='type'?TL[v]:v;
+    var lab=k==='type'?TL[v]:(k==='harms'?(HLAB[v]||v):v);
     c+='<button data-act="unfilter" data-fgroup="'+k+'" data-fval="'+esc(v)+'" data-log="filter:remove '+esc(FTITLE[k])+' = '+esc(lab)+'" aria-label="Remove filter '+esc(lab)+'">'+esc(lab)+' x</button>';
   });});
   return c;
@@ -1208,7 +1336,7 @@ function emptyBox(on,pool,o,keys){
   });});
   opts.sort(function(a,b){return b.n-a.n;});
   var btns=opts.slice(0,4).map(function(x){
-    var lab=x.k==='type'?TL[x.v]:x.v;
+    var lab=x.k==='type'?TL[x.v]:(x.k==='harms'?(HLAB[x.v]||x.v):x.v);
     return '<button data-act="unfilter" data-fgroup="'+x.k+'" data-fval="'+esc(x.v)+'" data-log="filter:remove '+esc(FTITLE[x.k])+' = '+esc(lab)+'">Remove "'+esc(lab)+'" to see '+x.n+(x.n===1?' plant':' plants')+'</button>';
   }).join('');
   return '<div class="ph col"><p>No plants match all of these filters.</p>'+(btns?'<div class="relax">'+btns+'</div>':'')+'<div><button data-act="clearfilters" data-log="filter:Clear all filters">Clear all filters</button></div></div>';
@@ -1233,7 +1361,7 @@ function placePage(r){
   return browse({route:'place:'+r,title:r,blurb:PHINT[r]+'.',pool:PLANTS.filter(function(p){return p.regions.indexOf(r)>=0;}),opts:{region:r,skip:['region']}});
 }
 function searchPage(q){
-  var base=doSearch(q);
+  var base=doSearch(q),info=SEARCH_INFO;
   var plants=base.filter(function(b){return !b.tool;}),tools=base.filter(function(b){return b.tool;});
   var o={useType:true};
   var keys=visibleKeys(o,true);
@@ -1241,9 +1369,16 @@ function searchPage(q){
   var list=plants.filter(function(p){return passes(p,S.filters,o);});
   var shown=list.concat(on?[]:tools);
   var chips=chipsHtml(keys);
-  var body=shown.length?'<div class="col">'+shown.map(rowFor).join('')+'</div>':(base.length?emptyBox(on,plants,o,keys):'<div class="ph col"><p>No matches for "'+esc(q)+'". Try a plant name, a color, or a place.</p>'+tryChips()+'</div>');
+  function why(b){
+    var w=info.why[b.id];if(!w)return '';
+    return '<p class="muted small why">Matched: '+esc(w.hit.join(', '))+(w.miss.length?'. Not matched: '+esc(w.miss.join(', ')):'')+'</p>';
+  }
+  var notes='';
+  if(info.corr.length)notes+='<p class="muted small">Showing results for '+info.corr.map(function(c){return '"'+esc(c.to)+'"';}).join(', ')+'. You typed '+info.corr.map(function(c){return '"'+esc(c.from)+'"';}).join(', ')+'.</p>';
+  if(base.length&&info.partial)notes+='<p class="box">Nothing matches every word you typed, so these are the closest matches. Each result says what it matched.</p>';
+  var body=shown.length?'<div class="col">'+shown.map(function(b){return '<div class="srow">'+rowFor(b)+why(b)+'</div>';}).join('')+'</div>':(base.length?emptyBox(on,plants,o,keys):'<div class="ph col"><p>No matches for "'+esc(q)+'". Try a plant name, a color, a place, or something like "purple flowers near water".</p>'+tryChips()+'</div>');
   return crumbs('search:'+q)+'<section class="col"><h1>Results for "'+esc(q)+'"</h1></section>'+
-    '<div class="split">'+filterAside(plants,o,true)+'<div class="col">'+statusBar(shown.length+' of '+base.length+' results shown',keys)+(chips?'<div class="chips" aria-label="Active filters">'+chips+'</div>':'')+(on&&tools.length?'<p class="muted small">Tool pages are hidden while filters are on.</p>':'')+body+'</div></div>';
+    '<div class="split">'+filterAside(plants,o,true)+'<div class="col">'+statusBar(shown.length+' of '+base.length+' results shown',keys)+notes+(chips?'<div class="chips" aria-label="Active filters">'+chips+'</div>':'')+(on&&tools.length?'<p class="muted small">Tool pages are hidden while filters are on.</p>':'')+body+'</div></div>';
 }
 
 /* ---------- GBIF live data ---------- */
@@ -1411,7 +1546,8 @@ function fetchThumb(latin,pl){
     var key=m.acceptedUsageKey||m.usageKey;
     return photoRecords(GBIF_API+'/occurrence/search?taxonKey='+key+'&'+UTAH_Q,pl||{}).then(function(r){
       var ph=pickPhotos((r&&r.results)||[]);
-      return ph.length?ph[0]:0;
+      if(!ph.length)return 0;
+      var first=ph[0];first.more=variantPicks(ph);return first;
     });
   });
 }
@@ -1448,6 +1584,96 @@ function observeThumbs(){
   },{rootMargin:'300px 0px'});
   TH_IO.disconnect();
   for(i=0;i<els.length;i++)TH_IO.observe(els[i]);
+}
+
+/* ---------- hover preview on browse cards ---------- */
+/* Mouse only. Shows three more photos of the plant while the pointer rests on its card, and hides them as soon as it leaves.
+   The photos come from the same GBIF lookup that supplies the card photo, so there are no extra requests for new plants. */
+var HV={el:null,timer:null,cur:null,token:0},HV_PEND={};
+function variantPicks(ph){
+  var main=ph[0],rest=ph.slice(1),out=[],seen={};
+  if(main)seen[main.credit]=1;
+  rest.forEach(function(p){if(out.length<3&&!seen[p.credit]){seen[p.credit]=1;out.push(p);}});
+  rest.forEach(function(p){if(out.length<3&&out.indexOf(p)<0)out.push(p);});
+  return out;
+}
+function hvExtras(id){
+  if(TH_BAD[id])return [];
+  var d=GB_CACHE[id];
+  if(d&&d.photos&&d.photos.length)return variantPicks(d.photos);
+  var t=TH_CACHE[id];
+  if(t===0)return [];
+  if(t&&t.more)return t.more;
+  return null;
+}
+function hvFetch(id,cb){
+  var b=plantInfo(id);
+  if(!b||HV_PEND[id])return;
+  HV_PEND[id]=1;
+  fetchThumb(b.latin,b).then(function(ph){
+    var t=TH_CACHE[id],list=[];
+    if(ph){
+      var mainUrl=(t&&t.orig)||ph.orig;
+      list=(ph.more||[]).filter(function(p){return p.orig!==mainUrl;});
+      if(t&&typeof t==='object')t.more=list;else if(t===undefined)TH_CACHE[id]=ph;
+      save('upthumb2',TH_CACHE);
+    }
+    HV_PEND[id]=0;cb(list);
+  },function(){HV_PEND[id]=0;cb([]);});
+}
+function hvPreload(list,done){
+  var ok=[],left=list.length,fin=false,to;
+  function end(){if(fin)return;fin=true;clearTimeout(to);ok.sort(function(a,b){return list.indexOf(a)-list.indexOf(b);});done(ok);}
+  to=setTimeout(end,1500);
+  list.forEach(function(p){
+    var im=new Image();im.referrerPolicy='no-referrer';
+    im.onload=function(){ok.push(p);if(--left===0)end();};
+    im.onerror=function(){if(--left===0)end();};
+    im.src=p.url;
+  });
+}
+function hvBuild(){
+  if(HV.el)return HV.el;
+  var d=document.createElement('div');
+  d.className='hvp';d.hidden=true;d.setAttribute('aria-hidden','true');
+  d.addEventListener('error',function(e){var f=e.target&&e.target.closest&&e.target.closest('.hvf');if(f)f.hidden=true;},true);
+  document.body.appendChild(d);HV.el=d;return d;
+}
+function hvHide(){
+  clearTimeout(HV.timer);HV.timer=null;HV.cur=null;HV.token++;
+  if(HV.el)HV.el.hidden=true;
+}
+function hvShow(w,b,list){
+  var el=hvBuild();
+  el.style.setProperty('--n',list.length);
+  el.innerHTML='<div class="hvt">More photos of '+esc(b.name)+'</div><div class="hvg">'+list.map(function(p){
+    return '<figure class="hvf"><img src="'+esc(p.url)+'" alt="" referrerpolicy="no-referrer"><figcaption>'+esc(p.credit)+', '+esc(p.lic)+'</figcaption></figure>';
+  }).join('')+'</div>';
+  el.style.left='0px';el.style.top='0px';el.hidden=false;
+  var r=(w.querySelector('.card')||w).getBoundingClientRect(),pw=el.offsetWidth,ph=el.offsetHeight,vw=document.documentElement.clientWidth,vh=window.innerHeight,x,y;
+  x=r.right+10;
+  if(x+pw>vw-8)x=r.left-pw-10;
+  if(x<8){
+    x=Math.min(Math.max(8,r.left+r.width/2-pw/2),vw-pw-8);
+    y=r.bottom+8;if(y+ph>vh-8)y=r.top-ph-8;
+  }else{y=Math.min(Math.max(8,r.top),vh-ph-8);}
+  el.style.left=Math.max(8,x)+'px';el.style.top=Math.max(8,y)+'px';
+}
+function hvStart(w,tok){
+  if(HV.cur!==w||HV.token!==tok||!document.body.contains(w))return;
+  var link=w.querySelector('[data-go^="leaf:"]'),r=link?link.getAttribute('data-go'):'',id=r.indexOf('leaf:')===0?r.slice(5):'',b=id&&BYID[id];
+  if(!b||b.tool)return;
+  function use(list){
+    if(HV.cur!==w||HV.token!==tok||!list||!list.length)return;
+    hvPreload(list,function(ok){if(HV.cur!==w||HV.token!==tok||!ok.length)return;hvShow(w,b,ok);});
+  }
+  var ex=hvExtras(id);
+  if(ex)use(ex);else hvFetch(id,use);
+}
+function hvBegin(w,delay){
+  hvHide();HV.cur=w;
+  var tok=HV.token;
+  HV.timer=setTimeout(function(){hvStart(w,tok);},delay);
 }
 
 /* ---------- tool pages ---------- */
@@ -1490,6 +1716,11 @@ var EDIBLE={
  'fireweed':{parts:'Young shoots and flowers',note:'Eaten as a spring green. Older leaves are tough.'},
  'balsamroot':{parts:'Roots, seeds, and young shoots',note:'Native peoples ate these parts. The plant grows slowly, so please do not dig it up.'}
 };
+/* Plants with a positive "non-toxic" listing. Only add a plant here when a source says so; a plant that is merely missing from the poison list stays neutral. */
+var SAFE={
+ 'sunflower':{who:'Dogs, cats, and horses',source:'ASPCA Poison Control',url:'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/sunflower',note:'The ASPCA lists sunflowers as non-toxic to dogs, cats, and horses. Eating a lot of any plant can still upset a stomach.'},
+ 'wild-rose':{who:'Dogs, cats, and horses',source:'ASPCA Poison Control (listed for rose species)',url:'https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/rose',note:'The ASPCA lists roses (Rosa species) as non-toxic to dogs, cats, and horses. The thorns can still scratch skin and mouths.'}
+};
 var TOX={
  'showy-milkweed':{who:'People, pets, and livestock',part:'The whole plant, especially the milky sap',note:'Contains compounds that affect the heart. Livestock poisonings are documented, and the sap can irritate eyes and skin. Wash your hands after touching it.',short:'The whole plant, including the milky sap, is poisonous. Do not eat.'},
  'cow-parsnip':{who:'People, mostly through the skin',part:'Sap on the stems and leaves',note:'Sap on skin plus sunlight can cause painful burns and blisters that last for weeks. It looks like poison hemlock and giant hogweed, so do not touch large white umbels unless you know which plant it is.',short:'Sap plus sunlight can cause painful burns and blisters on skin.'},
@@ -1528,12 +1759,19 @@ function poisonBody(){
     '<div class="sosbox"><b>A person</b><a class="callbtn" href="tel:18002221222" data-log="tool:Call Poison Help">'+tel+'Call Poison Help: 1-800-222-1222</a><p>Free, open 24 hours, and connects to the Utah Poison Control Center. Do not wait for signs of illness.</p></div>'+
     '<div class="sosbox"><b>A pet</b><a class="callbtn alt" href="tel:8884264435" data-log="tool:Call ASPCA">'+tel+'ASPCA Poison Control: (888) 426-4435</a><p>Or call your vet. A consultation fee may apply.</p></div>'+
     '<div class="sosbox"><b>Trouble breathing, a seizure, or passing out</b><a class="callbtn danger" href="tel:911" data-log="tool:Call 911">'+tel+'Call 911</a><p>Bring a sample or a photo of the plant if you can.</p></div></div></section>';
-  var f=S.toxFilter||'all';
+  var o={useType:true,skip:['safety'],harms:true};
   var ids=TOX_ORDER.slice().sort(function(a,b){return BYID[a].name.localeCompare(BYID[b].name);});
-  var FILT=[['all','All'],['people','Harms people'],['pets','Harms pets'],['livestock','Harms livestock'],['skin','Skin contact']];
-  function match(id,k){var t=TOX[id],w=toxWho(t);return k==='all'||(k==='people'&&w.indexOf('People')>=0)||(k==='pets'&&w.indexOf('Pets')>=0)||(k==='livestock'&&w.indexOf('Livestock')>=0)||(k==='skin'&&toxSkin(t));}
-  var chips=FILT.map(function(x){var n=ids.filter(function(id){return match(id,x[0]);}).length;return '<button type="button" class="pill pbtn" data-act="toxfilter" data-v="'+x[0]+'" aria-pressed="'+(f===x[0]?'true':'false')+'" data-log="tool:Poison filter '+esc(x[1])+'">'+esc(x[1])+' ('+n+')</button>';}).join('');
-  var shown=ids.filter(function(id){return match(id,f);});
+  var pool=ids.map(function(id){return BYID[id];});
+  var keys=visibleKeys(o,true);
+  var cur=S.filters.harms[0]||'all';
+  var FILT=[['all','All'],['People','Harms people'],['Pets','Harms pets'],['Livestock','Harms livestock'],['Skin','Skin contact']];
+  var chips=FILT.map(function(x){
+    var f2={};FKEYS.forEach(function(q){f2[q]=S.filters[q];});f2.harms=x[0]==='all'?[]:[x[0]];
+    var n=pool.filter(function(p){return passes(p,f2,o);}).length;
+    return '<button type="button" class="pill pbtn" data-act="toxfilter" data-v="'+x[0]+'" aria-pressed="'+(cur===x[0]?'true':'false')+'" data-log="tool:Poison filter '+esc(x[1])+'">'+esc(x[1])+' ('+n+')</button>';
+  }).join('');
+  var shown=pool.filter(function(p){return passes(p,S.filters,o);}).map(function(p){return p.id;});
+  var achips=chipsHtml(keys.filter(function(k){return k!=='harms';}));
   var list=shown.map(function(id){
     var t=TOX[id],b=BYID[id],k='t:'+id,open=!!S.open[k];
     var who=toxWho(t).map(function(w){return '<span class="pill warn">'+w+'</span>';}).join('');
@@ -1547,9 +1785,10 @@ function poisonBody(){
   }).join('');
   var rules=['Never eat a wild plant, berry, bulb, or mushroom unless an expert has identified it.','Do not assume a plant is safe because birds or animals eat it.','Teach children not to put leaves, stems, seeds, or berries in their mouths.'];
   return help+
-    '<section class="col"><h2>Find a plant</h2><p class="muted">Choose who you are worried about. Then open a plant to see which parts are harmful and what it does. A plant that is not on this list is not guaranteed safe. This is a short list, not a complete one.</p><div class="chips2" role="group" aria-label="Show plants that harm">'+chips+'</div><p role="status" class="muted small">Showing '+shown.length+' of '+ids.length+' plants</p><div class="col">'+(list||'<div class="ph">No plants in this group.</div>')+'</div></section>'+
+    '<section class="col"><h2>Find a plant</h2><p class="muted">Choose who you are worried about. Then narrow the list by what the plant looks like. Open a plant to see which parts are harmful and what it does. A plant that is not on this list is not guaranteed safe. This is a short list, not a complete one.</p><div class="chips2" role="group" aria-label="Show plants that harm">'+chips+'</div></section>'+
+    '<div class="split">'+filterAside(pool,o,true)+'<div class="col">'+statusBar(shown.length+' of '+ids.length+' plants shown',keys)+(achips?'<div class="chips" aria-label="Active filters">'+achips+'</div>':'')+'<div class="col">'+(list||emptyBox(anyFilter(keys),pool,o,keys))+'</div></div></div>'+
     '<section class="col"><h2>Three rules</h2><ul class="notes">'+rules.map(function(r){return '<li>'+esc(r)+'</li>';}).join('')+'</ul></section>'+
-    '<section class="col"><h2>Dangerous plants that are not in this guide</h2><p class="muted">These grow in Utah and are easy to mistake for harmless plants.</p><div class="col">'+look+'</div></section>'+
+    '<section class="col"><h2>Dangerous plants that are not in this guide</h2><p class="muted">These grow in Utah and are easy to mistake for harmless plants. The filters above do not apply here, so none of these are ever hidden.</p><div class="col">'+look+'</div></section>'+
     '<p class="muted small">Sources: '+extLink('https://poisoncontrol.utah.edu','Utah Poison Control Center')+', '+extLink('https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants','ASPCA toxic plant list')+', the USDA Poisonous Plant Research Laboratory in Logan, Utah, '+extLink('https://extension.usu.edu/rangeplants/shrubs-and-trees/gambel-oak.php','USU Extension (Gambel oak)')+', and Oregon State University Extension (elderberries). Poison control cannot name a plant over the phone, so take a photo and have it identified in person. This page is general information, not medical or veterinary advice.</p>';
 }
 
@@ -1589,72 +1828,6 @@ function savedBody(){
   return '<p role="status">'+list.length+(list.length===1?' plant saved':' plants saved')+'</p><div class="col">'+list.map(rowFor).join('')+'</div>';
 }
 
-function identifyBody(){
-  var o={};
-  var list=PLANTS.filter(function(p){return passes(p,S.filters,o);}).sort(byName);
-  var keys=visibleKeys(o,false);
-  var chips=chipsHtml(keys);
-  var grid=list.length?'<div class="grid">'+list.map(function(p){return cardFor(p);}).join('')+'</div>':emptyBox(anyFilter(keys),PLANTS,o,keys);
-  var has=!!S.idPhoto;
-  var sug='';
-  if(has&&S.idColors&&S.idColors.length){
-    sug='<div class="col"><p><b>Colors we noticed in your picture</b></p><div class="chips2">'+S.idColors.map(function(x){var on=S.filters.color.indexOf(x.c)>=0;return '<button type="button" class="pill pbtn" data-act="idcolor" data-v="'+esc(x.c)+'" aria-pressed="'+(on?'true':'false')+'" data-log="tool:Color '+esc(x.c)+'"><i style="background:'+(SWATCH[x.c]||'#ccc')+'"></i>'+esc(x.c)+(on?' (on)':'')+'</button>';}).join('')+'</div><p class="hint">This is a rough guess from the pixels. Background leaves, soil, or sky can fool it. Select a color to use it as a filter, and select it again to turn it off.</p></div>';
-  }
-  var drop='<label class="drop" for="idfile"><span class="dropt"><b>'+(has?'Choose a different picture':'Choose a picture')+'</b><span class="hint">Drag a picture here, or select to browse</span></span></label><input type="file" id="idfile" class="sr" accept="image/*">'+
-    '<div class="bar"><label class="btnlike" for="idcam">Take a photo</label><input type="file" id="idcam" class="sr" accept="image/*" capture="environment"></div>'+
-    '<p class="hint">Your picture stays in this browser tab. It is not uploaded or saved.</p><p id="idstatus" class="hint" role="status"></p>';
-  var pick='<div class="idphoto">'+(has?'<div class="col idprev"><img src="'+S.idPhoto+'" alt="The picture you chose"><button type="button" data-act="idclear" data-log="tool:Remove picture">Remove picture</button></div>':'')+'<div class="col" style="flex:1 1 280px">'+drop+sug+'</div></div>';
-  var stick=has?'<div class="idstick"><img src="'+S.idPhoto+'" alt="Your picture, for comparing"><span>Your picture. Compare it with the photos below.</span></div>':'';
-  return '<ol class="notes"><li><b>1.</b> Choose or take a picture of the plant. This tool does not name the plant for you. It reads the main colors and helps you narrow the list.</li><li><b>2.</b> Select the colors, leaf shape, and place that match what you saw. The matches below shrink as you go.</li><li><b>3.</b> Compare your picture with the photos, then open the one that looks right.</li></ol>'+pick+
-    '<div class="split">'+filterAside(PLANTS,o,false)+'<div class="col">'+stick+statusBar(list.length+' of '+PLANTS.length+' plants match',keys)+(chips?'<div class="chips" aria-label="Active filters">'+chips+'</div>':'')+grid+'</div></div>';
-}
-function analyzeColors(c){
-  var w=c.width,h=c.height,x0=Math.round(w*0.2),y0=Math.round(h*0.2),cw=Math.max(1,Math.round(w*0.6)),ch=Math.max(1,Math.round(h*0.6));
-  var data=c.getContext('2d').getImageData(x0,y0,cw,ch).data,cnt={},n=0,i;
-  for(i=0;i<data.length;i+=16){
-    var r=data[i]/255,g=data[i+1]/255,b=data[i+2]/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn,v=mx,sat=mx?d/mx:0,hh=0,name='';
-    if(v<0.2)continue;
-    if(d){if(mx===r)hh=((g-b)/d)%6;else if(mx===g)hh=(b-r)/d+2;else hh=(r-g)/d+4;hh*=60;if(hh<0)hh+=360;}
-    if(sat<0.12)name=v>0.85?'White':'Green or gray';
-    else if(hh<12||hh>=345)name=(sat<0.5&&v>0.75)?'Pink':'Red';
-    else if(hh<40)name='Orange';
-    else if(hh<70)name='Yellow';
-    else if(hh<170)name='Green or gray';
-    else if(hh<260)name='Blue';
-    else if(hh<300)name='Purple';
-    else name='Pink';
-    cnt[name]=(cnt[name]||0)+1;n++;
-  }
-  if(!n)return [];
-  var list=Object.keys(cnt).map(function(k){return {c:k,pct:Math.round(cnt[k]/n*100)};}).filter(function(x){return x.c!=='Green or gray';}).sort(function(a,b){return b.pct-a.pct;});
-  var out=list.filter(function(x,ix){return x.pct>=4&&(ix===0||x.pct>=list[0].pct/3);}).slice(0,3);
-  if(!out.length)out=[{c:'Green or gray',pct:Math.round((cnt['Green or gray']||0)/n*100)}];
-  return out;
-}
-function idLoad(f){
-  var st=function(t){var s2=$('#idstatus');if(s2)s2.textContent=t;};
-  var heic=/\.hei[cf]$/i.test(f.name||'')||/hei[cf]/i.test(f.type||'');
-  if(!/^image\//.test(f.type)&&!heic){st('That file is not a picture. Choose a JPG, PNG, or similar image.');return;}
-  if(f.size>25*1024*1024){st('That picture is larger than 25 MB. Choose a smaller one.');return;}
-  st('Loading picture…');
-  var url=URL.createObjectURL(f),im=new Image();
-  im.onerror=function(){URL.revokeObjectURL(url);st(heic?'This browser cannot open HEIC pictures from iPhones. Take a screenshot of the picture, or choose Settings, Camera, Formats, Most Compatible on your phone. You can still use the filters below.':'This browser cannot show that kind of picture. You can still use the filters below.');};
-  im.onload=function(){
-    try{
-      var w=im.naturalWidth||im.width,h=im.naturalHeight||im.height,sc=Math.min(1,900/Math.max(w,h,1));
-      var c=document.createElement('canvas');c.width=Math.max(1,Math.round(w*sc));c.height=Math.max(1,Math.round(h*sc));
-      c.getContext('2d').drawImage(im,0,0,c.width,c.height);
-      S.idPhoto=c.toDataURL('image/jpeg',0.85);
-      S.idColors=analyzeColors(c);
-    }catch(err){URL.revokeObjectURL(url);st('Could not read that picture. Try another one, or use the filters below.');return;}
-    URL.revokeObjectURL(url);
-    logEvent('tool','Chose a picture');
-    render();
-  };
-  im.src=url;
-}
-function handleIdFile(inp){var f=inp.files&&inp.files[0];if(!f)return;idLoad(f);inp.value='';}
-
 function reportBody(){
   var msg=S.repMsg||'';S.repMsg='';
   var plants=PLANTS.slice().sort(byName).map(function(p){return '<option value="'+esc(p.id)+'">'+esc(p.name)+' ('+esc(p.latin)+')</option>';}).join('');
@@ -1692,7 +1865,6 @@ function saveSighting(){
   render();window.scrollTo(0,0);
 }
 function toolBody(id){
-  if(id==='tool-identify')return identifyBody();
   if(id==='tool-saved')return savedBody();
   if(id==='tool-poison')return poisonBody();
   if(id==='tool-invasive')return invasiveBody();
@@ -1700,7 +1872,6 @@ function toolBody(id){
   return '<div class="ph">Nothing here yet.</div>';
 }
 function toolAct(name,el){
-  if(name==='idclear'){S.idPhoto='';S.idColors=[];render();return true;}
   if(name==='geo'){
     var gs=function(t){var s=$('#geostatus');if(s)s.textContent=t;};
     if(!navigator.geolocation){gs('This browser cannot share a location. Type the place instead.');return true;}
@@ -1760,6 +1931,9 @@ function safetyPanel(b){
   var out;
   if(t){
     out='<section class="safety warn" id="safety" aria-labelledby="sf"><div class="sfhead">'+tri+'<h2 id="sf">Poison warning</h2><span class="verdict">Dangerous? Yes, if eaten</span></div><p><b>'+esc(t.short)+'</b></p><dl class="sfgrid"><dt>Who it can harm</dt><dd>'+esc(t.who)+'</dd><dt>Harmful parts</dt><dd>'+esc(t.part)+'</dd><dt>What it does</dt><dd>'+esc(t.note)+'</dd></dl>'+edHtml+'<p class="small">If a person ate it, call Poison Help at <a href="tel:18002221222">1-800-222-1222</a> (free, 24 hours). For a pet, call your vet.</p><div class="bar"><button data-go="leaf:tool-poison" data-log="leaf:Poisonous plants">See all poisonous plants</button></div></section>';
+  }else if(SAFE[b.id]){
+    var s=SAFE[b.id],chk='<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>';
+    out='<section class="safety ok" id="safety" aria-labelledby="sf"><div class="sfhead">'+chk+'<h2 id="sf">Safety</h2><span class="verdict">Dangerous? No, non-toxic to pets</span></div><p><b>Generally safe if a pet nibbles it.</b> '+esc(s.note)+'</p><dl class="sfgrid"><dt>Listed as non-toxic to</dt><dd>'+esc(s.who)+'</dd><dt>Source</dt><dd>'+extLink(s.url,s.source)+'</dd></dl>'+edHtml+'<p class="small">Non-toxic to pets says nothing about whether people can eat it.'+(ed?'':' Never eat a wild plant unless an expert has identified it.')+' If a pet ate a lot of it and seems sick, call your vet or ASPCA Poison Control at <a href="tel:8884264435">(888) 426-4435</a>.</p><div class="bar"><button data-go="leaf:tool-poison" data-log="leaf:Poisonous plants">See poisonous plants</button></div></section>';
   }else{
     out='<section class="safety" id="safety" aria-labelledby="sf"><div class="sfhead">'+tri+'<h2 id="sf">Safety</h2><span class="verdict">Dangerous? No warning found</span></div><p>This plant is not on our poisonous plants list. The list is a short starter list, so a missing plant does not mean a safe one. Never eat a wild plant unless an expert has identified it.</p>'+edHtml+'<div class="bar"><button data-go="leaf:tool-poison" data-log="leaf:Poisonous plants">See poisonous plants</button></div></section>';
   }
@@ -1872,7 +2046,7 @@ function logPage(){
 
 function testIntro(){
   return crumbs('test')+
-  '<section class="box col"><h1>Test mode</h1><p>You will see 10 scenarios in random order. Most show a picture of a plant. For each one, read the scenario, click OK, then use the site to find the page you think matches. The timer starts when you click OK. When you reach a plant or tool page, your answer is recorded and the next scenario starts.</p>'+
+  '<section class="box col"><h1>Test mode</h1><p>You will see '+TASKS.length+' scenarios in random order. Most show a picture of a plant. For each one, read the scenario, click OK, then use the site to find the page you think matches. The timer starts when you click OK. When you reach a plant or tool page, your answer is recorded and the next scenario starts.</p>'+
   '<label for="pid">Participant name or ID</label><input type="text" id="pid" autocomplete="off" placeholder="P01">'+
   '<div class="bar"><button class="primary" data-act="starttest" data-log="control:Start test">Start test</button><button data-go="results" data-log="control:View test results">View test results</button><button data-go="home" data-log="nav:Back to site">Back to site</button></div></section>';
 }
@@ -1925,6 +2099,7 @@ function reportPage(){
 }
 
 function render(){
+  hvHide();
   var a=$('#app');var html;
   if(T&&T.state==='scenario'){html='<div class="col">'+scenarioScreen()+'</div>';}
   else if(T&&T.state==='done'){html='<div class="col">'+doneScreen()+'</div>';}
@@ -2018,12 +2193,7 @@ function act(name,el){
     if(t){var calm=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;t.scrollIntoView({behavior:calm?'auto':'smooth',block:'start'});t.setAttribute('tabindex','-1');t.focus({preventScroll:true});}
     return;
   }
-  if(name==='toxfilter'){S.toxFilter=el.getAttribute('data-v')||'all';keepScroll(render);var tf=document.querySelector('[data-act="toxfilter"][data-v="'+S.toxFilter+'"]');if(tf&&tf.focus)tf.focus({preventScroll:true});return;}
-  if(name==='idcolor'){
-    var v=el.getAttribute('data-v'),arr=S.filters.color,ix=arr.indexOf(v);
-    if(ix<0)arr.push(v);else arr.splice(ix,1);
-    logEvent('tool','Color '+v+(ix<0?' on':' off'));keepScroll(render);return;
-  }
+  if(name==='toxfilter'){var tv=el.getAttribute('data-v')||'all';S.filters.harms=tv==='all'?[]:[tv];keepScroll(render);var tf=document.querySelector('[data-act="toxfilter"][data-v="'+tv+'"]');if(tf&&tf.focus)tf.focus({preventScroll:true});return;}
   if(name==='back'){goBack();return;}
   if(toolAct(name,el))return;
   if(name==='clearfilters'){
@@ -2062,13 +2232,6 @@ app.addEventListener('click',function(e){
   if(el.getAttribute('data-act')){act(el.getAttribute('data-act'),el);return;}
   go(el.getAttribute('data-go'));
 });
-app.addEventListener('dragover',function(e){if(e.target.closest&&e.target.closest('.drop')){e.preventDefault();e.target.closest('.drop').classList.add('over');}});
-app.addEventListener('dragleave',function(e){var dz=e.target.closest&&e.target.closest('.drop');if(dz)dz.classList.remove('over');});
-app.addEventListener('drop',function(e){
-  var dz=e.target.closest&&e.target.closest('.drop');if(!dz)return;
-  e.preventDefault();dz.classList.remove('over');
-  var f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];if(f)idLoad(f);
-});
 app.addEventListener('submit',function(e){
   e.preventDefault();
   if(e.target&&e.target.id==='repform'){saveSighting();return;}
@@ -2079,7 +2242,7 @@ app.addEventListener('submit',function(e){
   go('search:'+q);
 });
 app.addEventListener('change',function(e){
-  var el=e.target;if(el&&(el.id==='idfile'||el.id==='idcam')){handleIdFile(el);return;}
+  var el=e.target;
   var g=el.getAttribute&&el.getAttribute('data-fgroup');if(!g||el.type!=='checkbox')return;
   var v=el.getAttribute('data-fval');var arr=S.filters[g];
   if(el.checked&&arr.indexOf(v)<0)arr.push(v);
@@ -2108,6 +2271,17 @@ app.addEventListener('error',function(e){
   if(im.classList.contains('main')){var pl=BYID[im.getAttribute('data-id')];if(pl)fig.outerHTML=pic(pl.id);}
   else fig.hidden=true;
 },true);
+var hvMQ=window.matchMedia?window.matchMedia('(hover: hover) and (pointer: fine)'):null;
+function hvOK(){return thumbsOn()&&(!hvMQ||hvMQ.matches);}
+function hvWrap(t){return t&&t.closest?t.closest('.cardwrap,.rowwrap'):null;}
+app.addEventListener('mouseover',function(e){var w=hvWrap(e.target);if(!w||w===HV.cur||!hvOK())return;hvBegin(w,250);});
+app.addEventListener('mouseout',function(e){var w=hvWrap(e.target);if(!w||w!==HV.cur)return;if(hvWrap(e.relatedTarget)===w)return;hvHide();});
+app.addEventListener('focusin',function(e){var t=e.target;if(!t||!t.matches||!t.matches(':focus-visible'))return;var w=hvWrap(t);if(w&&w!==HV.cur&&hvOK())hvBegin(w,400);});
+app.addEventListener('focusout',function(e){var w=hvWrap(e.target);if(w&&w===HV.cur)hvHide();});
+app.addEventListener('click',function(){hvHide();});
+window.addEventListener('scroll',hvHide,{passive:true});
+window.addEventListener('blur',hvHide);
+document.addEventListener('keydown',function(e){if(e.key==='Escape')hvHide();});
 var toastEl=$('#toast');
 if(toastEl)toastEl.addEventListener('click',function(e){
   if(e.target&&e.target.id==='undo'&&toastUndo){var f=toastUndo;toastUndo=null;toastEl.hidden=true;f();}
