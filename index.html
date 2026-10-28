@@ -1566,6 +1566,29 @@ function gbifBlock(b,d,st){
 
 /* ---------- card photos: small, lazy, cached ---------- */
 var TH_CACHE=load('upthumb2',{});
+/* Pre-baked photo data. Filled in by opening this page with ?bake on the live site (see the panel it shows).
+   When present, cards and plant pages show photos at once instead of waiting on GBIF. Live lookups still run for anything missing. */
+/* BAKED-PHOTOS-START */
+var BAKED=null;
+/* BAKED-PHOTOS-END */
+var BAKE_MODE=/[?&]bake(&|=|$)/.test(location.search);
+function bkPhoto(a){return {url:sizedPhoto(a[0]),big:sizedPhoto(a[0],'large'),orig:a[0],credit:a[1],lic:a[2],link:a[3]};}
+function bkPack(p){return [p.orig,p.credit,p.lic,p.link];}
+(function seedBaked(){
+  if(!BAKED||BAKE_MODE)return;
+  var id,g,t,o;
+  for(id in (BAKED.gb||{})){
+    if(GB_CACHE[id])continue;
+    g=BAKED.gb[id];
+    GB_CACHE[id]={key:g.key,sci:g.sci,authorship:g.authorship,family:g.family,threat:g.threat||[],names:g.names||[],photos:(g.photos||[]).map(bkPhoto),points:g.points||[],months:g.months||[0,0,0,0,0,0,0,0,0,0,0,0],total:typeof g.total==='number'?g.total:null,notes:g.notes||[]};
+  }
+  for(id in (BAKED.th||{})){
+    if(TH_CACHE[id])continue;
+    t=BAKED.th[id];
+    if(!t){if(TH_CACHE[id]===undefined)TH_CACHE[id]=0;continue;}
+    o=bkPhoto(t.p);o.more=(t.m||[]).map(bkPhoto);TH_CACHE[id]=o;
+  }
+})();
 var TH_STATE={},TH_BAD={},TH_Q=[],TH_ACTIVE=0,TH_IO=null;
 var XTRA=[
  ['x-death-camas','Foothill death camas','Toxicoscordion paniculatum'],
@@ -2401,6 +2424,94 @@ window.addEventListener('popstate',function(ev){
   while(POS>st.n&&stepBack()){}
   while(POS<st.n&&stepFwd()){}
 });
+/* ---------- bake mode: open index.html?bake on the live site to collect every photo lookup into this file ---------- */
+function runBake(){
+  var MAX_POINTS=150; /* map dots kept per plant; the live lookup returns up to 300. Lower this to make the file smaller. */
+  GB_CACHE={};TH_CACHE={};
+  var box=document.createElement('div');
+  box.style.cssText='position:fixed;left:12px;right:12px;bottom:12px;z-index:99999;background:#fff;color:#111;border:2px solid #111;border-radius:10px;padding:14px;font:15px/1.4 system-ui,sans-serif;max-width:560px;box-shadow:0 4px 20px rgba(0,0,0,.35)';
+  box.innerHTML='<b>Photo bake</b><div id="bkmsg" role="status">Starting…</div><div id="bkbar" style="height:8px;background:#ddd;border-radius:4px;margin:8px 0"><div id="bkfill" style="height:8px;width:0;background:#1a7f37;border-radius:4px"></div></div><button type="button" id="bkgo" disabled style="font:inherit;padding:8px 12px">Download updated index.html</button><div id="bkhelp" class="small" style="margin-top:8px"></div>';
+  document.body.appendChild(box);
+  var msg=box.querySelector('#bkmsg'),fill=box.querySelector('#bkfill'),btn=box.querySelector('#bkgo'),help=box.querySelector('#bkhelp');
+  var jobs=[],done=0,failed=[],th={};
+  PLANTS.forEach(function(p){jobs.push({kind:'gb',p:p});});
+  XTRA.forEach(function(x){jobs.push({kind:'th',p:XBY[x[0]]});});
+  function tick(){
+    done++;fill.style.width=Math.round(done/jobs.length*100)+'%';
+    msg.textContent='Looked up '+done+' of '+jobs.length+' plants'+(failed.length?' ('+failed.length+' failed so far)':'')+'…';
+  }
+  function runGb(p,tries){
+    return new Promise(function(res){
+      delete GB_CACHE[p.id];delete GB_STATE[p.id];
+      loadGbif(p);
+      var iv=setInterval(function(){
+        var st=GB_STATE[p.id];
+        if(st==='ok'||st==='error'){
+          clearInterval(iv);
+          if(st==='error'&&tries>0){setTimeout(function(){res(runGb(p,tries-1));},1500);}
+          else res(st==='ok');
+        }
+      },250);
+    });
+  }
+  function runTh(p,tries){
+    return fetchThumb(p.latin,p).then(function(ph){th[p.id]=ph||0;return true;},function(){
+      if(tries>0)return new Promise(function(r){setTimeout(function(){r(runTh(p,tries-1));},1500);});
+      return false;
+    });
+  }
+  function worker(){
+    var j=jobs.shift();
+    if(!j)return Promise.resolve();
+    return (j.kind==='gb'?runGb(j.p,1):runTh(j.p,1)).then(function(ok){
+      if(!ok)failed.push(j.p.name);
+      tick();return worker();
+    });
+  }
+  function sample(pts){
+    if(pts.length<=MAX_POINTS)return pts;
+    var out=[],step=pts.length/MAX_POINTS,i;
+    for(i=0;i<MAX_POINTS;i++)out.push(pts[Math.floor(i*step)]);
+    return out;
+  }
+  function build(){
+    var gb={},id,g,t,m;
+    for(id in GB_CACHE){
+      g=GB_CACHE[id];
+      gb[id]={key:g.key,sci:g.sci,authorship:g.authorship,family:g.family,threat:g.threat,names:g.names,total:g.total,months:g.months,notes:g.notes,points:sample(g.points||[]),photos:(g.photos||[]).map(bkPack)};
+    }
+    for(id in th){
+      t=th[id];
+      th[id]=t?{p:bkPack(t),m:(t.more||[]).map(bkPack)}:0;
+    }
+    return {v:1,when:new Date().toISOString(),gb:gb,th:th};
+  }
+  function block(data){
+    return '/* BAKED-PHOTOS-START */\nvar BAKED='+JSON.stringify(data).replace(/</g,'\\u003c')+';\n/* BAKED-PHOTOS-END */';
+  }
+  function save2(name,text,type){
+    var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:type}));a.download=name;
+    document.body.appendChild(a);a.click();a.remove();
+  }
+  Promise.all([worker(),worker(),worker()]).then(function(){
+    var data=build(),n=Object.keys(data.gb).length+Object.keys(data.th).filter(function(k){return data.th[k];}).length;
+    msg.textContent='Finished. Photos found for '+n+' of '+(PLANTS.length+XTRA.length)+' entries.'+(failed.length?' No data for: '+failed.join(', ')+'. Those will still load live.':'');
+    btn.disabled=false;
+    btn.onclick=function(){
+      var blk=block(data);
+      fetch(location.href.split('#')[0].split('?')[0],{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('src');return r.text();}).then(function(src){
+        var re=/\/\* BAKED-PHOTOS-START \*\/[\s\S]*?\/\* BAKED-PHOTOS-END \*\//;
+        if(!re.test(src))throw new Error('marker');
+        save2('index.html',src.replace(re,function(){return blk;}),'text/html');
+        help.textContent='Downloaded a new index.html. Replace the old file with it and reload without ?bake.';
+      }).catch(function(){
+        save2('baked-photos.txt',blk,'text/plain');
+        help.textContent='Could not read this page\u2019s own source. Downloaded baked-photos.txt instead: in index.html, replace everything from /* BAKED-PHOTOS-START */ through /* BAKED-PHOTOS-END */ with its contents.';
+      });
+    };
+  });
+}
+if(BAKE_MODE)setTimeout(runBake,300);
 render();
 scrollState();
 })();
