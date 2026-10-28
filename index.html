@@ -1475,6 +1475,7 @@ function searchPage(q){
 var GBIF_API='https://api.gbif.org/v1';
 var UTAH_Q='country=US&stateProvince=Utah';
 var GB_CACHE=load('upgbif2',{});
+(function(){for(var k in GB_CACHE){if(!GB_CACHE[k]||!GB_CACHE[k].photos||!GB_CACHE[k].photos.length)delete GB_CACHE[k];}})();
 var GB_STATE={};
 var MONTH_LETTERS=['J','F','M','A','M','J','J','A','S','O','N','D'];
 var MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -1529,9 +1530,13 @@ function loadGbif(p){
       soft(occ+'&facet=month&limit=0')
     ]).then(function(r){
       if(!r[0]&&!r[3]&&!r[5])throw new Error('GBIF unreachable');
-      GB_CACHE[p.id]=shapeGbif(key,r);
-      save('upgbif2',GB_CACHE);
-      GB_STATE[p.id]='ok';
+      var g=shapeGbif(key,r);
+      function fin(){GB_CACHE[p.id]=g;save('upgbif2',GB_CACHE);GB_STATE[p.id]='ok';}
+      if(g.photos.length){fin();return;}
+      /* No photos usually means GBIF dropped the photo request. Ask once more before accepting it. */
+      return new Promise(function(done){setTimeout(done,1200);}).then(function(){return photoRecords(occ,p);}).then(function(rr){
+        var ph=pickPhotos((rr&&rr.results)||[]);if(ph.length)g.photos=ph.slice(0,7);fin();
+      });
     });
   })
   .catch(function(){GB_STATE[p.id]='error';})
@@ -2142,7 +2147,7 @@ function photoBlock(b,d,tp){
     var th=ph.length>1?'<div class="thumbs" role="group" aria-label="More photos of '+esc(b.name)+'">'+ph.map(function(p,i){return '<button type="button" class="thumbbtn" data-act="pickphoto" data-id="'+esc(b.id)+'" data-i="'+i+'" data-log="photo:Show photo '+(i+1)+' of '+esc(b.name)+'" aria-pressed="'+(i===idx?'true':'false')+'" aria-label="Show photo '+(i+1)+' of '+ph.length+'"><img class="gb th2" data-orig="'+esc(p.orig)+'" src="'+esc(p.url)+'" alt="" loading="lazy" referrerpolicy="no-referrer"></button>';}).join('')+'</div><p class="muted small">Tap a small photo to switch. Tap the large photo to look closer.</p>':'';
     return lead+th;
   }
-  return (!d&&tp&&thumbsOn())?photoFig(tp,b,true):pic(b.id);
+  return (tp&&thumbsOn())?photoFig(tp,b,true):pic(b.id);
 }
 function scrollHint(){return '<div class="scrollhint" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Scroll for safety, map and more</div>';}
 function leafPage(id){
